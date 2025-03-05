@@ -1,0 +1,10 @@
+io.github.bothuany
+io.github.bothuany.dtos.analytics
+io.github.bothuany.dtos.billing
+io.github.bothuany.dtos.contract
+io.github.bothuany.dtos.customer
+io.github.bothuany.dtos.notification
+io.github.bothuany.dtos.plan
+io.github.bothuany.dtos.support
+io.github.bothuany.dtos.user
+io.github.bothuany.exception
