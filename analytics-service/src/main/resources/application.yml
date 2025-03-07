@@ -1,3 +1,27 @@
 spring:
   application:
     name: analytics-service
+
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/cart-service?authSource=admin
+
+  cloud:
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: #orderCreatedFunction TODO Change it
+      bindings:
+        orderCreatedFunction-in-0:
+          destination: order-topic
+          content-type: application/json
+          group: cart-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8888/eureka/"
+    register-with-eureka: true
+    fetch-registry: true

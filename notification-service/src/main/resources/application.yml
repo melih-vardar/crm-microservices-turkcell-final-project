@@ -1,3 +1,40 @@
 spring:
   application:
     name: notification-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "turkcellpair1@gmail.com"
+    password: "Turkcell?Pair1?"
+    protocol: smtp
+    smtp:
+      auth: true
+      starttls:
+        enable: true
+    debug: true
+
+  cloud:
+    stream:
+      defaultBinder: kafka
+      bindings:
+        consumerEmailNotification-in-0:
+          destination: email-notifications
+          content-type: application/json
+          group: notification-group
+        consumerSmsNotification-in-0:
+          destination: sms-notifications
+          content-type: application/json
+          group: notification-group
+        consumerPushNotification-in-0:
+          destination: push-notifications
+          content-type: application/json
+          group: notification-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+
+server:
+  port: 8765
+
+
