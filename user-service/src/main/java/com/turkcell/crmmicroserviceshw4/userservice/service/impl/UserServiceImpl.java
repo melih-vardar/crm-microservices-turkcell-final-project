@@ -1,6 +1,6 @@
 package com.turkcell.crmmicroserviceshw4.userservice.service.impl;
 
-import com.turkcell.crmmicroserviceshw4.userservice.model.Role;
+import io.github.bothuany.dtos.user.Role;
 import com.turkcell.crmmicroserviceshw4.userservice.model.User;
 import com.turkcell.crmmicroserviceshw4.userservice.repository.UserRepository;
 import com.turkcell.crmmicroserviceshw4.userservice.security.JwtUtils;
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
                 .username(registerDTO.getUsername())
                 .email(registerDTO.getEmail())
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
-                .role(Role.USER)
+                .role(registerDTO.getRole() != null ? registerDTO.getRole() : Role.CUSTOMER_REPRESENTATIVE)
                 .build();
 
         userRepository.save(user);
@@ -150,6 +150,6 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole().name());
+                user.getRole());
     }
 }

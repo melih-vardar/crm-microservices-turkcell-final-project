@@ -1,5 +1,6 @@
 package com.turkcell.crmmicroserviceshw4.userservice.model;
 
+import io.github.bothuany.dtos.user.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
