@@ -1,0 +1,89 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+      routes:
+        - id: user-service
+          uri: http://localhost:8010
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /api/users/$\{segment}
+
+        - id: customer-service
+          uri: http://localhost:8020
+          predicates:
+            - Path=/api/customers/**
+          filters:
+            - RewritePath=/api/customers/(?<segment>.*), /api/customers/$\{segment}
+
+        - id: contract-service
+          uri: http://localhost:8030
+          predicates:
+            - Path=/api/contracts/**
+          filters:
+            - RewritePath=/api/contracts/(?<segment>.*), /api/contracts/$\{segment}
+
+        - id: plan-service
+          uri: http://localhost:8040
+          predicates:
+            - Path=/api/plans/**
+          filters:
+            - RewritePath=/api/plans/(?<segment>.*), /api/plans/$\{segment}
+
+        - id: billing-service
+          uri: http://localhost:8050
+          predicates:
+            - Path=/api/billings/**
+          filters:
+            - RewritePath=/api/billings/(?<segment>.*), /api/billings/$\{segment}
+
+        - id: support-service
+          uri: http://localhost:8060
+          predicates:
+            - Path=/api/support/**
+          filters:
+            - RewritePath=/api/support/(?<segment>.*), /api/support/$\{segment}
+
+        - id: analytics-service
+          uri: http://localhost:8070
+          predicates:
+            - Path=/api/analytics/**
+          filters:
+            - RewritePath=/api/analytics/(?<segment>.*), /api/analytics/$\{segment}
+
+        - id: notification-service
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/notifications/**
+          filters:
+            - RewritePath=/api/notifications/(?<segment>.*), /api/notifications/$\{segment}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    reactor.netty: INFO
+    com.turkcell.crmmicroserviceshw4.gatewayserver: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true

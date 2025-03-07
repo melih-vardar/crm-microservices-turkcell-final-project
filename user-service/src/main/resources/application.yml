@@ -14,7 +14,7 @@ spring:
     show-sql: true
 
 server:
-  port: 8081
+  port: 8010
 
 jwt:
   secret: turkcellCRMMicroservicesSecretKey123456789012345678901234567890
