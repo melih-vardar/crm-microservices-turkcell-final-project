@@ -14,9 +14,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
     private final JavaMailSender javaMailSender;
-
-    public NotificationServiceImpl(JavaMailSender javaMailSender) {
+    private final TwilioService twilioService;
+    public NotificationServiceImpl(JavaMailSender javaMailSender, TwilioService twilioService) {
         this.javaMailSender = javaMailSender;
+        this.twilioService = twilioService;
     }
 
     @Override
@@ -47,11 +48,27 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void sendSms(SmsNotificationDTO smsNotificationDTO) {
+        //"phoneNumber": "+905555555555" example phone number value
+        logger.info("Sending SMS to: {} | Message: {}",
+                smsNotificationDTO.getPhoneNumber(),
+                smsNotificationDTO.getMessage());
 
+        String NewPhoneNumber = "+" + smsNotificationDTO.getPhoneNumber();
+
+        twilioService.sendSms(smsNotificationDTO.getPhoneNumber(), NewPhoneNumber);
     }
 
     @Override
     public void sendPushNotification(PushNotificationDTO pushNotificationDTO) {
+        String message = " notification sent to user: " + pushNotificationDTO.getUserId() +
+                " | Title: " + pushNotificationDTO.getTitle() +
+                " | Message: " + pushNotificationDTO.getMessage();
+
+        logger.info(message);
+
+        // firebase gibi yapılar kullanılabilir fakat son gelen güncellemeyle desteklememeye başlamış localde çalıştırabiliriz.
+        // administration json olarak bir dosya iniyor bunu path olarak vermemiz gerekli container işlemleri yüzünden pek mantıklı gelmedi.
+        // dockerda volume de tutabiliriz değeri. başka bilgisayarlarda çalışırken sıkıntı olabilirç
 
     }
 }
