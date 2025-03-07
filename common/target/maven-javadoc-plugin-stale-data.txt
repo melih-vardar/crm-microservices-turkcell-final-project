@@ -1,0 +1,82 @@
+@options
+@packages
+@argfile
+-classpath
+'C:/Users/rebat/.m2/repository/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'21'
+-sourcepath
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java;C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'crm-microservices-common 1.0.2 API'
+-use
+-version
+-windowtitle
+'crm-microservices-common 1.0.2 API'
+io.github.bothuany.dtos.analytics
+io.github.bothuany.dtos.billing
+io.github.bothuany.dtos.contract
+io.github.bothuany.dtos.customer
+io.github.bothuany.dtos.notification
+io.github.bothuany.dtos.plan
+io.github.bothuany.dtos.support
+io.github.bothuany.dtos.user
+io.github.bothuany.exception
+io.github.bothuany
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/billing/BillCreateDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/billing/BillResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/billing/PaymentDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/contract/ContractCreateDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/contract/ContractResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/customer/CustomerCreateDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/customer/CustomerResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/notification/EmailNotificationDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/notification/PushNotificationDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/notification/SmsNotificationDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/plan/PlanCreateDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/plan/PlanResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/support/TicketCreateDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/support/TicketResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/user/JwtResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/user/UserLoginDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/user/UserRegisterDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/dtos/user/UserResponseDTO.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/exception/ErrorResponse.java'
+'C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/common/src/main/java/io/github/bothuany/Main.java'
+C:\Users\rebat\.m2\repository\org\projectlombok\lombok\1.18.36\lombok-1.18.36.jar = 1735142823323
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\src\main\java = 1741198659824
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\generated-sources\annotations = 1741218676317
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\allclasses-index.html = 1741218713480
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\allpackages-index.html = 1741218713492
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\copy.svg = 1741218713608
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\element-list = 1741218713007
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\help-doc.html = 1741218713593
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\index-all.html = 1741218713567
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\index.html = 1741218713453
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\link.svg = 1741218713611
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\member-search-index.js = 1741218713505
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\module-search-index.js = 1741218713495
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\overview-summary.html = 1741218713576
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\overview-tree.html = 1741218713444
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\package-search-index.js = 1741218713499
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\script.js = 1741218713603
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\search-page.js = 1741218713619
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\search.html = 1741218713572
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\search.js = 1741218713616
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\stylesheet.css = 1741218713599
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\tag-search-index.js = 1741218713507
+C:\Users\rebat\IdeaProjects\crm-microservices-turkcell-final-project\common\target\apidocs\type-search-index.js = 1741218713503
