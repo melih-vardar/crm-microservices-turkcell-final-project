@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-service
+  namespace: crm
+spec:
+  selector:
+    app: billing-service
+  ports:
+    - port: 8050
+      targetPort: 8050
+  type: ClusterIP 
