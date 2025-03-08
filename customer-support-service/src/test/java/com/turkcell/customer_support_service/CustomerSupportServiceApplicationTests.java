@@ -1,10 +1,10 @@
-package com.turkcell.crmmicroserviceshw4.gatewayserver;
+package com.turkcell.customer_support_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GatewayServerApplicationTests {
+class CustomerSupportServiceApplicationTests {
 
     @Test
     void contextLoads() {

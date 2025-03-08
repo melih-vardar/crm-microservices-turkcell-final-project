@@ -5,8 +5,11 @@ import io.github.bothuany.dtos.notification.EmailNotificationDTO;
 import io.github.bothuany.dtos.notification.PushNotificationDTO;
 import io.github.bothuany.dtos.notification.SmsNotificationDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
+
+import java.util.function.Consumer;
 
 @Configuration
 @RequiredArgsConstructor
@@ -14,19 +17,22 @@ public class NotificationConsumer {
 
     private final NotificationService notificationService;
 
-    @KafkaListener(topics = "email-notifications", groupId = "notification-group")
-    public void consumerEmailNotification(EmailNotificationDTO emailNotificationDTO) {
-        notificationService.sendEmail(emailNotificationDTO);
+    // Email notification function
+    @Bean
+    public Consumer<EmailNotificationDTO> emailNotificationFunction() {
+        return notificationService::sendEmail;
     }
 
-    @KafkaListener(topics = "sms-notifications", groupId = "notification-group")
-    public void consumerSmsNotification(SmsNotificationDTO smsNotificationDTO) {
-        notificationService.sendSms(smsNotificationDTO);
+    // SMS notification function
+    @Bean
+    public Consumer<SmsNotificationDTO> smsNotificationFunction() {
+        return notificationService::sendSms;
     }
 
-    @KafkaListener(topics = "push-notifications", groupId = "notification-group")
-    public void consumerPushNotification(PushNotificationDTO pushNotificationDTO) {
-        notificationService.sendPushNotification(pushNotificationDTO);
+    // Push notification function
+    @Bean
+    public Consumer<PushNotificationDTO> pushNotificationFunction() {
+        return notificationService::sendPushNotification;
     }
 
 

@@ -5,6 +5,7 @@ import io.github.bothuany.dtos.user.UserLoginDTO;
 import io.github.bothuany.dtos.user.UserRegisterDTO;
 import io.github.bothuany.dtos.user.UserResponseDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -17,4 +18,6 @@ public interface UserService {
     UserResponseDTO updateUser(UUID id, UserRegisterDTO userDTO);
 
     void deleteUser(UUID id);
+
+    List<UserResponseDTO> getAllUsers();
 }

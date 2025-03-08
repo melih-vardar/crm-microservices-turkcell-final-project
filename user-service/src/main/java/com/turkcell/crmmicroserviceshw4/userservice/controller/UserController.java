@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,10 +49,21 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, userDTO));
     }
 
+    @GetMapping
+    @Operation(summary = "Get all users", description = "Retrieves information for all users")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete user", description = "Deletes a user by ID")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "User Service is working!";
     }
 }
