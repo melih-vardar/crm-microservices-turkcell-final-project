@@ -4,7 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d269b99-45b0-471c-9afb-6430bf608917" name="Changes" comment="Refactor user role management and update dependencies" />
+    <list default="true" id="2d269b99-45b0-471c-9afb-6430bf608917" name="Changes" comment="Refactor user role management and update dependencies">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/BillCreateDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/BillCreateDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/BillResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/BillResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/PaymentDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/PaymentDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/contract/ContractCreateDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/contract/ContractCreateDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/contract/ContractResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/contract/ContractResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/customer/CustomerCreateDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/customer/CustomerCreateDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/customer/CustomerResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/customer/CustomerResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/EmailNotificationDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/EmailNotificationDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/PushNotificationDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/PushNotificationDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/SmsNotificationDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/SmsNotificationDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/plan/PlanCreateDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/plan/PlanCreateDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/plan/PlanResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/plan/PlanResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/support/TicketCreateDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/support/TicketCreateDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/support/TicketResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/support/TicketResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO$JwtResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO$JwtResponseDTOBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/Role.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserLoginDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserLoginDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserRegisterDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserRegisterDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/exception/ErrorResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/exception/ErrorResponse.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,10 +50,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "bothuany"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/bothuany/crm-microservices-turkcell-final-project.git",
+    "accountId": "86c9c10a-16b8-432a-b98d-6a9234153651"
+  }
+}]]></component>
   <component name="KubernetesApiPersistence">{}</component>
-  <component name="KubernetesApiProvider">{
-        &quot;isMigrated&quot;: true
-        }</component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
         &quot;associatedIndex&quot;: 4
         }</component>
@@ -42,19 +82,23 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Maven.crm-microservices-common [clean,deploy].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.DiscoveryServiceApplication.executor": "Run",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "corretto-21",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/MONSTER/IdeaProjects/crm-microservices-turkcell-final-project/analytics-service",
+    "last_opened_file_path": "C:/Users/rebat/IdeaProjects/crm-microservices-turkcell-final-project/user-service",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
     "settings.editor.selected.configurable": "preferences.customizations",
     "vue.rearranger.settings.migration": "true"
   }
@@ -115,19 +159,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="user-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.turkcell.crmmicroserviceshw4.userservice.UserServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c30261da-a320-4d8b-a089-86029de1b96b" name="Changes" comment="" />
+      <changelist id="2d269b99-45b0-471c-9afb-6430bf608917" name="Changes" comment="Refactor user role management and update dependencies" />
       <created>1741197089971</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -136,11 +188,23 @@
       <workItem from="1741211283024" duration="3246000" />
       <workItem from="1741290693736" duration="6722000" />
       <workItem from="1741350149071" duration="10439000" />
+      <workItem from="1741400983608" duration="364000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
