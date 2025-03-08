@@ -25,3 +25,5 @@ eureka:
       defaultZone: "http://localhost:8888/eureka/"
     register-with-eureka: true
     fetch-registry: true
+server:
+  port: 8070

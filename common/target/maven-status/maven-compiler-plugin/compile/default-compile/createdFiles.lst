@@ -14,6 +14,7 @@ io\github\bothuany\dtos\notification\PushNotificationDTO.class
 io\github\bothuany\dtos\customer\CustomerCreateDTO.class
 io\github\bothuany\dtos\user\UserResponseDTO.class
 io\github\bothuany\dtos\notification\EmailNotificationDTO.class
+io\github\bothuany\dtos\user\Role.class
 io\github\bothuany\dtos\user\JwtResponseDTO.class
 io\github\bothuany\dtos\analytics\CustomerAnalyticsDTO.class
 io\github\bothuany\dtos\plan\PlanResponseDTO.class
