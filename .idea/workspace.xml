@@ -4,144 +4,149 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d269b99-45b0-471c-9afb-6430bf608917" name="Changes" comment="Update JwtResponseDTO">
-      <change afterPath="$PROJECT_DIR$/common/.gitignore" afterDir="false" />
+    <list default="true" id="2d269b99-45b0-471c-9afb-6430bf608917" name="Changes" comment="Add additional license and assembly exception information files">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/allclasses-index.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/allclasses-index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/allpackages-index.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/allpackages-index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/copy.svg" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/copy.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/help-doc.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/help-doc.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/index-all.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/index-all.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/Main.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/Main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/class-use/Main.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/class-use/Main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/class-use/ContractAnalyticsDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/class-use/ContractAnalyticsDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/class-use/CustomerAnalyticsDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/class-use/CustomerAnalyticsDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/BillCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/BillCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/BillResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/BillResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/PaymentDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/PaymentDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/BillCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/BillCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/BillResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/BillResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/PaymentDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/PaymentDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/ContractCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/ContractCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/ContractResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/ContractResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/class-use/ContractCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/class-use/ContractCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/class-use/ContractResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/class-use/ContractResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/CustomerCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/CustomerCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/CustomerResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/CustomerResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/class-use/CustomerCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/class-use/CustomerCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/class-use/CustomerResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/class-use/CustomerResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/EmailNotificationDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/EmailNotificationDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/PushNotificationDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/PushNotificationDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/SmsNotificationDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/SmsNotificationDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/EmailNotificationDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/EmailNotificationDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/PushNotificationDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/PushNotificationDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/SmsNotificationDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/SmsNotificationDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/PlanCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/PlanCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/PlanResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/PlanResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/class-use/PlanCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/class-use/PlanCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/class-use/PlanResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/class-use/PlanResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/TicketCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/TicketCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/TicketResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/TicketResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/class-use/TicketCreateDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/class-use/TicketCreateDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/class-use/TicketResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/class-use/TicketResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/JwtResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/JwtResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/Role.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/Role.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserLoginDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserLoginDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserRegisterDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserRegisterDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/JwtResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/JwtResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/Role.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/Role.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserLoginDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserLoginDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserRegisterDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserRegisterDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserResponseDTO.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserResponseDTO.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/ErrorResponse.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/ErrorResponse.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/class-use/ErrorResponse.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/class-use/ErrorResponse.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-use.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-use.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/COPYRIGHT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/jquery.md" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/legal/jquery.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/jqueryUI.md" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/legal/jqueryUI.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/link.svg" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/link.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/overview-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/overview-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/overview-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/overview-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-3.7.1.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-3.7.1.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-ui.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-ui.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-ui.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-ui.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/search-page.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/search-page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/apidocs/search.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/apidocs/search.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-publishing/central-bundle.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-javadoc.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-javadoc.jar.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-javadoc.jar.md5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-javadoc.jar.sha1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-javadoc.jar.sha256" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-javadoc.jar.sha512" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-sources.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-sources.jar.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-sources.jar.md5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-sources.jar.sha1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-sources.jar.sha256" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3-sources.jar.sha512" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.jar.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.jar.md5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.jar.sha1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.jar.sha256" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.jar.sha512" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.pom" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.pom.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.pom.md5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.pom.sha1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.pom.sha256" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/central-staging/io/github/bothuany/crm-microservices-common/1.0.3/crm-microservices-common-1.0.3.pom.sha512" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO$JwtResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO$JwtResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-javadoc.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-javadoc.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-javadoc.jar.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-sources.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-sources.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-sources.jar.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3.jar.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3.pom" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3.pom.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/javadoc-bundle-options/javadoc-options-javadoc-resources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/javadoc-bundle-options/javadoc-options-javadoc-resources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/maven-javadoc-plugin-stale-data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/maven-javadoc-plugin-stale-data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/allclasses-index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/allpackages-index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/copy.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/element-list" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/help-doc.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/index-all.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/Main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/class-use/Main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/class-use/ContractAnalyticsDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/class-use/CustomerAnalyticsDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/analytics/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/BillCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/BillResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/PaymentDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/BillCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/BillResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/class-use/PaymentDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/billing/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/ContractCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/ContractResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/class-use/ContractCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/class-use/ContractResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/contract/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/CustomerCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/CustomerResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/class-use/CustomerCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/class-use/CustomerResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/customer/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/EmailNotificationDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/PushNotificationDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/SmsNotificationDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/EmailNotificationDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/PushNotificationDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/class-use/SmsNotificationDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/notification/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/PlanCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/PlanResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/class-use/PlanCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/class-use/PlanResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/plan/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/TicketCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/TicketResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/class-use/TicketCreateDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/class-use/TicketResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/support/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/JwtResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/Role.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserLoginDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserRegisterDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/UserResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/JwtResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/Role.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserLoginDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserRegisterDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/class-use/UserResponseDTO.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/dtos/user/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/ErrorResponse.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/class-use/ErrorResponse.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/exception/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/io/github/bothuany/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/ADDITIONAL_LICENSE_INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/ASSEMBLY_EXCEPTION" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/jquery.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/legal/jqueryUI.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/link.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/member-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/module-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/overview-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/overview-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/package-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/resources/glass.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/resources/x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-3.7.1.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-ui.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script-dir/jquery-ui.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/search-page.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/search.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/search.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/stylesheet.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/tag-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/apidocs/type-search-index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/analytics/ContractAnalyticsDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/analytics/CustomerAnalyticsDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/BillCreateDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/BillResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/billing/PaymentDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/contract/ContractCreateDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/contract/ContractResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/customer/CustomerCreateDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/customer/CustomerResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/EmailNotificationDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/PushNotificationDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/notification/SmsNotificationDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/plan/PlanCreateDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/plan/PlanResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/support/TicketCreateDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/support/TicketResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO$JwtResponseDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/JwtResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/Role.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserLoginDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserRegisterDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/dtos/user/UserResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/classes/io/github/bothuany/exception/ErrorResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-javadoc.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3-sources.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/crm-microservices-common-1.0.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/javadoc-bundle-options/javadoc-options-javadoc-resources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/maven-javadoc-plugin-stale-data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,6 +197,7 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Maven.crm-microservices-common [clean,deploy].executor": "Run",
     "Maven.crm-microservices-common [clean].executor": "Run",
+    "Maven.crm-microservices-common [deploy].executor": "Run",
     "Maven.crm-microservices-common [package].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -311,7 +317,7 @@
       <workItem from="1741290693736" duration="6722000" />
       <workItem from="1741350149071" duration="10439000" />
       <workItem from="1741400983608" duration="364000" />
-      <workItem from="1741449104207" duration="3068000" />
+      <workItem from="1741449104207" duration="4409000" />
     </task>
     <task id="LOCAL-00001" summary="Add .gitignore and update workspace configuration">
       <option name="closed" value="true" />
@@ -329,7 +335,23 @@
       <option name="project" value="LOCAL" />
       <updated>1741453542119</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add .gitignore and removed type field from JsonResponseDTO">
+      <option name="closed" value="true" />
+      <created>1741453848964</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741453848964</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add additional license and assembly exception information files">
+      <option name="closed" value="true" />
+      <created>1741453873956</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1741453873956</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,6 +372,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Add .gitignore and update workspace configuration" />
     <MESSAGE value="Update JwtResponseDTO" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update JwtResponseDTO" />
+    <MESSAGE value="Add .gitignore and removed type field from JsonResponseDTO" />
+    <MESSAGE value="Add additional license and assembly exception information files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add additional license and assembly exception information files" />
   </component>
 </project>
