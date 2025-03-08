@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JwtResponseDTO {
     private String token;
-    private String type = "Bearer";
     private UserResponseDTO user;
 }
