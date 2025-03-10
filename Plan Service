@@ -1,0 +1,165 @@
+package com.example.planservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class PlanServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(PlanServiceApplication.class, args);
+    }
+}
+package com.example.planservice.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "plans")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Plan {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String type; // Mobil, İnternet, TV, Sabit Hat gibi türler
+
+    @Column(nullable = false)
+    private double price;
+
+    private String description;
+}
+package com.example.planservice.repository;
+
+import com.example.planservice.model.Plan;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface PlanRepository extends JpaRepository<Plan, Long> {
+    List<Plan> findByType(String type);
+}
+package com.example.planservice.service;
+
+import com.example.planservice.model.Plan;
+import com.example.planservice.repository.PlanRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class PlanService {
+    private final PlanRepository planRepository;
+
+    public PlanService(PlanRepository planRepository) {
+        this.planRepository = planRepository;
+    }
+
+    public List<Plan> getAllPlans() {
+        return planRepository.findAll();
+    }
+
+    public Optional<Plan> getPlanById(Long id) {
+        return planRepository.findById(id);
+    }
+
+    public List<Plan> getPlansByType(String type) {
+        return planRepository.findByType(type);
+    }
+
+    public Plan createPlan(Plan plan) {
+        return planRepository.save(plan);
+    }
+
+    public Plan updatePlan(Long id, Plan updatedPlan) {
+        return planRepository.findById(id)
+                .map(plan -> {
+                    plan.setName(updatedPlan.getName());
+                    plan.setType(updatedPlan.getType());
+                    plan.setPrice(updatedPlan.getPrice());
+                    plan.setDescription(updatedPlan.getDescription());
+                    return planRepository.save(plan);
+                })
+                .orElseThrow(() -> new RuntimeException("Plan not found!"));
+    }
+
+    public void deletePlan(Long id) {
+        planRepository.deleteById(id);
+    }
+}
+package com.example.planservice.controller;
+
+import com.example.planservice.model.Plan;
+import com.example.planservice.service.PlanService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/plans")
+public class PlanController {
+    private final PlanService planService;
+
+    public PlanController(PlanService planService) {
+        this.planService = planService;
+    }
+
+    @GetMapping
+    public List<Plan> getAllPlans() {
+        return planService.getAllPlans();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Plan> getPlanById(@PathVariable Long id) {
+        return planService.getPlanById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/type/{type}")
+    public List<Plan> getPlansByType(@PathVariable String type) {
+        return planService.getPlansByType(type);
+    }
+
+    @PostMapping
+    public Plan createPlan(@RequestBody Plan plan) {
+        return planService.createPlan(plan);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Plan> updatePlan(@PathVariable Long id, @RequestBody Plan updatedPlan) {
+        try {
+            return ResponseEntity.ok(planService.updatePlan(id, updatedPlan));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePlan(@PathVariable Long id) {
+        planService.deletePlan(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+spring.datasource.url=jdbc:postgresql://localhost:5432/plan_service_db
+spring.datasource.username=postgres
+spring.datasource.password=password
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# H2 Veritabanı Kullanmak İçin (Geliştirme Ortamında)
+# spring.datasource.url=jdbc:h2:mem:testdb
+# spring.datasource.driver-class-name=org.h2.Driver
+# spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+# Hibernate otomatik tabloları oluştursun
+spring.jpa.hibernate.ddl-auto=update
+
