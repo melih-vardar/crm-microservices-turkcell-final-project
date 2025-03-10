@@ -2,10 +2,12 @@
   <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_03_2025_17_44_[Changes]/shelved.patch" />
   <option name="DESCRIPTION" value="Uncommitted changes before Update at 8.03.2025 17:44 [Changes]" />
   <binary>
+    <option name="BEFORE_PATH" />
     <option name="AFTER_PATH" value="billing-service/target/billing-service-0.0.1-SNAPSHOT.jar.original" />
     <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_03_2025_17_44_[Changes]/billing-service-0.0.1-SNAPSHOT.jar.original" />
   </binary>
   <binary>
+    <option name="BEFORE_PATH" />
     <option name="AFTER_PATH" value="billing-service/target/billing-service-0.0.1-SNAPSHOT.jar" />
     <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_03_2025_17_44_[Changes]/billing-service-0.0.1-SNAPSHOT.jar" />
   </binary>
