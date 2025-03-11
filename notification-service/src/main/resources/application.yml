@@ -4,20 +4,19 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: "turkcellpair1@gmail.com"
-    password: "Turkcell?Pair1?"
+    username: turkcellpair1@gmail.com
+    password: pouxdijagcjgyuyb
     protocol: smtp
-    smtp:
-      auth: true
-      starttls:
-        enable: true
+    properties:
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
     debug: true
 
   cloud:
+    function:
+      definition: emailNotificationFunction;smsNotificationFunction;pushNotificationFunction
     stream:
       defaultBinder: kafka
-      function:
-        definition: emailNotificationFunction;smsNotificationFunction;pushNotificationFunction
       bindings:
         emailNotification-in-0:
           destination: email-notifications
@@ -39,3 +38,12 @@ spring:
 server:
   port: 8090
 
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8888/eureka/"
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}

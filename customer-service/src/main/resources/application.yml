@@ -12,6 +12,28 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  cloud:
+    function:
+      definition: emailNotification;smsNotification;pushNotification
+    stream:
+      defaultBinder: kafka
+      bindings:
+        emailNotification-out-0:
+          destination: emailNotificationFunction-in-0
+          content-type: application/json
+          group: notification-group
+        smsNotification-out-0:
+          destination: smsNotificationFunction-in-0
+          content-type: application/json
+          group: notification-group
+        pushNotification-out-0:
+          destination: pushNotificationFunction-in-0
+          content-type: application/json
+          group: notification-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+
 server:
   port: 8020
 
@@ -25,6 +47,9 @@ springdoc:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: "http://localhost:8888/eureka/"
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}

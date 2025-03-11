@@ -1,31 +1,35 @@
 package com.turkcell.notificationservice.service;
 
 import com.twilio.Twilio;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
-import com.twilio.rest.api.v2010.account.Message;
 
-@Service
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
+/*@Service
 public class TwilioService {
 
-    @Value("${twilio.accountSid}")
-    private String accountSid;
+    private static final Logger logger = LoggerFactory.getLogger(TwilioService.class);
 
-    @Value("${twilio.authToken}")
-    private String authToken;
 
-    @Value("${twilio.phoneNumber}")
-    private String twilioPhoneNumber;
-
-    public void sendSms(String toPhoneNumber, String messageBody) {
+    public TwilioService() {
         Twilio.init(accountSid, authToken);
+    }
 
-        Message message = Message.creator(
-                new com.twilio.type.PhoneNumber(toPhoneNumber),
-                new com.twilio.type.PhoneNumber(twilioPhoneNumber),
-                messageBody
-        ).create();
+    public void sendSms(String to, String message) {
+        try {
+            Message sms = Message.creator(
+                    new PhoneNumber(to),
+                    new PhoneNumber(twilioPhoneNumber),
+                    message
+            ).create();
 
-        System.out.println("Message sent with twilioPhoneNumber: " + twilioPhoneNumber);
+            logger.info("SMS sent successfully to {}. Message SID: {}", to, sms.getSid());
+        } catch (Exception e) {
+            logger.error("Failed to send SMS to {}. Error: {}", to, e.getMessage(), e);
+        }
     }
 }
+*/

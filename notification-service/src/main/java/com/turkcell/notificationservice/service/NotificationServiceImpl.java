@@ -1,3 +1,5 @@
+
+
 package com.turkcell.notificationservice.service;
 
 import io.github.bothuany.dtos.notification.EmailNotificationDTO;
@@ -14,16 +16,20 @@ public class NotificationServiceImpl implements NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);
     private final JavaMailSender javaMailSender;
-    private final TwilioService twilioService;
-    public NotificationServiceImpl(JavaMailSender javaMailSender, TwilioService twilioService) {
+    //private final TwilioService twilioService;
+    //private final OneSignalService oneSignalService;
+
+    public NotificationServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-        this.twilioService = twilioService;
+        //this.twilioService = twilioService;
+        //this.oneSignalService = oneSignalService;
     }
 
     @Override
     public void sendEmail(EmailNotificationDTO emailNotificationDTO) {
 
         try {
+
             // E-mail gönderimi için MimeMessage oluşturuluyor
             var mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -32,10 +38,13 @@ public class NotificationServiceImpl implements NotificationService {
             helper.setTo(emailNotificationDTO.getEmail());
             helper.setSubject(emailNotificationDTO.getSubject());
             helper.setText(emailNotificationDTO.getMessage(), true);
-
+            logger.info(" java mailSender ustu");
             // E-mail gönderimi
+            //org.springframework.mail.MailSendException: Failed messages: org.eclipse.angus.mail.smtp.SMTPSendFailedException: 530-5.7.0 Must issue a STARTTLS command first. For more information, go to
+            //530-5.7.0  https://support.google.com/a/answer/3221692 and review RFC 3207
+            //530 5.7.0 specifications. 5b1f17b1804b1-43bdd8da097sm130643865e9.17 - gsmtp
             javaMailSender.send(mimeMessage);
-
+            logger.info(" java mailSender altı");
             logger.info("Email sent to: {} | Subject: {} | Message: {}",
                     emailNotificationDTO.getEmail(),
                     emailNotificationDTO.getSubject(),
@@ -52,20 +61,25 @@ public class NotificationServiceImpl implements NotificationService {
         logger.info("Sending SMS to: {} | Message: {}",
                 smsNotificationDTO.getPhoneNumber(),
                 smsNotificationDTO.getMessage());
+        //String NewPhoneNumber = "+9" + smsNotificationDTO.getPhoneNumber();
 
-        String NewPhoneNumber = "+" + smsNotificationDTO.getPhoneNumber();
-
-        twilioService.sendSms(smsNotificationDTO.getPhoneNumber(), NewPhoneNumber);
+        //twilioService.sendSms(smsNotificationDTO.getPhoneNumber(), smsNotificationDTO.getMessage());
     }
 
     @Override
     public void sendPushNotification(PushNotificationDTO pushNotificationDTO) {
-        String message = " notification sent to user: " + pushNotificationDTO.getUserId() +
-                " | Title: " + pushNotificationDTO.getTitle() +
-                " | Message: " + pushNotificationDTO.getMessage();
+        // OneSignalService kullanarak push bildirimi gönderme
+        try {
+            logger.info("Sending Push Notification to user: {} | Title: {} | Message: {}",
+                    pushNotificationDTO.getUserId(),
+                    pushNotificationDTO.getTitle(),
+                    pushNotificationDTO.getMessage());
 
-        logger.info(message);
-
+            // OneSignal ile push bildirim gönderiyoruz
+            //oneSignalService.sendPushNotification(pushNotificationDTO);
+        } catch (Exception e) {
+            logger.error("Failed to send push notification: {}", pushNotificationDTO, e);
+        }
         // firebase gibi yapılar kullanılabilir fakat son gelen güncellemeyle desteklememeye başlamış localde çalıştırabiliriz.
         // administration json olarak bir dosya iniyor bunu path olarak vermemiz gerekli container işlemleri yüzünden pek mantıklı gelmedi.
         // dockerda volume de tutabiliriz değeri. başka bilgisayarlarda çalışırken sıkıntı olabilirç
