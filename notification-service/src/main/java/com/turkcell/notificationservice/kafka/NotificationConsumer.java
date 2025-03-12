@@ -2,9 +2,10 @@ package com.turkcell.notificationservice.kafka;
 
 import com.turkcell.notificationservice.service.NotificationService;
 import com.turkcell.notificationservice.service.NotificationServiceImpl;
-import io.github.bothuany.dtos.notification.EmailNotificationDTO;
-import io.github.bothuany.dtos.notification.PushNotificationDTO;
-import io.github.bothuany.dtos.notification.SmsNotificationDTO;
+
+import io.github.bothuany.event.notification.EmailNotificationEvent;
+import io.github.bothuany.event.notification.PushNotificationEvent;
+import io.github.bothuany.event.notification.SmsNotificationEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,37 +24,37 @@ public class NotificationConsumer {
 
     // Email notification function
     @Bean
-    public Consumer<EmailNotificationDTO> emailNotificationFunction() {
+    public Consumer<EmailNotificationEvent> emailNotificationFunction() {
         // return notificationService::sendEmail;
-        return emailNotificationDTO -> {
+        return emailNotificationEvent -> {
             try {
-                logger.info("Received email notification: {}", emailNotificationDTO);
-                notificationService.sendEmail(emailNotificationDTO);
+                logger.info("Received email notification: {}", emailNotificationEvent);
+                notificationService.sendEmail(emailNotificationEvent);
             } catch (Exception e) {
-                logger.error("Failed to process email notification: {}", emailNotificationDTO, e);
+                logger.error("Failed to process email notification: {}", emailNotificationEvent, e);
             }
         };
     }
 
     // SMS notification function
     @Bean
-    public Consumer<SmsNotificationDTO> smsNotificationFunction() {
+    public Consumer<SmsNotificationEvent> smsNotificationFunction() {
         return notificationService::sendSms;
     }
 
     // Push notification function
     @Bean
-    public Consumer<PushNotificationDTO> pushNotificationFunction() {
-        return pushNotificationDTO -> {
+    public Consumer<PushNotificationEvent> pushNotificationFunction() {
+        return pushNotificationEvent -> {
             // Log ekledik
             logger.info("Received push notification request: User ID: {} | Title: {} | Message: {}",
-                    pushNotificationDTO.getUserId(),
-                    pushNotificationDTO.getTitle(),
-                    pushNotificationDTO.getMessage()
+                    pushNotificationEvent.getUserId(),
+                    pushNotificationEvent.getTitle(),
+                    pushNotificationEvent.getMessage()
             );
 
             // Bildirimi gönder
-            notificationService.sendPushNotification(pushNotificationDTO);
+            notificationService.sendPushNotification(pushNotificationEvent);
         };
     }
 

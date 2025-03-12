@@ -109,7 +109,7 @@ public class CustomerServiceImpl implements CustomerService {
         PushNotificationDTO pushNotificationDTO = new PushNotificationDTO();
         pushNotificationDTO.setUserId(customer.getId());
         pushNotificationDTO.setTitle("Welcome to Our Service!");
-//pushNotificationDTO.setDeviceToken("EXAMPLE_DEVICE_TOKEN"); // Gerçek token buraya gelmeli
+        //pushNotificationDTO.setDeviceToken("EXAMPLE_DEVICE_TOKEN"); // Gerçek token buraya gelmeli
         pushNotificationDTO.setMessage("Welcome, " + customer.getFirstName() + "!");
         logger.info("Sending Push Notification to user: {} | Title: {} | Message: {}",
                 pushNotificationDTO.getUserId(), pushNotificationDTO.getTitle(), pushNotificationDTO.getMessage());

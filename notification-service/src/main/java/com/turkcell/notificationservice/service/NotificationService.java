@@ -1,15 +1,16 @@
 package com.turkcell.notificationservice.service;
 
-import io.github.bothuany.dtos.notification.EmailNotificationDTO;
-import io.github.bothuany.dtos.notification.PushNotificationDTO;
-import io.github.bothuany.dtos.notification.SmsNotificationDTO;
+
+import io.github.bothuany.event.notification.EmailNotificationEvent;
+import io.github.bothuany.event.notification.PushNotificationEvent;
+import io.github.bothuany.event.notification.SmsNotificationEvent;
 
 public interface NotificationService {
 
-    public void sendEmail(EmailNotificationDTO emailNotificationDTO);
+    public void sendEmail(EmailNotificationEvent emailNotificationEvent);
 
-    public void sendSms(SmsNotificationDTO smsNotificationDTO);
+    public void sendSms(SmsNotificationEvent smsNotificationEvent);
 
-    public void sendPushNotification(PushNotificationDTO pushNotificationDTO);
+    public void sendPushNotification(PushNotificationEvent pushNotificationEvent);
 
 }

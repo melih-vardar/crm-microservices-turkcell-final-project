@@ -2,7 +2,6 @@ package com.turkcell.notificationservice.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bothuany.dtos.notification.PushNotificationDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 /*@Service
 @RequiredArgsConstructor
-public class OneSignalService {
+public class OneSignalService { // buraya kodların geri kalanını getitirken eventleri değiştirmeyi unutma
 
     private static final Logger logger = LoggerFactory.getLogger(OneSignalService.class);
 
@@ -25,17 +24,17 @@ public class OneSignalService {
     private final ObjectMapper objectMapper;
 
 
-    public void sendPushNotification(PushNotificationDTO pushNotificationDTO) {
+    public void sendPushNotification(PushNotificationEvent pushNotificationEvent) {
         try {
             // Parametreyi array (liste) olarak gönderiyoruz.
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("app_id", oneSignalAppId);
 
             // 'include_external_user_ids' array olarak gönderiliyor.
-            requestBody.put("include_external_user_ids", new String[] { pushNotificationDTO.getUserId().toString() });
+            requestBody.put("include_external_user_ids", new String[] { pushNotificationEvent.getUserId().toString() });
 
-            requestBody.put("headings", Map.of("en", pushNotificationDTO.getTitle()));
-            requestBody.put("contents", Map.of("en", pushNotificationDTO.getMessage()));
+            requestBody.put("headings", Map.of("en", pushNotificationEvent.getTitle()));
+            requestBody.put("contents", Map.of("en", pushNotificationEvent.getMessage()));
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -46,7 +45,7 @@ public class OneSignalService {
             ResponseEntity<String> response = restTemplate.exchange(oneSignalApiUrl, HttpMethod.POST, request, String.class);
 
             if (response.getStatusCode() == HttpStatus.OK) {
-                logger.info("Push notification sent successfully to user: {}", pushNotificationDTO.getUserId());
+                logger.info("Push notification sent successfully to user: {}", pushNotificationEvent.getUserId());
             } else {
                 logger.error("Failed to send push notification. Response: {}", response.getBody());
             }
