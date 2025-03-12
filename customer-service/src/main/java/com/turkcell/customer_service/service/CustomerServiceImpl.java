@@ -5,9 +5,9 @@ import com.turkcell.customer_service.repository.CustomerRepository;
 import com.turkcell.customer_service.rules.CustomerBusinessRules;
 import io.github.bothuany.dtos.customer.CustomerResponseDTO;
 import io.github.bothuany.dtos.customer.CustomerCreateDTO;
-import io.github.bothuany.dtos.notification.EmailNotificationDTO;
-import io.github.bothuany.dtos.notification.PushNotificationDTO;
-import io.github.bothuany.dtos.notification.SmsNotificationDTO;
+import io.github.bothuany.event.notification.EmailNotificationEvent;
+import io.github.bothuany.event.notification.PushNotificationEvent;
+import io.github.bothuany.event.notification.SmsNotificationEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +36,11 @@ public class CustomerServiceImpl implements CustomerService {
         updateCustomerFromRequest(customer, request);
 
         // Email Bildirimi Gönder
-        //sendEmailNotification(customer);
+        //sendEmailNotification(customer,"Welcome to Our Service!","Dear " + customer.getFirstName() + " " + customer.getLastName() + ",\n\nThank you for registering with us!");
         // SMS Bildirimi Gönder
-        //sendSmsNotification(customer);
+        //sendSmsNotification(customer,"Welcome " + customer.getFirstName() + "! Thank you for registering.");
         // Push Bildirimi Gönder
-        //sendPushNotification(customer);
+        //sendPushNotification(customer,"Welcome to Our Service!","Welcome, " + customer.getFirstName() + "!");
 
         return convertToResponse(customerRepository.save(customer));
     }
@@ -57,10 +57,12 @@ public class CustomerServiceImpl implements CustomerService {
         customerBusinessRules.checkIfCustomerExists(id);
         customerBusinessRules.checkIfEmailExistsForUpdate(id, request.getEmail());
         customerBusinessRules.checkIfPhoneExistsForUpdate(id, request.getPhone());
-
         Customer customer = customerRepository.findById(id).get();
-        sendPushNotification(customer);
         updateCustomerFromRequest(customer, request);
+
+        //sendPushNotification(customer);
+        //sendEmailNotification(customer,"Update the customer","Dear " + customer.getFirstName() + " " + customer.getLastName() + ",\n\n Updated is Succesfully!");
+
         return convertToResponse(customerRepository.save(customer));
     }
 
@@ -68,7 +70,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void deleteCustomer(UUID id) {
         customerBusinessRules.checkIfCustomerExists(id);
+        Customer customer = customerRepository.findById(id).get();
+        //sendEmailNotification(customer,"Delete the customer","Dear " + customer.getFirstName() + " " + customer.getLastName() + ",\n\n Delete is Succesfully!");
         customerRepository.deleteById(id);
+
     }
 
     private void updateCustomerFromRequest(Customer customer, CustomerCreateDTO request) {
@@ -88,32 +93,32 @@ public class CustomerServiceImpl implements CustomerService {
         response.setPhone(customer.getPhone());
         return response;
     }
-    private void sendEmailNotification(Customer customer) {
-        EmailNotificationDTO emailNotificationDTO = new EmailNotificationDTO();
-        emailNotificationDTO.setEmail(customer.getEmail());
-        emailNotificationDTO.setSubject("Welcome to Our Service!");
-        emailNotificationDTO.setMessage("Dear " + customer.getFirstName() + " " + customer.getLastName() + ",\n\nThank you for registering with us!");
-        logger.info("Sending email notification: {}", emailNotificationDTO);
-        streamBridge.send("emailNotification-out-0", emailNotificationDTO);
+    private void sendEmailNotification(Customer customer,String subject,String message) {
+        EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
+        emailNotificationEvent.setEmail(customer.getEmail());
+        emailNotificationEvent.setSubject(subject);
+        emailNotificationEvent.setMessage(message);
+        logger.info("Sending email notification: {}", emailNotificationEvent);
+        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
     }
 
-    private void sendSmsNotification(Customer customer) {
-        SmsNotificationDTO smsNotificationDTO = new SmsNotificationDTO();
-        smsNotificationDTO.setPhoneNumber(customer.getPhone());
-        smsNotificationDTO.setMessage("Welcome " + customer.getFirstName() + "! Thank you for registering.");
-        logger.info("Sending SMS notification: {}", smsNotificationDTO);
-        streamBridge.send("smsNotification-out-0", smsNotificationDTO);
+    private void sendSmsNotification(Customer customer,String message) {
+        SmsNotificationEvent smsNotificationEvent = new SmsNotificationEvent();
+        smsNotificationEvent.setPhoneNumber(customer.getPhone());
+        smsNotificationEvent.setMessage(message);
+        logger.info("Sending SMS notification: {}", smsNotificationEvent);
+        streamBridge.send("smsNotification-out-0", smsNotificationEvent);
     }
 
-    private void sendPushNotification(Customer customer) {
-        PushNotificationDTO pushNotificationDTO = new PushNotificationDTO();
-        pushNotificationDTO.setUserId(customer.getId());
-        pushNotificationDTO.setTitle("Welcome to Our Service!");
+    private void sendPushNotification(Customer customer,String title,String message) {
+        PushNotificationEvent pushNotificationEvent = new PushNotificationEvent();
+        pushNotificationEvent.setUserId(customer.getId());
+        pushNotificationEvent.setTitle(title);
         //pushNotificationDTO.setDeviceToken("EXAMPLE_DEVICE_TOKEN"); // Gerçek token buraya gelmeli
-        pushNotificationDTO.setMessage("Welcome, " + customer.getFirstName() + "!");
+        pushNotificationEvent.setMessage(message);
         logger.info("Sending Push Notification to user: {} | Title: {} | Message: {}",
-                pushNotificationDTO.getUserId(), pushNotificationDTO.getTitle(), pushNotificationDTO.getMessage());
-        streamBridge.send("pushNotification-out-0", pushNotificationDTO);
+                pushNotificationEvent.getUserId(), pushNotificationEvent.getTitle(), pushNotificationEvent.getMessage());
+        streamBridge.send("pushNotification-out-0", pushNotificationEvent);
     }
 
 }
