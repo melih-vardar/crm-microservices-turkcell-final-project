@@ -1,5 +1,6 @@
 package com.turkcell.customer_support_service.service.impl;
 
+import com.turkcell.customer_support_service.client.CustomerClient;
 import com.turkcell.customer_support_service.entity.CustomerSupport;
 import com.turkcell.customer_support_service.repository.CustomerSupportRepository;
 import com.turkcell.customer_support_service.rules.CustomerSupportBusinessRules;
@@ -22,7 +23,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
     @Override
     public TicketResponseDTO createTicket(TicketCreateDTO ticket) {
-        // customerServiceBusinessRules.checkIfCustomerExists(ticket.customerId);
+        customerSupportBusinessRules.checkIfCustomerExists(ticket.getCustomerId());
 
         CustomerSupport customerSupport = new CustomerSupport();
         updateTicketFromRequest(customerSupport, ticket);
@@ -33,7 +34,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
     @Override
     public TicketResponseDTO updateTicket(UUID id, TicketCreateDTO ticket) {
         customerSupportBusinessRules.checkIfTicketExists(id);
-        //customerSupportBusinessRules.checkIfCustomerExists(ticket.customerId);
+        customerSupportBusinessRules.checkIfCustomerExists(ticket.getCustomerId());
 
         CustomerSupport customerSupport = customerSupportRepository.findById(id).get();
         updateTicketFromRequest(customerSupport, ticket);
@@ -42,7 +43,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
     @Override
     public List<TicketResponseDTO> getTicketsByCustomerId(UUID customerId) {
-        // customerServiceBusinessRules.checkIfCustomerExists(ticket.customerId);
+        customerSupportBusinessRules.checkIfCustomerExists(customerId);
 
         return customerSupportRepository.getAllByCustomerId(customerId);
     }
@@ -56,7 +57,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
     @Override
     public List<TicketResponseDTO> getAllTickets() {
-        return customerSupportRepository.findAll().stream().map(t -> convertToResponseDTO(t)).collect(Collectors.toList());
+        return customerSupportRepository.findAll().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
     @Override
