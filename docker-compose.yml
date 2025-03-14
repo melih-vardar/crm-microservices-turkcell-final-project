@@ -1,4 +1,21 @@
 services:
+  # DATABASES
+  postgres_5433:
+    image: postgres:latest
+    container_name: postgres_5433
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: order
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_5433_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # COMMUNICATIONS
   kafka:
     image: bitnami/kafka
     ports:
@@ -17,3 +34,34 @@ services:
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - BITNAMI_DEBUG=yes
       - KAFKA_CFG_NUM_PARTITIONS=2
+
+  # BASIC SERVICES
+  discovery-server:
+    build:
+      context: ./discovery-server
+      dockerfile: Dockerfile
+    container_name: discovery-server
+    ports:
+      - "8888:8888"
+    networks:
+      - app-network
+
+
+  gateway-server:
+    build:
+      context: ./gateway-server
+      dockerfile: Dockerfile
+    container_name: gateway-server
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8079
+    networks:
+      - app-network
+    depends_on:
+      - config-server
+      - discovery-server
+
+
+    # CUSTOM SERVICES

@@ -1,5 +1,11 @@
-FROM eclipse-temurin:21-jre-alpine
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+
 WORKDIR /app
-COPY target/*.jar app.jar
-EXPOSE 8050
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+COPY . /app/
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jdk
+COPY --from=build /app/target/billing-service-0.0.1-SNAPSHOT.jar /app/billing-service.jar
+
+ENTRYPOINT ["java", "-jar", "/app/billing-service.jar"]
