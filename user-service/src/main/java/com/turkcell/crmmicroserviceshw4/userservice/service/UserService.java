@@ -1,6 +1,7 @@
 package com.turkcell.crmmicroserviceshw4.userservice.service;
 
 import io.github.bothuany.dtos.user.JwtResponseDTO;
+import io.github.bothuany.dtos.user.Role;
 import io.github.bothuany.dtos.user.UserLoginDTO;
 import io.github.bothuany.dtos.user.UserRegisterDTO;
 import io.github.bothuany.dtos.user.UserResponseDTO;
@@ -20,4 +21,18 @@ public interface UserService {
     void deleteUser(UUID id);
 
     List<UserResponseDTO> getAllUsers();
+
+    // New methods for managing deleted users
+    List<UserResponseDTO> getAllDeletedUsers();
+
+    List<UserResponseDTO> getAllUsersIncludingDeleted();
+
+    UserResponseDTO restoreUser(UUID id);
+
+    // New methods for the missing endpoints
+    UserResponseDTO getCurrentUser(String token);
+
+    boolean logout(String token);
+
+    Role getUserRole(UUID id);
 }

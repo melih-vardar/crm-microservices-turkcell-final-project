@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: "gateway-server"
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     gateway:
       routes:

@@ -3,7 +3,7 @@ package com.turkcell.crmmicroserviceshw4.userservice.service.impl;
 import io.github.bothuany.dtos.user.Role;
 import com.turkcell.crmmicroserviceshw4.userservice.model.User;
 import com.turkcell.crmmicroserviceshw4.userservice.repository.UserRepository;
-import com.turkcell.crmmicroserviceshw4.userservice.security.JwtUtils;
+import com.turkcell.crmmicroserviceshw4.userservice.security.JwtService;
 import com.turkcell.crmmicroserviceshw4.userservice.service.UserService;
 import io.github.bothuany.dtos.user.JwtResponseDTO;
 import io.github.bothuany.dtos.user.UserLoginDTO;
@@ -13,9 +13,9 @@ import io.github.bothuany.event.notification.EmailNotificationEvent;
 import io.github.bothuany.event.notification.PushNotificationEvent;
 import io.github.bothuany.event.notification.SmsNotificationEvent;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,32 +23,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    private final StreamBridge streamBridge; // Sanırım Autowired ile çalışmıyor
+    private JwtService jwtService;
+    private final StreamBridge streamBridge; // Sanırım Autowired ile çalışmıyor, AllArgsConstructor koydum dener misin
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
-    public UserServiceImpl(StreamBridge streamBridge) {
-        this.streamBridge = streamBridge;
-    }
 
     @Override
     public JwtResponseDTO register(UserRegisterDTO registerDTO) {
@@ -70,17 +61,20 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
-        /*sendEmailNotification(user,
-                "Welcome to Our Service! 🎉",
-                "Dear " + user.getUsername() + ",\n\n"
-                        + "We are thrilled to welcome you to turkcell! Thank you for registering with us.\n\n"
-                        + "Here are a few things you can do next:\n"
-                        + "✅ Explore your account and personalize your settings.\n"
-                        + "✅ Check out our latest features and services.\n"
-                        + "✅ Contact our support team if you need any assistance.\n\n"
-                        + "We’re excited to have you on board!\n\n"
-                        + "Best regards,\n[turkcell] Support Team"
-        );*/
+        /*
+         * sendEmailNotification(user,
+         * "Welcome to Our Service! 🎉",
+         * "Dear " + user.getUsername() + ",\n\n"
+         * +
+         * "We are thrilled to welcome you to turkcell! Thank you for registering with us.\n\n"
+         * + "Here are a few things you can do next:\n"
+         * + "✅ Explore your account and personalize your settings.\n"
+         * + "✅ Check out our latest features and services.\n"
+         * + "✅ Contact our support team if you need any assistance.\n\n"
+         * + "We're excited to have you on board!\n\n"
+         * + "Best regards,\n[turkcell] Support Team"
+         * );
+         */
 
         // Authenticate user and generate token
         Authentication authentication = authenticationManager.authenticate(
@@ -89,7 +83,7 @@ public class UserServiceImpl implements UserService {
                         registerDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String jwt = jwtService.generateJwtToken(authentication);
 
         // Create response
         UserResponseDTO userResponseDTO = mapToUserResponseDTO(user);
@@ -113,17 +107,21 @@ public class UserServiceImpl implements UserService {
                         loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String jwt = jwtService.generateJwtToken(authentication);
 
         // Create response
         UserResponseDTO userResponseDTO = mapToUserResponseDTO(user);
-        /*sendEmailNotification(user,
-                "Security Alert: A Login to Your Account Was Detected",
-                "Dear " + user.getUsername() + ",\n\n"
-                        + "We detected a successful login to your account. If this was you, no further action is required.\n\n"
-                        + "If you did not perform this login, please change your password immediately and contact our support team.\n\n"
-                        + "Best regards,\n[Turkcell] Support Team"
-        );*/
+        /*
+         * sendEmailNotification(user,
+         * "Security Alert: A Login to Your Account Was Detected",
+         * "Dear " + user.getUsername() + ",\n\n"
+         * +
+         * "We detected a successful login to your account. If this was you, no further action is required.\n\n"
+         * +
+         * "If you did not perform this login, please change your password immediately and contact our support team.\n\n"
+         * + "Best regards,\n[Turkcell] Support Team"
+         * );
+         */
         return JwtResponseDTO.builder()
                 .token(jwt)
                 .user(userResponseDTO)
@@ -170,10 +168,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-        userRepository.delete(user);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setDeletedAt(LocalDateTime.now());
+            userRepository.save(user);
+        } else {
+            throw new EntityNotFoundException("User not found with id: " + id);
+        }
     }
 
     @Override
@@ -181,6 +185,71 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream()
                 .map(this::mapToUserResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllDeletedUsers() {
+        return userRepository.findAllByDeletedAtIsNotNull().stream()
+                .map(this::mapToUserResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllUsersIncludingDeleted() {
+        return userRepository.findAllIncludingDeleted().stream()
+                .map(this::mapToUserResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDTO restoreUser(UUID id) {
+        // We need to use the findAllIncludingDeleted query to bypass the @Where clause
+        User user = userRepository.findAllIncludingDeleted().stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        if (user.getDeletedAt() == null) {
+            throw new IllegalStateException("User is not deleted: " + id);
+        }
+
+        // Restore the user by setting deletedAt to null
+        user.setDeletedAt(null);
+        userRepository.save(user);
+
+        return mapToUserResponseDTO(user);
+    }
+
+    @Override
+    public UserResponseDTO getCurrentUser(String token) {
+        if (!jwtService.validateJwtToken(token)) {
+            throw new RuntimeException("Invalid or expired token");
+        }
+
+        String username = jwtService.getUserNameFromJwtToken(token);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+
+        return mapToUserResponseDTO(user);
+    }
+
+    @Override
+    public boolean logout(String token) {
+        if (!jwtService.validateJwtToken(token)) {
+            // Token is already invalid, so consider logout successful
+            return true;
+        }
+
+        return jwtService.invalidateJwtToken(token);
+    }
+
+    @Override
+    public Role getUserRole(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        return user.getRole();
     }
 
     private UserResponseDTO mapToUserResponseDTO(User user) {
@@ -191,7 +260,7 @@ public class UserServiceImpl implements UserService {
                 user.getRole());
     }
 
-    private void sendEmailNotification(User user,String subject,String message) {
+    private void sendEmailNotification(User user, String subject, String message) {
         EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
         emailNotificationEvent.setEmail(user.getEmail());
         emailNotificationEvent.setSubject(subject);
@@ -199,23 +268,26 @@ public class UserServiceImpl implements UserService {
         logger.info("Sending email notification: {}", emailNotificationEvent);
         streamBridge.send("emailNotification-out-0", emailNotificationEvent);
     }
-    //burada sms gönderilmesine gerek yok modelde phone yok
-    private void sendSmsNotification(User user,String message) {
+
+    // burada sms gönderilmesine gerek yok modelde phone yok
+    private void sendSmsNotification(User user, String message) {
         SmsNotificationEvent smsNotificationEvent = new SmsNotificationEvent();
-        //smsNotificationEvent.setPhoneNumber(user.getPhone());
+        // smsNotificationEvent.setPhoneNumber(user.getPhone());
         smsNotificationEvent.setMessage(message);
         logger.info("Sending SMS notification: {}", smsNotificationEvent);
         streamBridge.send("smsNotification-out-0", smsNotificationEvent);
     }
 
-    private void sendPushNotification(User user,String title,String message) {
+    private void sendPushNotification(User user, String title, String message) {
         PushNotificationEvent pushNotificationEvent = new PushNotificationEvent();
         pushNotificationEvent.setUserId(user.getId());
         pushNotificationEvent.setTitle(title);
-        //pushNotificationDTO.setDeviceToken("EXAMPLE_DEVICE_TOKEN"); // Gerçek token buraya gelmeli
+        // pushNotificationDTO.setDeviceToken("EXAMPLE_DEVICE_TOKEN"); // Gerçek token
+        // buraya gelmeli
         pushNotificationEvent.setMessage(message);
         logger.info("Sending Push Notification to user: {} | Title: {} | Message: {}",
-                pushNotificationEvent.getUserId(), pushNotificationEvent.getTitle(), pushNotificationEvent.getMessage());
+                pushNotificationEvent.getUserId(), pushNotificationEvent.getTitle(),
+                pushNotificationEvent.getMessage());
         streamBridge.send("pushNotification-out-0", pushNotificationEvent);
     }
 }

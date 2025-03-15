@@ -2,7 +2,7 @@ spring:
   application:
     name: "user-service"
   datasource:
-    url: jdbc:postgresql://localhost:5432/userdb
+    url: jdbc:postgresql://localhost:5433/user
     username: postgres
     password: postgres
   jpa:
@@ -37,8 +37,6 @@ server:
   port: 8010
 
 jwt:
-  secret: turkcellCRMMicroservicesSecretKey123456789012345678901234567890
-  expiration: 86400000
 
 eureka:
   client:

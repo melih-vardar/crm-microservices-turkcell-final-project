@@ -1,13 +1,14 @@
 services:
   # DATABASES
+  # User service database
   postgres_5433:
     image: postgres:latest
     container_name: postgres_5433
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: order
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: user
     ports:
       - "5433:5432"
     volumes:
@@ -46,7 +47,6 @@ services:
     networks:
       - app-network
 
-
   gateway-server:
     build:
       context: ./gateway-server
@@ -54,14 +54,52 @@ services:
     container_name: gateway-server
     ports:
       - "8080:8080"
-    environment:
-      - SPRING_CLOUD_CONFIG_PROFILE=prod
-      - CONFIGURL=http://config-server:8079
     networks:
       - app-network
     depends_on:
-      - config-server
       - discovery-server
+      - utility-server
 
+  # CUSTOM SERVICES
+  utility-server:
+    build:
+      context: ./utility-server
+      dockerfile: Dockerfile
+    container_name: utility-server
+    ports:
+      - "8100:8100"
+    networks:
+      - app-network
+    depends_on:
+      - discovery-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
 
-    # CUSTOM SERVICES
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+    depends_on:
+      - discovery-server
+      - postgres_5433
+      - utility-server
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5433:5432/user
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=test
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_5433_data:
