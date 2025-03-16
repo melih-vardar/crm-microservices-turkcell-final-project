@@ -1,8 +1,8 @@
 spring:
   application:
-    name: user-service
+    name: customer-support-service
   mongodb:
-    uri: mongodb://localhost:27017/customerSupportdb
+    uri: mongodb://mongodb:27017/customerSupportdb
 
 server:
   port: 8060

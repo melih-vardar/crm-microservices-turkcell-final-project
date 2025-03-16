@@ -1,5 +1,7 @@
 package com.turkcell.customer_support_service.entity;
 
+import io.github.bothuany.enums.IssueTypes;
+import io.github.bothuany.enums.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,9 +22,9 @@ public class CustomerSupport {
 
     private UUID customerId;
 
-    private String issueType;
+    private IssueTypes issueType;
 
     private String description;
 
-    private String status;
+    private TicketStatus status;
 }

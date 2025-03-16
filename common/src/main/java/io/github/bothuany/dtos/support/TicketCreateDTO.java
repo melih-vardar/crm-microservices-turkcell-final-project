@@ -1,5 +1,6 @@
 package io.github.bothuany.dtos.support;
 
+import io.github.bothuany.enums.IssueTypes;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class TicketCreateDTO {
 
     @NotBlank(message = "Issue type cannot be empty")
     @Pattern(regexp = "^(TECHNICAL|BILLING|SERVICE|OTHER)$", message = "Issue type must be one of: TECHNICAL, BILLING, SERVICE, OTHER")
-    private String issueType;
+    private IssueTypes issueType;
 
     @NotBlank(message = "Description cannot be empty")
     @Size(min = 10, max = 1000, message = "Description must be between 10 and 1000 characters")

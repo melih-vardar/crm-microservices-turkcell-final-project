@@ -7,6 +7,7 @@ import com.turkcell.customer_support_service.rules.CustomerSupportBusinessRules;
 import com.turkcell.customer_support_service.service.CustomerSupportService;
 import io.github.bothuany.dtos.support.TicketCreateDTO;
 import io.github.bothuany.dtos.support.TicketResponseDTO;
+import io.github.bothuany.enums.TicketStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
     }
 
     private void updateTicketFromRequest(CustomerSupport customerSupport, TicketCreateDTO ticketCreateDTO) {
-        customerSupport.setStatus("ACTIVE");
+        customerSupport.setStatus(TicketStatus.OPEN);
         customerSupport.setDescription(ticketCreateDTO.getDescription());
         customerSupport.setCustomerId(ticketCreateDTO.getCustomerId());
         customerSupport.setIssueType(ticketCreateDTO.getIssueType());
