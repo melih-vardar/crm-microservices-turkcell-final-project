@@ -1,17 +1,31 @@
 package com.turkcell.customer_support_service.util.exception;
 
-import com.turkcell.customer_support_service.util.exception.result.BusinessExceptionResult;
 import com.turkcell.customer_support_service.util.exception.type.BusinessException;
+import io.github.bothuany.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({BusinessException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BusinessExceptionResult handleRuntimeException(BusinessException e) {
-        return new BusinessExceptionResult(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleRuntimeException(BusinessException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                e.getMessage(),
+                LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred",
+                LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
