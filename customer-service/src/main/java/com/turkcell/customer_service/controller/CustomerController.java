@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import io.github.bothuany.dtos.customer.CustomerCreateDTO;
 
 import java.util.UUID;
+import java.util.List;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/customers")
 @AllArgsConstructor
 public class CustomerController {
 
@@ -38,5 +39,15 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/bills")
+    public ResponseEntity<List<Object>> getCustomerBills(@PathVariable UUID id) {
+        return ResponseEntity.ok(customerService.getCustomerBills(id));
+    }
+
+    @GetMapping("/{id}/contracts")
+    public ResponseEntity<List<Object>> getCustomerContracts(@PathVariable UUID id) {
+        return ResponseEntity.ok(customerService.getCustomerContracts(id));
     }
 }

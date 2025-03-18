@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @FeignClient(name="customer-service")
 public interface CustomerClient {
-    @GetMapping("/customers/{uuid}")
+    @GetMapping("/api/customers/{uuid}")
     CustomerResponseDTO getCustomer(@PathVariable("uuid") UUID uuid);
 }

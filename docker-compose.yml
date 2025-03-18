@@ -16,6 +16,22 @@ services:
     networks:
       - app-network
 
+  # Customer service database
+  postgres_5435:
+    image: postgres:latest
+    container_name: postgres_5435
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: customer
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_5435_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
   # Billing service database
   postgres_5434:
     image: postgres:latest
@@ -75,6 +91,9 @@ services:
     depends_on:
       - discovery-server
       - utility-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
 
   # CUSTOM SERVICES
   utility-server:
@@ -113,6 +132,26 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
 
+  customer-service:
+    build:
+      context: ./customer-service
+      dockerfile: Dockerfile
+    container_name: customer-service
+    ports:
+      - "8020:8020"
+    networks:
+      - app-network
+    depends_on:
+      - discovery-server
+      - postgres_5434
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/customer
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+
   billing-service:
     build:
       context: ./billing-service
@@ -142,3 +181,5 @@ networks:
 volumes:
   postgres_5433_data:
   postgres_5434_data:
+
+
