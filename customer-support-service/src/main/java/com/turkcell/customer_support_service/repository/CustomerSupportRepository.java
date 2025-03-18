@@ -14,7 +14,4 @@ public interface CustomerSupportRepository extends MongoRepository<CustomerSuppo
     Optional<CustomerSupport> findById(UUID id);
 
     List<TicketResponseDTO> getAllByCustomerId(UUID customerId);
-
-    // TODO: Customer ile iletişim
-    // Optional<Customer> findCustomer(UUID customerID);
 }
