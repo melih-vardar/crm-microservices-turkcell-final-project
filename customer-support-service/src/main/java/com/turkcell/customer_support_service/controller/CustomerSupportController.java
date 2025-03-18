@@ -21,7 +21,7 @@ public class CustomerSupportController {
         return new ResponseEntity<>(customerSupportService.createTicket(ticketCreateDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("tickets/{id}")
+    @GetMapping("/tickets/{id}")
     public ResponseEntity<TicketResponseDTO> getTicketById(@PathVariable UUID id) {
         return ResponseEntity.ok(customerSupportService.getTicketById(id));
     }
