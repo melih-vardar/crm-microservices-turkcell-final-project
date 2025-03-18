@@ -12,34 +12,30 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "payments")
+@Table(name = "bills")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bill_id", nullable = false)
-    private Bill bill;
+    @Column(nullable = false)
+    private String customerId;
 
     @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private String paymentMethod;
+    private LocalDateTime dueDate;
 
-    @Column(nullable = false)
-    private String transactionId;
-
-    @Column(nullable = false)
-    private LocalDateTime paymentDate;
+    @Column(name = "is_paid", nullable = false)
+    private boolean paid = false;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-}
+} 
