@@ -20,7 +20,6 @@ spring:
             - Path=/customer-service/**,/api/customers/**
           filters:
             - StripPrefix=1
-            - RewritePath=/api/customers/(?<segment>.*), /api/customers/$\{segment}
 
         - id: "contract-service"
           uri: "lb://contract-service"
