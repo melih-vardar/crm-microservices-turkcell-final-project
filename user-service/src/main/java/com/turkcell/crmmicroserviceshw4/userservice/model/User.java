@@ -1,6 +1,7 @@
 package com.turkcell.crmmicroserviceshw4.userservice.model;
 
 import io.github.bothuany.dtos.user.Role;
+import io.github.bothuany.security.encryption.Encryptable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,9 +32,11 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Encryptable
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Encryptable
     @Column(nullable = false, unique = true)
     private String email;
 

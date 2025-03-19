@@ -36,6 +36,10 @@ spring:
 server:
   port: 8010
 
+# Encryption configuration
+encryption:
+  secret-key: "YAQoNmCUbYdDTnwgCh11xPQ5pSI/uZJDM+dzCBL683s=" # Replace with a properly generated key in production
+
 jwt:
 
 eureka:
