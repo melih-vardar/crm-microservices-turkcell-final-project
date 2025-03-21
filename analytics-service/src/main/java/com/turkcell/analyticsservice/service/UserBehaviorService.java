@@ -1,4 +1,4 @@
 package com.turkcell.analyticsservice.service;
 
-public interface AnalyticsService {
+public interface UserBehaviorService {
 }
