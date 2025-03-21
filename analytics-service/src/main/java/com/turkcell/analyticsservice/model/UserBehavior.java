@@ -19,8 +19,10 @@ public class UserBehavior {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    private String username;
+    private String email;
 
-    private UUID userId;
-    private String EventType;
+    @Enumerated(EnumType.STRING)
+    private EventType EventType;
     private LocalDateTime dateTime;
 }

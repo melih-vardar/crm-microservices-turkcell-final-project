@@ -22,6 +22,6 @@ public class SubscriptionAnalytics {
 
     private UUID subscriptionId;
     private String planType;
-    private String changeType; // UPGRADE, DOWNGRADE, CANCELLATION
+    private String changeType;
     private LocalDate dateTime;
 }
