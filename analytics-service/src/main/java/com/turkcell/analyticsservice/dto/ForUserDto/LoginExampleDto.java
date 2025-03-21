@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class LoginExampleDto {
     String userId;
-
-    boolean isSuccess;
-    LocalDateTime loginStartTime;
+    String email;
+    long loginStartTime;
+    String eventType;
 }

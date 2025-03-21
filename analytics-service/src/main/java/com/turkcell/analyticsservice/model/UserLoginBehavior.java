@@ -1,28 +1,28 @@
 package com.turkcell.analyticsservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "user_behavior")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserBehavior {
+@Entity
+@Table(name = "user_login_behavior")
+@Builder
+public class UserLoginBehavior {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String username;
     private String email;
-
+    @Column(name = "login_start_time")
+    private long loginStartTime; // Epoch millis
+    @Column(name = "duration_ms")
+    private long durationMs;
     @Enumerated(EnumType.STRING)
     private EventType EventType;
-    private LocalDateTime dateTime;
+    private LocalDateTime eventTime;
 }
