@@ -1,60 +1,11 @@
+configurl: http://localhost:8070
+
 spring:
   application:
-    name: "user-service"
-  datasource:
-    url: jdbc:postgresql://localhost:5433/user
-    username: postgres
-    password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    name: "userservice"
   cloud:
-    function:
-      definition: emailNotification;smsNotification;pushNotification
-    stream:
-      defaultBinder: kafka
-      bindings:
-        emailNotification-out-0:
-          destination: emailNotificationFunction-in-0
-          content-type: application/json
-          group: notification-group
-        smsNotification-out-0:
-          destination: smsNotificationFunction-in-0
-          content-type: application/json
-          group: notification-group
-        pushNotification-out-0:
-          destination: pushNotificationFunction-in-0
-          content-type: application/json
-          group: notification-group
-      kafka:
-        binder:
-          brokers: localhost:9092
-server:
-  port: 8010
-
-# Encryption configuration
-encryption:
-  secret-key: "YAQoNmCUbYdDTnwgCh11xPQ5pSI/uZJDM+dzCBL683s=" # Replace with a properly generated key in production
-
-jwt:
-
-eureka:
-  client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operationsSorter: method
+    config:
+      profile: dev
+      uri: ${configurl}
+  config:
+    import: optional:configserver:${configurl}

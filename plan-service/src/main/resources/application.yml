@@ -1,36 +1,11 @@
+configurl: http://localhost:8070
+
 spring:
   application:
-    name: "plan-service"
-  datasource:
-    url: jdbc:postgresql://localhost:5433/plandb
-    username: postgres
-    password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-
-server:
-  port: 8040
-
-jwt:
-
-eureka:
-  client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operationsSorter: method
+    name: "planservice"
+  cloud:
+    config:
+      profile: dev
+      uri: ${configurl}
+  config:
+    import: optional:configserver:${configurl}
