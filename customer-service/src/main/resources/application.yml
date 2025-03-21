@@ -7,7 +7,6 @@ spring:
     active: dev
   cloud:
     config:
-      profile: dev
       uri: ${configurl}
   config:
     import: optional:configserver:${configurl}

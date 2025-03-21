@@ -3,9 +3,10 @@ configurl: http://localhost:8070
 spring:
   application:
     name: "notificationservice"
+  profiles:
+    active: dev
   cloud:
     config:
-      profile: dev
       uri: ${configurl}
   config:
     import: optional:configserver:${configurl}
