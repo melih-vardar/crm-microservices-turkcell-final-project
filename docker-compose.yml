@@ -91,8 +91,19 @@ services:
     depends_on:
       - discovery-server
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=prod
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - configurl=http://config-server:8070
+
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8070:8070"
+    networks:
+      - app-network
 
   # CUSTOM SERVICES
   user-service:
@@ -108,12 +119,14 @@ services:
       - discovery-server
       - postgres_5433
       - kafka
+      - config-server
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5433:5432/user
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - configurl=http://config-server:8070
 
   customer-service:
     build:
@@ -128,12 +141,14 @@ services:
       - discovery-server
       - postgres_5434
       - kafka
+      - config-server
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/customer
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - configurl=http://config-server:8070
 
   billing-service:
     build:
@@ -149,12 +164,14 @@ services:
       - postgres_5434
       - kafka
       - user-service
+      - config-server
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/billing
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - configurl=http://config-server:8070
 
 networks:
   app-network:
@@ -163,5 +180,6 @@ networks:
 volumes:
   postgres_5433_data:
   postgres_5434_data:
+  postgres_5435_data:
 
 

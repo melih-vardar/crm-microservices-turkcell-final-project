@@ -1,6 +1,6 @@
 spring:
   application:
-    name: analytics-service
+    name: analyticsservice
 
   data:
     mongodb:

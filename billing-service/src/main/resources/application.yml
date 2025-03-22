@@ -1,45 +1,12 @@
-server:
-  port: 8050
+configurl: http://localhost:8070
 
 spring:
   application:
-    name: billing-service
-  datasource:
-    url: jdbc:postgresql://localhost:5434/billing
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8888/eureka
-    fetch-registry: true
-    register-with-eureka: true
-  instance:
-    prefer-ip-address: true
-
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-  api-docs:
-    path: /v3/api-docs
-
-logging:
-  level:
-    com.turkcell.billingservice: DEBUG
-    org.springframework.web: INFO
-    org.hibernate: INFO
+    name: "billingservice"
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: ${configurl}
+  config:
+    import: optional:configserver:${configurl}

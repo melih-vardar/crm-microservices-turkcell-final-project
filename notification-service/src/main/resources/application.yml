@@ -1,49 +1,12 @@
+configurl: http://localhost:8070
+
 spring:
   application:
-    name: notification-service
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: turkcellpair1@gmail.com
-    password: pouxdijagcjgyuyb
-    protocol: smtp
-    properties:
-      mail.smtp.starttls.enable: true
-      mail.smtp.starttls.required: true
-    debug: true
-
+    name: "notificationservice"
+  profiles:
+    active: dev
   cloud:
-    function:
-      definition: emailNotificationFunction;smsNotificationFunction;pushNotificationFunction
-    stream:
-      defaultBinder: kafka
-      bindings:
-        emailNotification-in-0:
-          destination: email-notifications
-          content-type: application/json
-          group: notification-group
-        smsNotification-in-0:
-          destination: sms-notifications
-          content-type: application/json
-          group: notification-group
-        pushNotification-in-0:
-          destination: push-notifications
-          content-type: application/json
-          group: notification-group
-      kafka:
-        binder:
-          brokers: localhost:9092
-
-
-server:
-  port: 8090
-
-eureka:
-  client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
+    config:
+      uri: ${configurl}
+  config:
+    import: optional:configserver:${configurl}
