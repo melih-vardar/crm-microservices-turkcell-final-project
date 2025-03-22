@@ -2,7 +2,7 @@ package com.turkcell.customer_support_service.entity;
 
 import io.github.bothuany.enums.IssueTypes;
 import io.github.bothuany.enums.TicketStatus;
-import io.github.bothuany.security.encryption.Encryptable;
+import io.github.bothuany.security.encryption.AttributeEncryptor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,7 +19,7 @@ public class CustomerSupport {
 
     private IssueTypes issueType;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private String description;
 
     private TicketStatus status;

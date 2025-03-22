@@ -1,0 +1,522 @@
+{
+  "info": {
+    "_postman_id": "e8a52d7e-4f8b-4ded-a1bb-db3c92f7a352",
+    "name": "User Service API Collection",
+    "description": "Turkcell CRM Microservices - User Service API endpoints collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Test Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/test",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "test"]
+            },
+            "description": "Test if the user service is working"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints that are accessible without authentication"
+    },
+    {
+      "name": "Auth Endpoints",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"Password123+\",\n    \"role\": \"CUSTOMER_REPRESENTATIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user and get JWT token in response"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"Password123+\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login-with-email",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login-with-email"]
+            },
+            "description": "Login with email and password to get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser@example.com\",\n    \"password\": \"Password123+\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with username and password to get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"admin123\",\n    \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new admin user for testing admin endpoints"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout and invalidate the JWT token"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for registering, logging in and out"
+    },
+    {
+      "name": "User Endpoints",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me"]
+            },
+            "description": "Get information about the currently logged in user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{customer_rep_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{customer_rep_id}}"]
+            },
+            "description": "Get user information by ID (requires admin role or own ID)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"updated_username\",\n    \"email\": \"updated_email@example.com\",\n    \"password\": \"newPassword123+\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{customer_rep_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{customer_rep_id}}"]
+            },
+            "description": "Update user information (requires admin role or own ID)"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "logout"]
+            },
+            "description": "Logout and invalidate the JWT token through user controller"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Customer Representative Endpoint",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/test/rep",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "test", "rep"]
+            },
+            "description": "Test endpoint accessible only to users with CUSTOMER_REPRESENTATIVE role"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Get all active users (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Deleted Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/deleted",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "deleted"]
+            },
+            "description": "Get all deleted users (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users Including Deleted",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "all"]
+            },
+            "description": "Get all users including deleted ones (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id_to_delete}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id_to_delete}}"]
+            },
+            "description": "Delete a user by ID (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Restore Deleted User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{user_id_to_restore}}/restore",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{user_id_to_restore}}", "restore"]
+            },
+            "description": "Restore a previously deleted user (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Roles",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{admin_id}}/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{admin_id}}", "roles"]
+            },
+            "description": "Get roles for a specific user (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Admin Endpoint",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/test/admin",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "test", "admin"]
+            },
+            "description": "Test endpoint accessible only to users with ADMIN role"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Store token after login or register",
+          "if (pm.response.code === 200 || pm.response.code === 201) {",
+          "    if (pm.response.json() && pm.response.json().token) {",
+          "        // Check if this is a regular user or admin based on response",
+          "        if (pm.response.json().user && pm.response.json().user.role === 'ADMIN') {",
+          "            pm.environment.set('admin_token', pm.response.json().token);",
+          "            pm.environment.set('admin_id', pm.response.json().user.id);",
+          "        } else if (pm.response.json().user && pm.response.json().user.role === 'CUSTOMER_REPRESENTATIVE') {",
+          "            pm.environment.set('customer_rep_token', pm.response.json().token);",
+          "            pm.environment.set('customer_rep_id', pm.response.json().user.id);",
+          "        }",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8010",
+      "type": "string"
+    },
+    {
+      "key": "customer_rep_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "customer_rep_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "admin_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "user_id_to_delete",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "user_id_to_restore",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

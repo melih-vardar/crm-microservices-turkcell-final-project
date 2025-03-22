@@ -90,27 +90,11 @@ services:
       - app-network
     depends_on:
       - discovery-server
-      - utility-server
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
 
   # CUSTOM SERVICES
-  utility-server:
-    build:
-      context: ./utility-server
-      dockerfile: Dockerfile
-    container_name: utility-server
-    ports:
-      - "8100:8100"
-    networks:
-      - app-network
-    depends_on:
-      - discovery-server
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
-
   user-service:
     build:
       context: ./user-service
@@ -123,7 +107,6 @@ services:
     depends_on:
       - discovery-server
       - postgres_5433
-      - utility-server
       - kafka
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -164,7 +147,6 @@ services:
     depends_on:
       - discovery-server
       - postgres_5434
-      - utility-server
       - kafka
       - user-service
     environment:

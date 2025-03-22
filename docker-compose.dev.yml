@@ -90,26 +90,10 @@ services:
       - app-network
     depends_on:
       - discovery-server
-      - utility-server
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
 
-  # CUSTOM SERVICES
-  utility-server:
-    build:
-      context: ./utility-server
-      dockerfile: Dockerfile
-    container_name: utility-server
-    ports:
-      - "8100:8100"
-    networks:
-      - app-network
-    depends_on:
-      - discovery-server
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
 
 networks:
   app-network:
@@ -118,5 +102,6 @@ networks:
 volumes:
   postgres_5433_data:
   postgres_5434_data:
+  postgres_5435_data:
 
 

@@ -1,5 +1,6 @@
 package com.turkcell.crmmicroserviceshw4.userservice.controller;
 
+import com.turkcell.crmmicroserviceshw4.userservice.model.User;
 import com.turkcell.crmmicroserviceshw4.userservice.service.UserService;
 import io.github.bothuany.dtos.user.JwtResponseDTO;
 import io.github.bothuany.dtos.user.Role;
@@ -13,14 +14,12 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import com.turkcell.crmmicroserviceshw4.userservice.model.dto.UserDetailsDTO;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,7 +27,6 @@ import com.turkcell.crmmicroserviceshw4.userservice.model.dto.UserDetailsDTO;
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
-    private UserDetailsService userDetailsService;
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user", description = "Creates a new user account and returns JWT token")
@@ -43,12 +41,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @securityExpression.hasUserId(#id)")
     @Operation(summary = "Get user by ID", description = "Retrieves user information by ID")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @securityExpression.hasUserId(#id)")
     @Operation(summary = "Update user", description = "Updates user information")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id,
             @Valid @RequestBody UserRegisterDTO userDTO) {
@@ -56,12 +56,14 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all users", description = "Retrieves information for all users")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete user", description = "Deletes a user by ID")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
@@ -73,19 +75,34 @@ public class UserController {
         return "User Service is working!";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/test/admin")
+    public String testAdmin() {
+        return "Admin endpoint is working!";
+    }
+
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @GetMapping("/test/rep")
+    public String testRep() {
+        return "Customer Representative endpoint is working!";
+    }
+
     @GetMapping("/deleted")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all deleted users", description = "Retrieves information for all deleted users")
     public ResponseEntity<List<UserResponseDTO>> getAllDeletedUsers() {
         return ResponseEntity.ok(userService.getAllDeletedUsers());
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all users including deleted", description = "Retrieves information for all users including deleted ones")
     public ResponseEntity<List<UserResponseDTO>> getAllUsersIncludingDeleted() {
         return ResponseEntity.ok(userService.getAllUsersIncludingDeleted());
     }
 
     @PostMapping("/{id}/restore")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Restore deleted user", description = "Restores a previously deleted user")
     public ResponseEntity<UserResponseDTO> restoreUser(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.restoreUser(id));
@@ -93,10 +110,8 @@ public class UserController {
 
     @GetMapping("/me")
     @Operation(summary = "Get current user information", description = "Retrieves information for the currently authenticated user", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<UserResponseDTO> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
-        // Extract token from Authorization header (Bearer token)
-        String token = authHeader.substring(7);
-        return ResponseEntity.ok(userService.getCurrentUser(token));
+    public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(userService.getUserById(user.getId()));
     }
 
     @PostMapping("/logout")
@@ -114,15 +129,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/roles")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get user roles", description = "Retrieves roles for a specific user (Admin only)", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Role> getUserRoles(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserRole(id));
-    }
-
-    @GetMapping("/details/{username}")
-    @Operation(summary = "Get user details by username", description = "Retrieves user details for authentication")
-    public ResponseEntity<UserDetailsDTO> getUserDetailsByUsername(@PathVariable String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return ResponseEntity.ok(new UserDetailsDTO(userDetails));
     }
 }

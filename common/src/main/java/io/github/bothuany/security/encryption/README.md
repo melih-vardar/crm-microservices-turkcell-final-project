@@ -1,12 +1,12 @@
-# Data Encryption (AES/GCM) with Spring AOP
+# Data Encryption (AES/CBC) with JPA AttributeConverter
 
-This package provides a secure AES/GCM encryption implementation that can be easily integrated with your Spring Boot microservices.
+This package provides a secure AES/CBC encryption implementation that can be easily integrated with your Spring Boot microservices using JPA's AttributeConverter.
 
 ## Features
 
-- Strong AES/GCM encryption with 256-bit keys
-- Automatic encryption/decryption through Spring AOP
-- Field-level encryption with simple annotations
+- Strong AES/CBC encryption with PKCS5 padding
+- Automatic encryption/decryption through JPA's AttributeConverter
+- Field-level encryption with standard JPA annotations
 - No need to modify your business logic for encryption/decryption
 
 ## How to Use
@@ -37,28 +37,31 @@ public class YourApplication {
 }
 ```
 
-### 3. Configure the encryption secret key
+### 3. Configure the encryption keys
 
-Add the following property to your `application.properties` or `application.yml`:
+Add the following properties to your `application.properties` or `application.yml`:
 
 ```properties
 # For application.properties
-encryption.secret-key=yourBase64EncodedSecretKey
+encryption.key=yourEncryptionKey
+encryption.iv=yourInitializationVector
 
 # Or for application.yml
 encryption:
-  secret-key: yourBase64EncodedSecretKey
+  key: yourEncryptionKey
+  iv: yourInitializationVector
 ```
 
-> **Note**: The secret key should be a 256-bit key (32 bytes) encoded in Base64.
+> **Note**: Both the key and IV should be 16 characters (128-bit).
 > For security, use different keys for different environments and store them securely.
 
-### 4. Annotate fields to be encrypted
+### 4. Apply the converter to fields that need encryption
 
-Simply add the `@Encryptable` annotation to any String field that should be encrypted:
+Use the standard JPA `@Convert` annotation with the provided AttributeEncryptor:
 
 ```java
-import io.github.bothuany.security.encryption.Encryptable;
+import io.github.bothuany.security.encryption.AttributeEncryptor;
+import jakarta.persistence.Convert;
 
 @Entity
 public class Customer {
@@ -67,10 +70,10 @@ public class Customer {
 
     private String name;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private String personalIdNumber; // This field will be automatically encrypted/decrypted
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private String creditCardNumber; // This field will be automatically encrypted/decrypted
 
     // Regular fields, getters, setters, etc.
@@ -97,12 +100,17 @@ public class CustomerService {
         // Fields are automatically decrypted after retrieving
         return customerRepository.findById(id).orElseThrow();
     }
+
+    public boolean customerExists(String email) {
+        // The email parameter will be automatically encrypted for comparison
+        return customerRepository.existsByEmail(email);
+    }
 }
 ```
 
-## Generating a Secure Key
+## Generating Secure Keys
 
-You can generate a secure key for AES-256 using the following Java code:
+For security, use random generated keys instead of hardcoded values:
 
 ```java
 import java.security.SecureRandom;
@@ -111,10 +119,9 @@ import java.util.Base64;
 public class KeyGenerator {
     public static void main(String[] args) {
         SecureRandom random = new SecureRandom();
-        byte[] key = new byte[32]; // 256 bits
+        byte[] key = new byte[16]; // 128 bits
         random.nextBytes(key);
-        String encodedKey = Base64.getEncoder().encodeToString(key);
-        System.out.println(encodedKey);
+        System.out.println(new String(key));
     }
 }
 ```

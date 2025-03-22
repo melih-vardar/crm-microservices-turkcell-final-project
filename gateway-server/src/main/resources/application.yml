@@ -9,10 +9,26 @@ spring:
   cloud:
     gateway:
       routes:
+        # Auth routes - directing to user-service
+        - id: "auth-service"
+          uri: "lb://user-service"
+          predicates:
+            - "Path=/api/auth/**"
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/user-service
+
         - id: "user-service"
           uri: "lb://user-service"
           predicates:
             - "Path=/api/users/**"
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/user-service
 
         - id: "customer-service"
           uri: "lb://customer-service"
@@ -20,6 +36,10 @@ spring:
             - Path=/customer-service/**,/api/customers/**
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: customerCircuitBreaker
+                fallbackUri: forward:/fallback/customer-service
 
         - id: "contract-service"
           uri: "lb://contract-service"

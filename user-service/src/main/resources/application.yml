@@ -40,7 +40,13 @@ server:
 encryption:
   secret-key: "YAQoNmCUbYdDTnwgCh11xPQ5pSI/uZJDM+dzCBL683s=" # Replace with a properly generated key in production
 
+# JWT Configuration
 jwt:
+  secret-key: very-secure-jwt-secret-key-used-for-signing-tokens-in-user-service
+  expiration-ms: 86400000
+  issuer: user-service
+  token-prefix: "Bearer "
+  header-string: Authorization
 
 eureka:
   client:
@@ -56,5 +62,6 @@ springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
-    path: /swagger-ui.html
+    path: /swagger-ui/index.html
     operationsSorter: method
+    disable-swagger-default-url: true

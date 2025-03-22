@@ -9,12 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fallback")
 public class FallbackController {
 
-    @GetMapping("/users")
+    @GetMapping("/auth-service")
+    public ResponseEntity<String> authServiceFallback() {
+        return ResponseEntity.ok("Authentication Service is currently unavailable. Please try again later.");
+    }
+
+    @GetMapping("/user-service")
     public ResponseEntity<String> userServiceFallback() {
         return ResponseEntity.ok("User Service is currently unavailable. Please try again later.");
     }
 
-    @GetMapping("/customers")
+    @GetMapping("/customer-service")
     public ResponseEntity<String> customerServiceFallback() {
         return ResponseEntity.ok("Customer Service is currently unavailable. Please try again later.");
     }
@@ -43,5 +48,9 @@ public class FallbackController {
     public ResponseEntity<String> analyticsServiceFallback() {
         return ResponseEntity.ok("Analytics Service is currently unavailable. Please try again later.");
     }
-}
 
+    @GetMapping("/notifications")
+    public ResponseEntity<String> notificationServiceFallback() {
+        return ResponseEntity.ok("Notification Service is currently unavailable. Please try again later.");
+    }
+}

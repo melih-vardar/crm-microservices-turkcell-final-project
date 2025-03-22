@@ -1,6 +1,6 @@
 package com.turkcell.customer_service.entity;
 
-import io.github.bothuany.security.encryption.Encryptable;
+import io.github.bothuany.security.encryption.AttributeEncryptor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,23 +23,23 @@ public class Customer {
     @Column(name = "id")
     private UUID id;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "firstname")
     private String firstName;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "lastname")
     private String lastName;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "email")
     private String email;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "phone")
     private String phone;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "address")
     private String address;
 

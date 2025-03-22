@@ -53,3 +53,11 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
+
+# JWT Configuration
+jwt:
+  secret-key: very-secure-jwt-secret-key-used-for-signing-tokens-in-user-service
+  expiration-ms: 86400000
+  issuer: user-service
+  token-prefix: "Bearer "
+  header-string: Authorization
