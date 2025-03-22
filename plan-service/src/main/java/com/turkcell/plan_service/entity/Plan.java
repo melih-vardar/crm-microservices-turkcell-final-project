@@ -1,6 +1,7 @@
 package com.turkcell.plan_service.entity;
 
-import io.github.bothuany.security.encryption.Encryptable;
+import io.github.bothuany.security.encryption.AttributeEncryptor;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -19,15 +20,15 @@ public class Plan {
     @UuidGenerator
     private UUID id;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private String name;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private String description;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private double price;
 
-    @Encryptable
+    @Convert(converter = AttributeEncryptor.class)
     private int durationInMonths;
 }
