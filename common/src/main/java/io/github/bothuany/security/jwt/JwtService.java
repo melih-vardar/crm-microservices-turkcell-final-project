@@ -19,9 +19,11 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,32 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMs()))
+                .setIssuer(jwtProperties.getIssuer())
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    /**
+     * Generates a JWT token with additional claims like user ID
+     *
+     * @param authentication the authentication object
+     * @param userId         the ID of the user to include in the token
+     * @return the JWT token
+     */
+    public String generateToken(Authentication authentication, UUID userId) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("auth", authorities);
+        claims.put("userId", userId.toString());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(authentication.getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMs()))
                 .setIssuer(jwtProperties.getIssuer())
@@ -154,5 +182,33 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    /**
+     * Extracts all claims from the token.
+     * 
+     * @param token JWT token
+     * @return Claims
+     */
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    /**
+     * Extracts the user ID from the token
+     * 
+     * @param token JWT token
+     * @return user ID
+     */
+    public UUID extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        if (claims.containsKey("userId")) {
+            return UUID.fromString(claims.get("userId", String.class));
+        }
+        return null;
     }
 }
