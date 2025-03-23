@@ -19,7 +19,6 @@ public class SubscriptionAnalytics {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private UUID subscriptionId;
     private String planType;
     private String changeType;

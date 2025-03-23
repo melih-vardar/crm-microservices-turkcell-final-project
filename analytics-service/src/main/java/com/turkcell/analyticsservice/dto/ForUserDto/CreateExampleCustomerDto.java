@@ -12,13 +12,12 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateExampleDto {
-
+public class CreateExampleCustomerDto {
     private UUID customerId;
-    private String username;
+    private String firstname;
+    private String lastname;
     private String email;
     private String eventType;
-    private LocalDateTime dateTime;
-
+    private LocalDateTime eventTime;
 
 }

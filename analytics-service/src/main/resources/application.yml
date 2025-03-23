@@ -1,29 +1,36 @@
+server:
+  port: 8070
 spring:
   application:
     name: analyticsservice
 
-  data:
-    mongodb:
-      uri: mongodb://root:root@localhost:27017/cart-service?authSource=admin
+
 
   cloud:
+    function:
+      definition: CreateAnalyticsFunction;LoginAnalyticsFunction;CreateAnalyticsCustomerFunction
     stream:
       defaultBinder: kafka
-      function:
-        definition: #orderCreatedFunction TODO Change it
       bindings:
-        orderCreatedFunction-in-0:
-          destination: order-topic
+        CreateUserAnalytics-in-0:
+          destination: createUser-analytics
           content-type: application/json
-          group: cart-group
-      kafka:
-        binder:
-          brokers: localhost:9092
+          group: Analytics-group
+        LoginUserAnalytics-in-0:
+          destination: loginUser-analytics
+          content-type: application/json
+          group: Analytics-group
+        CreateCustomerAnalytics-in-0:
+          destination: createCustomer-analytics
+          content-type: application/json
+          group: Analytics-group
+
 eureka:
   client:
     service-url:
       defaultZone: "http://localhost:8888/eureka/"
     register-with-eureka: true
     fetch-registry: true
-server:
-  port: 8070
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}

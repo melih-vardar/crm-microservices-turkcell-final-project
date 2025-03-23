@@ -1,7 +1,9 @@
 package com.turkcell.analyticsservice.kafka;
 
+import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleCustomerDto;
 import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleDto;
 import com.turkcell.analyticsservice.dto.ForUserDto.LoginExampleDto;
+import com.turkcell.analyticsservice.service.CustomerBehaviorService;
 import com.turkcell.analyticsservice.service.SubscriptionAnalyticsService;
 import com.turkcell.analyticsservice.service.UserBehaviorService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ public class AnalyticsPipeline {
     private final UserBehaviorService userBehaviorService;
     private final SubscriptionAnalyticsService subscriptionAnalyticsService;
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
-
+    private final CustomerBehaviorService customerBehaviorService;
     @Bean
     public Consumer<CreateExampleDto> CreateAnalyticsFunction(){
         return exampleDto -> {
@@ -41,6 +43,18 @@ public class AnalyticsPipeline {
             }catch (Exception e){
                 logger.error("Failed to process user analytics function : {}",loginExampleDto,e);
             }
+        };
+    }
+
+    @Bean
+    public Consumer<CreateExampleCustomerDto> CreateAnalyticsCustomerFunction(){
+        return createExampleCustomerDto -> {
+          try {
+              logger.info("received customer analytics: {}", createExampleCustomerDto);
+              customerBehaviorService.registerAnalyticsToCustomer(createExampleCustomerDto);
+          }catch (Exception e){
+              logger.error("Failed to process customer analytics function : {}",createExampleCustomerDto,e);
+          }
         };
     }
 
