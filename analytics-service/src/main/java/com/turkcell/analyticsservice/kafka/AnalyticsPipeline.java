@@ -3,7 +3,9 @@ package com.turkcell.analyticsservice.kafka;
 import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleCustomerDto;
 import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleDto;
 import com.turkcell.analyticsservice.dto.ForUserDto.LoginExampleDto;
+import com.turkcell.analyticsservice.dto.ForUserDto.TicketExampleDto;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
+import com.turkcell.analyticsservice.service.CustomerSupportBehaviorService;
 import com.turkcell.analyticsservice.service.SubscriptionAnalyticsService;
 import com.turkcell.analyticsservice.service.UserBehaviorService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class AnalyticsPipeline {
     private final SubscriptionAnalyticsService subscriptionAnalyticsService;
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
     private final CustomerBehaviorService customerBehaviorService;
+    private final CustomerSupportBehaviorService customerSupportBehaviorService;
     @Bean
     public Consumer<CreateExampleDto> CreateAnalyticsFunction(){
         return exampleDto -> {
@@ -55,6 +58,17 @@ public class AnalyticsPipeline {
           }catch (Exception e){
               logger.error("Failed to process customer analytics function : {}",createExampleCustomerDto,e);
           }
+        };
+    }
+
+    @Bean
+    public Consumer<TicketExampleDto> TicketAnalyticsFunction(){
+        return ticketExampleDto -> {
+            switch (ticketExampleDto.getEventType()){
+                case "TICKET_CREATED" -> customerSupportBehaviorService.processTicketCreation(ticketExampleDto);
+                case "TICKET_UPDATED" -> customerSupportBehaviorService.processTicketUpdate(ticketExampleDto);
+                case "TICKET_CLOSED" -> customerSupportBehaviorService.processTicketClosure(ticketExampleDto);
+            }
         };
     }
 
