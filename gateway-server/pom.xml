@@ -88,11 +88,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.github.bothuany</groupId>
-            <artifactId>crm-microservices-common</artifactId>
-            <version>LATEST</version>
-        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

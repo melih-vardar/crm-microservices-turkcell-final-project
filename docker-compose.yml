@@ -69,6 +69,16 @@ services:
       - KAFKA_CFG_NUM_PARTITIONS=2
 
   # BASIC SERVICES
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8070:8070"
+    networks:
+      - app-network
+
   discovery-server:
     build:
       context: ./discovery-server
@@ -78,6 +88,12 @@ services:
       - "8888:8888"
     networks:
       - app-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
+    depends_on:
+      - config-server
 
   gateway-server:
     build:
@@ -90,20 +106,12 @@ services:
       - app-network
     depends_on:
       - discovery-server
+      - config-server
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
-      - configurl=http://config-server:8070
-
-  config-server:
-    build:
-      context: ./config-server
-      dockerfile: Dockerfile
-    container_name: config-server
-    ports:
-      - "8070:8070"
-    networks:
-      - app-network
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
 
   # CUSTOM SERVICES
   user-service:
@@ -126,7 +134,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
-      - configurl=http://config-server:8070
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
 
   customer-service:
     build:
@@ -148,7 +157,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
-      - configurl=http://config-server:8070
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
 
   billing-service:
     build:
@@ -171,7 +181,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
-      - configurl=http://config-server:8070
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
 
 networks:
   app-network:
