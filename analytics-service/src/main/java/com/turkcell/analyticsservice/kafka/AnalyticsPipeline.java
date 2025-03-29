@@ -1,16 +1,17 @@
 package com.turkcell.analyticsservice.kafka;
 
-import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleCustomerDto;
-import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleDto;
-import com.turkcell.analyticsservice.dto.ForUserDto.LoginExampleDto;
+
 import com.turkcell.analyticsservice.dto.ForUserDto.TicketExampleDto;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerSupportBehaviorService;
 import com.turkcell.analyticsservice.service.SubscriptionAnalyticsService;
 import com.turkcell.analyticsservice.service.UserBehaviorService;
+import io.github.bothuany.event.analytics.CreateExampleCustomerEvent;
+import io.github.bothuany.event.analytics.CreateUserAnalyticsEvent;
+import io.github.bothuany.event.analytics.LoginUserAnalyticsEvent;
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,46 +20,45 @@ import java.util.function.Consumer;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class AnalyticsPipeline {
 
     private final UserBehaviorService userBehaviorService;
     private final SubscriptionAnalyticsService subscriptionAnalyticsService;
     private final CustomerBehaviorService customerBehaviorService;
     private final CustomerSupportBehaviorService customerSupportBehaviorService;
-
+    private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
     @Bean
-    public Consumer<CreateExampleDto> CreateAnalyticsFunction(){
-        return exampleDto -> {
+    public Consumer<CreateUserAnalyticsEvent> CreateAnalyticsFunction(){
+        return createUserAnalyticsEvent -> {
             try {
-                log.info("Received user analytics: {}", exampleDto);
-                userBehaviorService.registerAnalyticsToUser(exampleDto);
+                logger.info("Received create user analytics: {}", createUserAnalyticsEvent);
+                userBehaviorService.registerAnalyticsToUser(createUserAnalyticsEvent);
             }catch (Exception e){
-                log.error("Failed to process user analytics function : {}",exampleDto,e);
+                logger.error("Failed to process user analytics function : {}",createUserAnalyticsEvent,e);
             }
         };
     }
 
     @Bean
-    public Consumer<LoginExampleDto> LoginAnalyticsFunction(){
-        return loginExampleDto -> {
+    public Consumer<LoginUserAnalyticsEvent> LoginAnalyticsFunction(){
+        return loginUserAnalyticsEvent -> {
             try {
-                log.info("Received user analytics: {}", loginExampleDto);
-                userBehaviorService.loginAnalyticsToUser(loginExampleDto);
+                logger.info("Received user login analytics: {}",loginUserAnalyticsEvent );
+                userBehaviorService.loginAnalyticsToUser(loginUserAnalyticsEvent);
             }catch (Exception e){
-                log.error("Failed to process user analytics function : {}",loginExampleDto,e);
+                logger.error("Failed to process user analytics function : {}",loginUserAnalyticsEvent,e);
             }
         };
     }
 
     @Bean
-    public Consumer<CreateExampleCustomerDto> CreateAnalyticsCustomerFunction(){
-        return createExampleCustomerDto -> {
+    public Consumer<CreateExampleCustomerEvent> CreateAnalyticsCustomerFunction(){
+        return createExampleCustomerEvent -> {
           try {
-              log.info("received customer analytics: {}", createExampleCustomerDto);
-              customerBehaviorService.registerAnalyticsToCustomer(createExampleCustomerDto);
+              logger.info("received customer analytics: {}", createExampleCustomerEvent);
+              customerBehaviorService.registerAnalyticsToCustomer(createExampleCustomerEvent);
           }catch (Exception e){
-              log.error("Failed to process customer analytics function : {}",createExampleCustomerDto,e);
+              logger.error("Failed to process customer analytics function : {}",createExampleCustomerEvent,e);
           }
         };
     }

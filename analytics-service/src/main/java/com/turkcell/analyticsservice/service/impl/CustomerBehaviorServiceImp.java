@@ -1,11 +1,11 @@
 package com.turkcell.analyticsservice.service.impl;
 
-import com.turkcell.analyticsservice.dto.ForUserDto.CreateExampleCustomerDto;
 import com.turkcell.analyticsservice.kafka.AnalyticsPipeline;
 import com.turkcell.analyticsservice.model.CustomerCreateBehavior;
 import com.turkcell.analyticsservice.model.EventType;
 import com.turkcell.analyticsservice.repository.CustomerCreateBehaviorRepository;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
+import io.github.bothuany.event.analytics.CreateExampleCustomerEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +22,14 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
 
     @Override
-    public void registerAnalyticsToCustomer(CreateExampleCustomerDto createExampleCustomerDto) {
+    public void registerAnalyticsToCustomer(CreateExampleCustomerEvent createExampleCustomerEvent) {
         logger.info("Registering analytics to Customer start ");
 
         CustomerCreateBehavior customerCreateBehavior = new CustomerCreateBehavior();
-        customerCreateBehavior.setCustomerId(createExampleCustomerDto.getCustomerId());
+        customerCreateBehavior.setCustomerId(createExampleCustomerEvent.getCustomerId());
         customerCreateBehavior.setUsername(customerCreateBehavior.getUsername());
         customerCreateBehavior.setEmail(customerCreateBehavior.getEmail());
-        customerCreateBehavior.setEventType(EventType.valueOf(createExampleCustomerDto.getEventType()));
+        customerCreateBehavior.setEventType(EventType.valueOf(createExampleCustomerEvent.getEventType()));
         customerCreateBehavior.setDateTime(LocalDateTime.now());
 
         logger.info("converted userBehavior {}", customerCreateBehavior);

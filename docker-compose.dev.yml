@@ -68,6 +68,28 @@ services:
       - BITNAMI_DEBUG=yes
       - KAFKA_CFG_NUM_PARTITIONS=2
 
+    # Analytics service database
+  postgres_5471:
+    image: postgres:latest
+    container_name: postgres_5471
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: analytics
+    ports:
+      - "5470:5432"
+    volumes:
+      - postgres_5471_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
   # BASIC SERVICES
   config-server:
     build:
@@ -120,3 +142,4 @@ volumes:
   postgres_5433_data:
   postgres_5434_data:
   postgres_5435_data:
+  postgres_5471_data:

@@ -6,7 +6,6 @@ package com.turkcell.notificationservice.service;
 import io.github.bothuany.event.notification.EmailNotificationEvent;
 import io.github.bothuany.event.notification.PushNotificationEvent;
 import io.github.bothuany.event.notification.SmsNotificationEvent;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class NotificationServiceImpl implements NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationServiceImpl.class);

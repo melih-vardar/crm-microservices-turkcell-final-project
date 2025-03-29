@@ -13,6 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class TicketExampleDto {
+
     UUID ticketId;
     UUID customerId;
     String eventType;

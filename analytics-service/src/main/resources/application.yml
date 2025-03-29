@@ -1,10 +1,19 @@
 server:
-  port: 8070
+  port: 8071
 spring:
   application:
     name: analyticsservice
-
-
+  datasource:
+    url: jdbc:postgresql://localhost:5471/analytics
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
 
   cloud:
     function:
@@ -28,7 +37,10 @@ spring:
           destination: ticket-analytics
           content-type: application/json
           group: Analytics-group
-
+  security:
+    user:
+      name: prometheus
+      password: prometheus
 eureka:
   client:
     service-url:
@@ -39,4 +51,13 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
