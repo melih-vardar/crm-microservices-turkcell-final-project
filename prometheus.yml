@@ -2,19 +2,67 @@ global:
   scrape_interval: 15s # Metriklerin her 15 saniyede bir toplanmasını sağlar.
 
 scrape_configs:
-  - job_name: 'prometheus' # Job to scrape Prometheus metrics
+  - job_name: "prometheus" # Job to scrape Prometheus metrics
     scrape_interval: 5s
     static_configs:
-      - targets: [ 'localhost:9090' ]
+      - targets: ["localhost:9090"]
 
-  - job_name: 'spring-actuator'
-    metrics_path: '/actuator/prometheus' # Job to scrape application metrics
+  - job_name: "spring-actuator"
+    metrics_path: "/actuator/prometheus" # Job to scrape application metrics
     scrape_interval: 5s
     static_configs:
-      - targets: [ 'localhost:8071' ]
+      - targets: ["localhost:8070"] # config-server
 
-  - job_name: "analyticsservice"
-    scrape_interval: 30s
+  - job_name: "discovery-server"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8888"]
+
+  - job_name: "gateway-server"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8080"]
+
+  - job_name: "user-service"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8081"]
+
+  - job_name: "customer-service"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8020"]
+
+  - job_name: "billing-service"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8030"]
+
+  - job_name: "plan-service"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8040"]
+
+  - job_name: "notification-service"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8050"]
+
+  - job_name: "customer-support-service"
+    scrape_interval: 5s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8060"]
+
+  - job_name: "analytics-service"
+    scrape_interval: 5s
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["host.docker.internal:8071"]

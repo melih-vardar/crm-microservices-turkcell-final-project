@@ -15,6 +15,11 @@ services:
       - app-network
     volumes:
       - postgres_5433_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Customer service database
   postgres_5435:
@@ -31,6 +36,11 @@ services:
       - app-network
     volumes:
       - postgres_5435_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Billing service database
   postgres_5434:
@@ -47,6 +57,12 @@ services:
       - app-network
     volumes:
       - postgres_5434_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Analytics service database
   postgres_5471:
     image: postgres:latest
@@ -62,13 +78,31 @@ services:
       - app-network
     volumes:
       - postgres_5471:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Prometheus
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     ports:
       - 9090:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    networks:
+      - app-network
+    restart: unless-stopped
+
   # Grafana
   grafana:
     image: grafana/grafana
@@ -77,12 +111,16 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
+    networks:
+      - app-network
+    restart: unless-stopped
     depends_on:
       - prometheus
-
 
   # COMMUNICATIONS
   kafka:
@@ -105,6 +143,16 @@ services:
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - BITNAMI_DEBUG=yes
       - KAFKA_CFG_NUM_PARTITIONS=2
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   # BASIC SERVICES
   config-server:
@@ -116,6 +164,13 @@ services:
       - "8070:8070"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8070/actuator/health"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: on-failure
 
   discovery-server:
     build:
@@ -129,7 +184,15 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: on-failure
 
   gateway-server:
     build:
@@ -141,13 +204,16 @@ services:
     networks:
       - app-network
     depends_on:
-      - discovery-server
-      - config-server
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070
+    restart: on-failure
 
   # CUSTOM SERVICES
   user-service:
@@ -156,14 +222,18 @@ services:
       dockerfile: Dockerfile
     container_name: user-service
     ports:
-      - "8081:8081"
+      - "8010:8010"
     networks:
       - app-network
     depends_on:
-      - discovery-server
-      - postgres_5433
-      - kafka
-      - config-server
+      discovery-server:
+        condition: service_healthy
+      postgres_5433:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5433:5432/user
@@ -172,6 +242,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070
+    restart: on-failure
 
   customer-service:
     build:
@@ -183,10 +254,14 @@ services:
     networks:
       - app-network
     depends_on:
-      - discovery-server
-      - postgres_5434
-      - kafka
-      - config-server
+      discovery-server:
+        condition: service_healthy
+      postgres_5434:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/customer
@@ -195,6 +270,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070
+    restart: on-failure
 
   billing-service:
     build:
@@ -206,11 +282,16 @@ services:
     networks:
       - app-network
     depends_on:
-      - discovery-server
-      - postgres_5434
-      - kafka
-      - user-service
-      - config-server
+      discovery-server:
+        condition: service_healthy
+      postgres_5434:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      user-service:
+        condition: service_started
+      config-server:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/billing
@@ -219,6 +300,8 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070
+    restart: on-failure
+
   analytics-service:
     build:
       context: ./analytics-service
@@ -234,8 +317,15 @@ services:
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - SPRING_APPLICATION_NAME=analyticsservice
     depends_on:
-      - kafka
-      - config-server
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+      postgres_5471:
+        condition: service_healthy
+    restart: on-failure
 
 networks:
   app-network:
@@ -246,3 +336,4 @@ volumes:
   postgres_5435_data:
   postgres_5471:
   grafana_data:
+  prometheus_data:
