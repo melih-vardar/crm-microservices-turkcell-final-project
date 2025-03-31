@@ -6,6 +6,13 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: [ 'localhost:9090' ]
+
+  - job_name: 'spring-actuator'
+    metrics_path: '/actuator/prometheus' # Job to scrape application metrics
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'localhost:8071' ]
+
   - job_name: "analyticsservice"
     scrape_interval: 30s
     metrics_path: "/actuator/prometheus"

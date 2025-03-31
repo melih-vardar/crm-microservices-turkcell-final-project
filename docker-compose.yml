@@ -11,10 +11,10 @@ services:
       POSTGRES_DB: user
     ports:
       - "5433:5432"
-    volumes:
-      - postgres_5433_data:/var/lib/postgresql/data
     networks:
       - app-network
+    volumes:
+      - postgres_5433_data:/var/lib/postgresql/data
 
   # Customer service database
   postgres_5435:
@@ -27,10 +27,10 @@ services:
       POSTGRES_DB: customer
     ports:
       - "5435:5432"
-    volumes:
-      - postgres_5435_data:/var/lib/postgresql/data
     networks:
       - app-network
+    volumes:
+      - postgres_5435_data:/var/lib/postgresql/data
 
   # Billing service database
   postgres_5434:
@@ -43,10 +43,10 @@ services:
       POSTGRES_DB: billing
     ports:
       - "5434:5432"
-    volumes:
-      - postgres_5434_data:/var/lib/postgresql/data
     networks:
       - app-network
+    volumes:
+      - postgres_5434_data:/var/lib/postgresql/data
   # Analytics service database
   postgres_5471:
     image: postgres:latest
@@ -58,29 +58,46 @@ services:
       POSTGRES_DB: analytics
     ports:
       - "5471:5432"
-    volumes:
-      - postgres_5471_data:/var/lib/postgresql/data
     networks:
       - app-network
-
+    volumes:
+      - postgres_5471:/var/lib/postgresql/data
+  # Prometheus
   prometheus:
     image: prom/prometheus
     ports:
       - 9090:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  # Grafana
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+
+
   # COMMUNICATIONS
   kafka:
     image: bitnami/kafka
     ports:
       - "9092:9092"
+    networks:
+      - app-network
     environment:
       - KAFKA_ENABLE_KRAFT=yes
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://kafka:9094
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
       - ALLOW_PLAINTEXT_LISTENER=yes
@@ -110,9 +127,7 @@ services:
     networks:
       - app-network
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_CLOUD_CONFIG_PROFILE=prod
-      - CONFIGURL=http://config-server:8070
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
     depends_on:
       - config-server
 
@@ -210,20 +225,24 @@ services:
       dockerfile: Dockerfile
     container_name: analytics-service
     ports:
-      - 8071:8071
+      - "8071:8071"
     networks:
       - app-network
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5471:5432/analytics
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - CONFIGURL=http://config-server:8070
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - SPRING_APPLICATION_NAME=analyticsservice
+    depends_on:
+      - kafka
+      - config-server
+
 networks:
   app-network:
     driver: bridge
-
 volumes:
   postgres_5433_data:
   postgres_5434_data:
   postgres_5435_data:
-  postgres_5471_data:
+  postgres_5471:
+  grafana_data:
