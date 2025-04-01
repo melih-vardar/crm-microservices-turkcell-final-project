@@ -10,6 +10,8 @@ import io.github.bothuany.dtos.user.JwtResponseDTO;
 import io.github.bothuany.dtos.user.UserLoginDTO;
 import io.github.bothuany.dtos.user.UserRegisterDTO;
 import io.github.bothuany.dtos.user.UserResponseDTO;
+import io.github.bothuany.event.analytics.CreateUserAnalyticsEvent;
+import io.github.bothuany.event.analytics.LoginUserAnalyticsEvent;
 import io.github.bothuany.event.notification.EmailNotificationEvent;
 import io.github.bothuany.event.notification.PushNotificationEvent;
 import io.github.bothuany.event.notification.SmsNotificationEvent;
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
          * + "Best regards,\n[turkcell] Support Team"
          * );
          */
-
+        sendUserRegistryAnalytics(user);
         // Authenticate user and generate token
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -123,6 +125,7 @@ public class UserServiceImpl implements UserService {
          * + "Best regards,\n[Turkcell] Support Team"
          * );
          */
+        sendUserLoginAnalytics(user);
         return JwtResponseDTO.builder()
                 .token(jwt)
                 .user(userResponseDTO)
@@ -321,5 +324,26 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             logger.error("Failed to send push notification: {}", e.getMessage());
         }
+    }
+    private void sendUserRegistryAnalytics(User user){
+        CreateUserAnalyticsEvent createUserAnalyticsEvent = new CreateUserAnalyticsEvent();
+        createUserAnalyticsEvent.setUsername(user.getUsername());
+        createUserAnalyticsEvent.setEmail(user.getEmail());
+        createUserAnalyticsEvent.setUserid(user.getId());
+        createUserAnalyticsEvent.setEventType("USER_REGISTER");
+        createUserAnalyticsEvent.setDateTime(LocalDateTime.now());
+        streamBridge.send("CreateUserAnalytics-out-0", createUserAnalyticsEvent);
+        logger.info("Created user analytics event: {}", createUserAnalyticsEvent.getEventType());
+    }
+
+    private void sendUserLoginAnalytics(User user){
+        LoginUserAnalyticsEvent loginUserAnalyticsEvent = new LoginUserAnalyticsEvent();
+        loginUserAnalyticsEvent.setUserId(String.valueOf(user.getId()));
+        loginUserAnalyticsEvent.setEmail(user.getEmail());
+        loginUserAnalyticsEvent.setEventType("USER_LOGIN");
+        loginUserAnalyticsEvent.setLoginStartTime(System.currentTimeMillis());
+        streamBridge.send("LoginUserAnalytics-out-0", loginUserAnalyticsEvent);
+        logger.info("user login analytics event: {}", loginUserAnalyticsEvent.getEventType());
+
     }
 }
