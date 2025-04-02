@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "config-server"
+    name: "configserver"
   cloud:
     config:
       server:
@@ -9,8 +9,19 @@ spring:
           default-label: main
           clone-on-start: true
           skip-ssl-validation: true
+          force-pull: true
+          timeout: 10
+          refresh-rate: 30
 server:
   port: 8070
+
+# Debug için log seviyesini artırma
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.config: DEBUG
+    org.springframework.boot: INFO
+    org.springframework.web: DEBUG
 
 management:
   endpoints:

@@ -6,6 +6,6 @@ COPY . /app/
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk
-COPY --from=build /app/target/user-service-0.0.1-SNAPSHOT.jar /app/user-service.jar
+COPY --from=build /app/target/user-0.0.1-SNAPSHOT.jar /app/user.jar
 
-ENTRYPOINT ["java", "-jar", "/app/user-service.jar"]
+ENTRYPOINT ["java", "-jar", "/app/user.jar"]

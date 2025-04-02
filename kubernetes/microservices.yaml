@@ -1,0 +1,306 @@
+---
+# User Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: crm-system
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 8010
+      targetPort: 8010
+      nodePort: 30010
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: user-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8010
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-user:5432/user
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+            - name: SPRING_CLOUD_CONFIG_RETRY_INITIAL_INTERVAL
+              value: "1000"
+            - name: SPRING_CLOUD_CONFIG_RETRY_MAX_ATTEMPTS
+              value: "6"
+            - name: SPRING_CLOUD_CONFIG_RETRY_MAX_INTERVAL
+              value: "2000"
+            - name: SPRING_CLOUD_CONFIG_RETRY_MULTIPLIER
+              value: "1.1"
+            - name: SPRING_APPLICATION_NAME
+              value: userservice
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Customer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+  namespace: crm-system
+spec:
+  selector:
+    app: customer-service
+  ports:
+    - port: 8020
+      targetPort: 8020
+      nodePort: 30020
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-service
+  template:
+    metadata:
+      labels:
+        app: customer-service
+    spec:
+      containers:
+        - name: customer-service
+          image: customer-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8020
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-customer:5432/customer
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Billing Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-service
+  namespace: crm-system
+spec:
+  selector:
+    app: billing-service
+  ports:
+    - port: 8050
+      targetPort: 8050
+      nodePort: 30050
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing-service
+  template:
+    metadata:
+      labels:
+        app: billing-service
+    spec:
+      containers:
+        - name: billing-service
+          image: billing-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8050
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-billing:5432/billing
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Analytics Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: analytics-service
+  namespace: crm-system
+spec:
+  selector:
+    app: analytics-service
+  ports:
+    - port: 8071
+      targetPort: 8071
+      nodePort: 30071
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analytics-service
+  template:
+    metadata:
+      labels:
+        app: analytics-service
+    spec:
+      containers:
+        - name: analytics-service
+          image: analytics-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8071
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-analytics:5432/analytics
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: SPRING_APPLICATION_NAME
+              value: analyticsservice
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Gateway Server Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-server
+  namespace: crm-system
+spec:
+  selector:
+    app: gateway-server
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  type: NodePort
+---
+# Gateway Server Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-server
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-server
+  template:
+    metadata:
+      labels:
+        app: gateway-server
+    spec:
+      containers:
+        - name: gateway-server
+          image: gateway-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              value: "true"
+            - name: SPRING_CLOUD_SERVICE_REGISTRY_AUTO_REGISTRATION_ENABLED
+              value: "true"
+            - name: SPRING_APPLICATION_NAME
+              value: gatewayserver
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+            - name: SPRING_CLOUD_CONFIG_RETRY_INITIAL_INTERVAL
+              value: "1000"
+            - name: SPRING_CLOUD_CONFIG_RETRY_MAX_ATTEMPTS
+              value: "6"
+            - name: SPRING_CLOUD_CONFIG_RETRY_MAX_INTERVAL
+              value: "2000"
+            - name: SPRING_CLOUD_CONFIG_RETRY_MULTIPLIER
+              value: "1.1"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"

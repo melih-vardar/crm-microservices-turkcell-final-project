@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.turkcell</groupId>
-	<artifactId>customer-service</artifactId>
+	<artifactId>customer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>customer-service</name>
+	<name>customer</name>
 	<description>Customer service</description>
 	<url/>
 	<licenses>

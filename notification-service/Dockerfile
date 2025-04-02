@@ -6,6 +6,6 @@ COPY . /app/
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk
-COPY --from=build /app/target/notification-service-0.0.1-SNAPSHOT.jar /app/notification-service.jar
+COPY --from=build /app/target/notification-0.0.1-SNAPSHOT.jar /app/notification.jar
 
-ENTRYPOINT ["java", "-jar", "/app/notification-service.jar"] 
+ENTRYPOINT ["java", "-jar", "/app/notification.jar"] 

@@ -1,0 +1,236 @@
+---
+# User Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-user
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-user
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# User Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-user
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-user
+  template:
+    metadata:
+      labels:
+        app: postgres-user
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: user
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-user-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-user-data
+          persistentVolumeClaim:
+            claimName: user-db-pvc
+---
+# Customer Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-customer
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-customer
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Customer Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-customer
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-customer
+  template:
+    metadata:
+      labels:
+        app: postgres-customer
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: customer
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-customer-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-customer-data
+          persistentVolumeClaim:
+            claimName: customer-db-pvc
+---
+# Billing Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-billing
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-billing
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Billing Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-billing
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-billing
+  template:
+    metadata:
+      labels:
+        app: postgres-billing
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: billing
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-billing-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-billing-data
+          persistentVolumeClaim:
+            claimName: billing-db-pvc
+---
+# Analytics Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-analytics
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-analytics
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Analytics Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-analytics
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-analytics
+  template:
+    metadata:
+      labels:
+        app: postgres-analytics
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: analytics
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-analytics-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-analytics-data
+          persistentVolumeClaim:
+            claimName: analytics-db-pvc

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: crm-system
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+      
+      - job_name: 'config-server'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['config-server:8070']
+      
+      - job_name: 'discovery-server'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['discovery-server:8888']
+      
+      - job_name: 'gateway-server'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['gateway-server:8080']
+      
+      - job_name: 'user-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['user-service:8010']
+      
+      - job_name: 'customer-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['customer-service:8020']
+      
+      - job_name: 'billing-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['billing-service:8050']
+      
+      - job_name: 'analytics-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['analytics-service:8071']

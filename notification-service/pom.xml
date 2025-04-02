@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.turkcell</groupId>
-	<artifactId>notification-service</artifactId>
+	<artifactId>notification</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>notification-service</name>
-	<description>notification-service</description>
+	<name>notification</name>
+	<description>notification</description>
 	<url/>
 	<licenses>
 		<license/>

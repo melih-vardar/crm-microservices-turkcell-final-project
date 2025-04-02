@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.turkcell.crm-microservices-hw4</groupId>
-    <artifactId>user-service</artifactId>
+    <artifactId>user</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-service</name>
-    <description>user-service</description>
+    <name>user</name>
+    <description>user</description>
     <url/>
     <licenses>
         <license/>

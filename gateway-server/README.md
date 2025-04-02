@@ -17,22 +17,22 @@ Gateway aşağıdaki yönlendirmeleri sağlar:
 
 ### Güvenlik Endpointleri
 
-- `/api/auth/**` -> `user-service`: Tüm kimlik doğrulama istekleri (login, register, logout)
+- `/api/auth/**` -> `user`: Tüm kimlik doğrulama istekleri (login, register, logout)
 
 ### Mikroservis Endpointleri
 
-- `/api/users/**` -> `user-service`: Kullanıcı yönetimi
-- `/api/customers/**` -> `customer-service`: Müşteri yönetimi
-- `/api/contracts/**` -> `contract-service`: Sözleşme yönetimi
-- `/api/plans/**` -> `plan-service`: Plan yönetimi
-- `/api/billings/**` -> `billing-service`: Fatura yönetimi
-- `/api/support/**` -> `support-service`: Destek yönetimi
-- `/api/analytics/**` -> `analytics-service`: Analitik
-- `/api/notifications/**` -> `notification-service`: Bildirim yönetimi
+- `/api/users/**` -> `user`: Kullanıcı yönetimi
+- `/api/customers/**` -> `customer`: Müşteri yönetimi
+- `/api/contracts/**` -> `contract`: Sözleşme yönetimi
+- `/api/plans/**` -> `plan`: Plan yönetimi
+- `/api/billings/**` -> `billing`: Fatura yönetimi
+- `/api/support/**` -> `support`: Destek yönetimi
+- `/api/analytics/**` -> `analytics`: Analitik
+- `/api/notifications/**` -> `notification`: Bildirim yönetimi
 
 ## Güvenlik
 
-Gateway, tüm kimlik doğrulama (authentication) isteklerini user-service'e yönlendirir. Diğer servisler doğrudan authentication işlemleri yapmaz, bunun yerine user-service'e yönlendirme yapar.
+Gateway, tüm kimlik doğrulama (authentication) isteklerini user'e yönlendirir. Diğer servisler doğrudan authentication işlemleri yapmaz, bunun yerine user'e yönlendirme yapar.
 
 ### Security Konfigürasyonu
 
