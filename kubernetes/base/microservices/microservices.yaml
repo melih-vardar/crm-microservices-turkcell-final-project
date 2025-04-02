@@ -304,3 +304,325 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
+---
+# Contract Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: contract-service
+  namespace: crm-system
+spec:
+  selector:
+    app: contract-service
+  ports:
+    - port: 8030
+      targetPort: 8030
+      nodePort: 30030
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contract-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contract-service
+  template:
+    metadata:
+      labels:
+        app: contract-service
+    spec:
+      containers:
+        - name: contract-service
+          image: contract-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8030
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-contract:5432/contract
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: SPRING_APPLICATION_NAME
+              value: contractservice
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Plan Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: plan-service
+  namespace: crm-system
+spec:
+  selector:
+    app: plan-service
+  ports:
+    - port: 8040
+      targetPort: 8040
+      nodePort: 30040
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plan-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plan-service
+  template:
+    metadata:
+      labels:
+        app: plan-service
+    spec:
+      containers:
+        - name: plan-service
+          image: plan-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8040
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-plan:5432/plan
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: SPRING_APPLICATION_NAME
+              value: planservice
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Notification Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: crm-system
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - port: 8060
+      targetPort: 8060
+      nodePort: 30060
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: notification-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8060
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-notification:5432/notification
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: SPRING_APPLICATION_NAME
+              value: notificationservice
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Customer Support Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-support-service
+  namespace: crm-system
+spec:
+  selector:
+    app: customer-support-service
+  ports:
+    - port: 8070
+      targetPort: 8070
+      nodePort: 30070
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-support-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-support-service
+  template:
+    metadata:
+      labels:
+        app: customer-support-service
+    spec:
+      containers:
+        - name: customer-support-service
+          image: customer-support-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8070
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-customer-support:5432/customersupport
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-server:8888/eureka
+            - name: CONFIGURL
+              value: http://config-server:8070
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-server:8070
+            - name: SPRING_APPLICATION_NAME
+              value: customersupportservice
+            - name: SPRING_CLOUD_CONFIG_FAIL_FAST
+              value: "false"
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Config Server Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server
+  namespace: crm-system
+spec:
+  selector:
+    app: config-server
+  ports:
+    - port: 8070
+      targetPort: 8070
+      nodePort: 30100
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+        - name: config-server
+          image: config-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8070
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+          resources:
+            requests:
+              memory: "512Mi"
+---
+# Discovery Server Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-server
+  namespace: crm-system
+spec:
+  selector:
+    app: discovery-server
+  ports:
+    - port: 8888
+      targetPort: 8888
+      nodePort: 30888
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-server
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery-server
+  template:
+    metadata:
+      labels:
+        app: discovery-server
+    spec:
+      containers:
+        - name: discovery-server
+          image: discovery-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8888
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+          resources:
+            requests:
+              memory: "512Mi"

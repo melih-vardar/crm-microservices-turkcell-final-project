@@ -48,6 +48,55 @@ services:
     networks:
       - app-network
 
+  # Contract service database
+  postgres_5436:
+    image: postgres:latest
+    container_name: postgres_5436
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: contract
+    ports:
+      - "5436:5432"
+    networks:
+      - app-network
+    volumes:
+      - postgres_5436_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Plan service database
+  postgres_5437:
+    image: postgres:latest
+    container_name: postgres_5437
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: plan
+    ports:
+      - "5437:5432"
+    volumes:
+      - postgres_5437_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # MongoDB for Customer Support Service
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
   # COMMUNICATIONS
   kafka:
     image: bitnami/kafka
@@ -67,7 +116,6 @@ services:
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - BITNAMI_DEBUG=yes
       - KAFKA_CFG_NUM_PARTITIONS=2
-
 
   prometheus:
     image: prom/prometheus
@@ -119,6 +167,77 @@ services:
       - SPRING_CLOUD_CONFIG_PROFILE=dev
       - CONFIGURL=http://config-server:8070
 
+  # Add missing services for development
+  contract-service:
+    build:
+      context: ./contract-service
+      dockerfile: Dockerfile
+    container_name: contract-service
+    ports:
+      - "8030:8030"
+    networks:
+      - app-network
+    depends_on:
+      - discovery-server
+      - config-server
+      - postgres_5436
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5436:5432/contract
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - SPRING_CLOUD_CONFIG_PROFILE=dev
+      - CONFIGURL=http://config-server:8070
+      - SPRING_APPLICATION_NAME=contractservice
+
+  customer-support-service:
+    build:
+      context: ./customer-support-service
+      dockerfile: Dockerfile
+    container_name: customer-support-service
+    ports:
+      - "8070:8070"
+    networks:
+      - app-network
+    depends_on:
+      - discovery-server
+      - config-server
+      - mongodb
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_MONGODB_URI=mongodb://mongodb:27017/customerSupportdb
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - SPRING_CLOUD_CONFIG_PROFILE=dev
+      - CONFIGURL=http://config-server:8070
+      - SPRING_APPLICATION_NAME=customersupportservice
+
+  plan-service:
+    build:
+      context: ./plan-service
+      dockerfile: Dockerfile
+    container_name: plan-service
+    ports:
+      - "8040:8040"
+    networks:
+      - app-network
+    depends_on:
+      - discovery-server
+      - config-server
+      - postgres_5437
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5437:5432/plan
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - SPRING_CLOUD_CONFIG_PROFILE=dev
+      - CONFIGURL=http://config-server:8070
+      - SPRING_APPLICATION_NAME=planservice
+
 networks:
   app-network:
     driver: bridge
@@ -127,4 +246,6 @@ volumes:
   postgres_5433_data:
   postgres_5434_data:
   postgres_5435_data:
-
+  postgres_5436_data:
+  postgres_5437_data:
+  mongodb_data:

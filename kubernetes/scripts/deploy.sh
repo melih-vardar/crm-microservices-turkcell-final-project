@@ -86,8 +86,8 @@ else
   # Apply Config Server FIRST and wait for it
   echo -e "\033[32mDeploying Config Server...\033[0m"
   kubectl apply -f "$BASE_DIR/base/infrastructure/infrastructure.yaml"
-  echo -e "\033[33mWaiting for Config Server to start (30 seconds)...\033[0m"
-  sleep 30
+  echo -e "\033[33mWaiting for Config Server to start (90 seconds)...\033[0m"
+  sleep 90
 
   # Verify if Config Server is running
   configServerPod=$(kubectl get pods -n crm-system -l app=config-server -o jsonpath="{.items[0].metadata.name}" 2>/dev/null)

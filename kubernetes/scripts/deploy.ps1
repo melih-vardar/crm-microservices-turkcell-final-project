@@ -88,8 +88,8 @@ if ($proceedK8s -eq "n") {
     # Apply Config Server FIRST and wait for it
     Write-Host "Deploying Config Server..." -ForegroundColor Green
     kubectl apply -f (Join-Path $BASE_DIR "base/infrastructure/infrastructure.yaml")
-    Write-Host "Waiting for Config Server to start (30 seconds)..." -ForegroundColor Yellow
-    Start-Sleep -Seconds 30
+    Write-Host "Waiting for Config Server to start (90 seconds)..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 90
 
     # Verify if Config Server is running
     $configServerPod = kubectl get pods -n crm-system -l app=config-server -o jsonpath="{.items[0].metadata.name}" 2>$null

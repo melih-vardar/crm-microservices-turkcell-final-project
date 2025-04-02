@@ -1,0 +1,12 @@
+configurl: http://localhost:8070
+
+spring:
+  application:
+    name: "contractservice"
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: ${configurl}
+  config:
+    import: optional:configserver:${configurl}

@@ -234,3 +234,239 @@ spec:
         - name: postgres-analytics-data
           persistentVolumeClaim:
             claimName: analytics-db-pvc
+---
+# Contract Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-contract
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-contract
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Contract Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-contract
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-contract
+  template:
+    metadata:
+      labels:
+        app: postgres-contract
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: contract
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-contract-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-contract-data
+          persistentVolumeClaim:
+            claimName: contract-db-pvc
+---
+# Plan Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-plan
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-plan
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Plan Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-plan
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-plan
+  template:
+    metadata:
+      labels:
+        app: postgres-plan
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: plan
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-plan-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-plan-data
+          persistentVolumeClaim:
+            claimName: plan-db-pvc
+---
+# Notification Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-notification
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-notification
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Notification Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-notification
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-notification
+  template:
+    metadata:
+      labels:
+        app: postgres-notification
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: notification
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-notification-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-notification-data
+          persistentVolumeClaim:
+            claimName: notification-db-pvc
+---
+# Customer Support Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-customer-support
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-customer-support
+  ports:
+    - port: 5432
+      targetPort: 5432
+  clusterIP: None
+---
+# Customer Support Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-customer-support
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-customer-support
+  template:
+    metadata:
+      labels:
+        app: postgres-customer-support
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: customersupport
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-customer-support-data
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - postgres
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: postgres-customer-support-data
+          persistentVolumeClaim:
+            claimName: customer-support-db-pvc

@@ -84,6 +84,27 @@ services:
       timeout: 5s
       retries: 5
 
+  # Contract service database
+  postgres_5436:
+    image: postgres:latest
+    container_name: postgres_5436
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: contract
+    ports:
+      - "5436:5432"
+    networks:
+      - app-network
+    volumes:
+      - postgres_5436_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Prometheus
   prometheus:
     image: prom/prometheus
@@ -327,6 +348,129 @@ services:
         condition: service_healthy
     restart: on-failure
 
+  contract-service:
+    build:
+      context: ./contract-service
+      dockerfile: Dockerfile
+    container_name: contract-service
+    ports:
+      - "8030:8030"
+    networks:
+      - app-network
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      postgres_5436:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5436:5432/contract
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
+      - SPRING_APPLICATION_NAME=contractservice
+    restart: on-failure
+
+  # MongoDB for Customer Support Service
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  customer-support-service:
+    build:
+      context: ./customer-support-service
+      dockerfile: Dockerfile
+    container_name: customer-support-service
+    ports:
+      - "8070:8070"
+    networks:
+      - app-network
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_MONGODB_URI=mongodb://mongodb:27017/customerSupportdb
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
+      - SPRING_APPLICATION_NAME=customersupportservice
+    restart: on-failure
+
+  # Plan Service Database
+  postgres_5437:
+    image: postgres:latest
+    container_name: postgres_5437
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: plan
+    ports:
+      - "5437:5432"
+    networks:
+      - app-network
+    volumes:
+      - postgres_5437_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  plan-service:
+    build:
+      context: ./plan-service
+      dockerfile: Dockerfile
+    container_name: plan-service
+    ports:
+      - "8040:8040"
+    networks:
+      - app-network
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      postgres_5437:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5437:5432/plan
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8070
+      - SPRING_APPLICATION_NAME=planservice
+    restart: on-failure
+
 networks:
   app-network:
     driver: bridge
@@ -334,6 +478,9 @@ volumes:
   postgres_5433_data:
   postgres_5434_data:
   postgres_5435_data:
+  postgres_5436_data:
+  postgres_5437_data:
   postgres_5471:
   grafana_data:
   prometheus_data:
+  mongodb_data:

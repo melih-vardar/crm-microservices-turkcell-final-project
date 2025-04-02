@@ -48,3 +48,23 @@ data:
         metrics_path: '/actuator/prometheus'
         static_configs:
           - targets: ['analytics-service:8071']
+      
+      - job_name: 'contract-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['contract-service:8030']
+      
+      - job_name: 'plan-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['plan-service:8040']
+      
+      - job_name: 'notification-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['notification-service:8060']
+      
+      - job_name: 'customer-support-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['customer-support-service:8070']
