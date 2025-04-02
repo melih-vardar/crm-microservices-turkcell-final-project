@@ -35,6 +35,6 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
         logger.info("converted userBehavior {}", customerCreateBehavior);
 
         customerCreateBehaviorRepository.save(customerCreateBehavior);
-        customerMetrics.incrementCustomerRegistrations();
+        //customerMetrics.incrementCustomerRegistrations();
     }
 }
