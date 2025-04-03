@@ -28,18 +28,6 @@ import java.util.UUID;
 public class UserController {
     private UserService userService;
 
-    @PostMapping("/register")
-    @Operation(summary = "Register a new user", description = "Creates a new user account and returns JWT token")
-    public ResponseEntity<JwtResponseDTO> registerUser(@Valid @RequestBody UserRegisterDTO registerDTO) {
-        return new ResponseEntity<>(userService.register(registerDTO), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/login")
-    @Operation(summary = "Login user", description = "Authenticates a user and returns JWT token")
-    public ResponseEntity<JwtResponseDTO> loginUser(@Valid @RequestBody UserLoginDTO loginDTO) {
-        return ResponseEntity.ok(userService.login(loginDTO));
-    }
-
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @securityExpression.hasUserId(#id)")
     @Operation(summary = "Get user by ID", description = "Retrieves user information by ID")
@@ -112,20 +100,6 @@ public class UserController {
     @Operation(summary = "Get current user information", description = "Retrieves information for the currently authenticated user", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(userService.getUserById(user.getId()));
-    }
-
-    @PostMapping("/logout")
-    @Operation(summary = "Logout user", description = "Invalidates the JWT token", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
-        // Extract token from Authorization header (Bearer token)
-        String token = authHeader.substring(7);
-        boolean success = userService.logout(token);
-
-        if (success) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     @GetMapping("/{id}/roles")
