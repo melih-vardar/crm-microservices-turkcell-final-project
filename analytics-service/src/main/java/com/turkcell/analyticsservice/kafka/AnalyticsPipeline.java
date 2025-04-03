@@ -44,7 +44,7 @@ public class AnalyticsPipeline {
         return loginUserAnalyticsEvent -> {
             try {
                 logger.info("Received user login analytics: {}",loginUserAnalyticsEvent );
-                userBehaviorService.loginAnalyticsToUser(loginUserAnalyticsEvent);
+                userBehaviorService.sendUserLoginAnalytics(loginUserAnalyticsEvent);
             }catch (Exception e){
                 logger.error("Failed to process user analytics function : {}",loginUserAnalyticsEvent,e);
             }

@@ -285,9 +285,6 @@ services:
         condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/customer
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070

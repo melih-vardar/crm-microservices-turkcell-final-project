@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -24,7 +25,6 @@ public class UserBehaviorServiceServiceImpl implements UserBehaviorService {
 
     private final UserMetrics userMetrics;
     private final UserCreateBehaviorRepository userBehaviorRepository;
-    private final UserLoginBehaviorRepository userLoginBehaviorRepository;
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
 
     public void registerAnalyticsToUser(CreateUserAnalyticsEvent createUserAnalyticsEvent){
@@ -45,33 +45,17 @@ public class UserBehaviorServiceServiceImpl implements UserBehaviorService {
     }
 
     @Override
-    public void loginAnalyticsToUser(LoginUserAnalyticsEvent loginUserAnalyticsEvent) {
-        logger.info("Logging user login analytics start");
-        // dikkat et denemeden önce
-        //long loginStartTime = System.currentTimeMillis(); // Epoch millis cinsinden istek bu şekilde gelecek
-        try {
-            // 1. Entity oluştur
-            UserLoginBehavior loginBehavior = new UserLoginBehavior();
-            loginBehavior.setEmail(loginUserAnalyticsEvent.getEmail());
-            loginBehavior.setLoginStartTime(loginUserAnalyticsEvent.getLoginStartTime());
-            loginBehavior.setEventType(EventType.valueOf(loginUserAnalyticsEvent.getEventType()));
+    public void sendUserLoginAnalytics(LoginUserAnalyticsEvent loginUserAnalyticsEvent) {
+        UserLoginBehavior userLoginBehavior = new UserLoginBehavior();
+        userLoginBehavior.setId(UUID.fromString(loginUserAnalyticsEvent.getUserId()));
+        userLoginBehavior.setEmail(loginUserAnalyticsEvent.getEmail());
+        userLoginBehavior.setEventType(EventType.valueOf(loginUserAnalyticsEvent.getEventType()));
+        userLoginBehavior.setLoginStartTime(loginUserAnalyticsEvent.getLoginStartTime());
 
+        userMetrics.incrementLoginAttempts();
 
-            // 2. Veritabanına kaydet
-            userLoginBehaviorRepository.save(loginBehavior);
-            logger.info("User login behavior saved: {}", loginBehavior);
-            long durationMs = System.currentTimeMillis() - loginUserAnalyticsEvent.getLoginStartTime();
+        long duration = System.currentTimeMillis() - userLoginBehavior.getLoginStartTime();
+        userMetrics.recordLoginDuration(duration);
 
-            // 3. Metrikleri güncelle
-            userMetrics.getLoginTimer().record(durationMs, TimeUnit.MILLISECONDS);
-
-            logger.info("Login analytics processed successfully: {}", loginBehavior);
-
-        } catch (Exception e) {
-            logger.error("Error processing login analytics for: {}", loginUserAnalyticsEvent, e);
-            throw new RuntimeException("Login analytics failed", e);
-        }
     }
-
-
 }

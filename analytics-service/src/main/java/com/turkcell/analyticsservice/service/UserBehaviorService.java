@@ -8,5 +8,5 @@ import io.github.bothuany.event.analytics.LoginUserAnalyticsEvent;
 public interface UserBehaviorService {
 
     public void registerAnalyticsToUser(CreateUserAnalyticsEvent createUserAnalyticsEvent);
-    public void loginAnalyticsToUser(LoginUserAnalyticsEvent loginUserAnalyticsEvent);
+    public void sendUserLoginAnalytics(LoginUserAnalyticsEvent loginUserAnalyticsEvent);
 }

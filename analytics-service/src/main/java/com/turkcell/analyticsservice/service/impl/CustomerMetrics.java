@@ -10,8 +10,8 @@ public class CustomerMetrics {
     private final Counter CustomerRegistrationsCounter;
 
     public CustomerMetrics(MeterRegistry meterRegistry) {
-        this.CustomerRegistrationsCounter = Counter.builder("user.registrations.total")
-                .description("total user registered count")
+        this.CustomerRegistrationsCounter = Counter.builder("customer.registrations.total")
+                .description("total customer registered count")
                 .tag("application","analytics-service").register(meterRegistry);
     }
 

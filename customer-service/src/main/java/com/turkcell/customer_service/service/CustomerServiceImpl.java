@@ -7,6 +7,7 @@ import com.turkcell.customer_service.repository.CustomerRepository;
 import com.turkcell.customer_service.rules.CustomerBusinessRules;
 import io.github.bothuany.dtos.customer.CustomerResponseDTO;
 import io.github.bothuany.dtos.customer.CustomerCreateDTO;
+import io.github.bothuany.event.analytics.CreateExampleCustomerEvent;
 import io.github.bothuany.event.notification.EmailNotificationEvent;
 import io.github.bothuany.event.notification.PushNotificationEvent;
 import io.github.bothuany.event.notification.SmsNotificationEvent;
@@ -17,6 +18,7 @@ import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.List;
 
@@ -89,6 +91,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
+    public List<Object> getCustomerBills(UUID customerId) {
+        return billingClient.getCustomerBills(customerId);
+    }
+
+    public List<Object> getCustomerContracts(UUID customerId) {
+        return contractClient.getCustomerContracts(customerId);
+    }
     private void updateCustomerFromRequest(Customer customer, CustomerCreateDTO request) {
         customer.setFirstName(request.getFirstName());
         customer.setLastName(request.getLastName());
@@ -137,12 +146,18 @@ public class CustomerServiceImpl implements CustomerService {
         streamBridge.send("pushNotification-out-0", pushNotificationEvent);
     }
 
-    public List<Object> getCustomerBills(UUID customerId) {
-        return billingClient.getCustomerBills(customerId);
-    }
+    private void sendCustomerAnalytics(Customer customer) {
 
-    public List<Object> getCustomerContracts(UUID customerId) {
-        return contractClient.getCustomerContracts(customerId);
+        CreateExampleCustomerEvent createExampleCustomerEvent = new CreateExampleCustomerEvent();
+        createExampleCustomerEvent.setCustomerId(customer.getId());
+        createExampleCustomerEvent.setFirstname(customer.getFirstName());
+        createExampleCustomerEvent.setLastname(customer.getLastName());
+        createExampleCustomerEvent.setEmail(customer.getEmail());
+        createExampleCustomerEvent.setEventType("CUSTOMER_CREATE");
+        createExampleCustomerEvent.setEventTime(LocalDateTime.now());
+        logger.info("Sending Customer Analytics event: {}", createExampleCustomerEvent);
+        streamBridge.send("CreateCustomerAnalytics-out-0", createExampleCustomerEvent);
+
     }
 
 }

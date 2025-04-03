@@ -337,13 +337,19 @@ public class UserServiceImpl implements UserService {
     }
 
     private void sendUserLoginAnalytics(User user){
+        logger.info("sendUserLoginAnalytics called for user: {}", user.getUsername());
         LoginUserAnalyticsEvent loginUserAnalyticsEvent = new LoginUserAnalyticsEvent();
         loginUserAnalyticsEvent.setUserId(String.valueOf(user.getId()));
         loginUserAnalyticsEvent.setEmail(user.getEmail());
         loginUserAnalyticsEvent.setEventType("USER_LOGIN");
         loginUserAnalyticsEvent.setLoginStartTime(System.currentTimeMillis());
-        streamBridge.send("LoginUserAnalytics-out-0", loginUserAnalyticsEvent);
-        logger.info("user login analytics event: {}", loginUserAnalyticsEvent.getEventType());
+
+        boolean result = streamBridge.send("LoginUserAnalytics-out-0", loginUserAnalyticsEvent);
+        if (!result) {
+            logger.error("Failed to send analytics event for user: {}", user.getUsername());
+        }
+
+        logger.info("Event sent: {}, Send result: {}", loginUserAnalyticsEvent.getEventType(), result);
 
     }
 }
