@@ -3,6 +3,8 @@ configurl: http://localhost:8070
 spring:
   application:
     name: "billingservice"
+  main:
+    allow-bean-definition-overriding: true
   profiles:
     active: dev
   cloud:
