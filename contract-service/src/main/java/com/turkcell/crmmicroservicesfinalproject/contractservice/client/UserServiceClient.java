@@ -1,4 +1,4 @@
-package com.turkcell.customer_service.client;
+package com.turkcell.crmmicroservicesfinalproject.contractservice.client;
 
 import io.github.bothuany.dtos.user.JwtResponseDTO;
 import io.github.bothuany.dtos.user.UserLoginDTO;
@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.util.Map;
 import java.util.UUID;
 
 @FeignClient(name = "user-service")
 public interface UserServiceClient {
-
-    @GetMapping("/api/users/validate/{username}")
-    boolean validateUser(@PathVariable("username") String username);
 
     @GetMapping("/api/users/role/{id}")
     String getUserRole(@PathVariable("id") UUID id);
@@ -34,12 +30,6 @@ public interface UserServiceClient {
 
     @PostMapping("/api/auth/logout")
     ResponseEntity<?> logout(@RequestHeader("Authorization") String token);
-
-    /**
-     * Test endpoint to verify connectivity
-     */
-    @GetMapping("/api/auth/test")
-    ResponseEntity<Map<String, String>> testAuth();
 
     /**
      * Validates a JWT token with the user-service

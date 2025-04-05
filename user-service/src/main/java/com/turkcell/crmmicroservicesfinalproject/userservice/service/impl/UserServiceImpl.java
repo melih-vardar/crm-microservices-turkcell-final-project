@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
          * + "Best regards,\n[turkcell] Support Team"
          * );
          */
-        sendUserRegistryAnalytics(user);
+        // sendUserRegistryAnalytics(user);
         // Authenticate user and generate token
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -81,15 +81,18 @@ public class UserServiceImpl implements UserService {
                         registerDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // Include the user ID in the token
-        String jwt = jwtTokenProvider.generateJwtToken(authentication, user.getId());
+        String jwt = jwtTokenProvider.generateJwtTokenWithRoles(authentication, user.getId());
 
-        // Create response
         UserResponseDTO userResponseDTO = mapToUserResponseDTO(user);
 
+        // Extract roles from token to include in response
+        List<String> roles = jwtTokenProvider.getRolesFromJwtToken(jwt);
+
+        sendUserRegistryAnalytics(user);
         return JwtResponseDTO.builder()
                 .token(jwt)
                 .user(userResponseDTO)
+                .roles(roles)
                 .build();
     }
 
@@ -109,8 +112,8 @@ public class UserServiceImpl implements UserService {
                         loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // Include user ID in token
-        String jwt = jwtTokenProvider.generateJwtToken(authentication, user.getId());
+        // Include user ID and roles in token
+        String jwt = jwtTokenProvider.generateJwtTokenWithRoles(authentication, user.getId());
 
         // Create response
         UserResponseDTO userResponseDTO = mapToUserResponseDTO(user);
@@ -126,9 +129,14 @@ public class UserServiceImpl implements UserService {
          * );
          */
         sendUserLoginAnalytics(user);
+
+        // Extract roles from token to include in response
+        List<String> roles = jwtTokenProvider.getRolesFromJwtToken(jwt);
+
         return JwtResponseDTO.builder()
                 .token(jwt)
                 .user(userResponseDTO)
+                .roles(roles)
                 .build();
     }
 
@@ -325,7 +333,8 @@ public class UserServiceImpl implements UserService {
             logger.error("Failed to send push notification: {}", e.getMessage());
         }
     }
-    private void sendUserRegistryAnalytics(User user){
+
+    private void sendUserRegistryAnalytics(User user) {
         CreateUserAnalyticsEvent createUserAnalyticsEvent = new CreateUserAnalyticsEvent();
         createUserAnalyticsEvent.setUsername(user.getUsername());
         createUserAnalyticsEvent.setEmail(user.getEmail());
@@ -336,7 +345,7 @@ public class UserServiceImpl implements UserService {
         logger.info("Created user analytics event: {}", createUserAnalyticsEvent.getEventType());
     }
 
-    private void sendUserLoginAnalytics(User user){
+    private void sendUserLoginAnalytics(User user) {
         LoginUserAnalyticsEvent loginUserAnalyticsEvent = new LoginUserAnalyticsEvent();
         loginUserAnalyticsEvent.setUserId(String.valueOf(user.getId()));
         loginUserAnalyticsEvent.setEmail(user.getEmail());

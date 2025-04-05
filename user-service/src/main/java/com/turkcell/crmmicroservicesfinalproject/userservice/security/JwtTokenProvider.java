@@ -1,10 +1,10 @@
 package com.turkcell.crmmicroservicesfinalproject.userservice.security;
 
-import io.github.bothuany.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -21,6 +21,10 @@ public class JwtTokenProvider {
         return jwtService.generateToken(authentication, userId);
     }
 
+    public String generateJwtTokenWithRoles(Authentication authentication, UUID userId) {
+        return jwtService.generateTokenWithRoles(authentication, userId);
+    }
+
     public boolean validateJwtToken(String token) {
         return jwtService.validateToken(token);
     }
@@ -31,6 +35,10 @@ public class JwtTokenProvider {
 
     public UUID getUserIdFromJwtToken(String token) {
         return jwtService.extractUserId(token);
+    }
+
+    public List<String> getRolesFromJwtToken(String token) {
+        return jwtService.extractRoles(token);
     }
 
     public boolean invalidateJwtToken(String token) {

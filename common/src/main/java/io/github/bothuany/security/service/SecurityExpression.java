@@ -1,6 +1,6 @@
 package io.github.bothuany.security.service;
 
-import io.github.bothuany.security.jwt.JwtService;
+import io.github.bothuany.security.jwt.service.BaseJwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SecurityExpression {
 
-    private final JwtService jwtService;
+    private final BaseJwtService jwtService;
 
     /**
      * Checks if the currently authenticated user has the specified user ID.

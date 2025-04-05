@@ -99,6 +99,7 @@ public class UserController {
     @GetMapping("/me")
     @Operation(summary = "Get current user information", description = "Retrieves information for the currently authenticated user", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal User user) {
+        // TODO
         return ResponseEntity.ok(userService.getUserById(user.getId()));
     }
 

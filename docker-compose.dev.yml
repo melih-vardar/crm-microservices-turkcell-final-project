@@ -97,6 +97,18 @@ services:
       - mongodb_data:/data/db
     restart: unless-stopped
 
+  # Redis for token blacklist
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
   # COMMUNICATIONS
   kafka:
     image: bitnami/kafka
@@ -238,6 +250,21 @@ services:
       - CONFIGURL=http://config-server:8070
       - SPRING_APPLICATION_NAME=planservice
 
+  # Add service dependencies for Redis
+  user-service:
+    depends_on:
+      - redis
+    environment:
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+
+  customer-service:
+    depends_on:
+      - redis
+    environment:
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+
 networks:
   app-network:
     driver: bridge
@@ -249,3 +276,4 @@ volumes:
   postgres_5436_data:
   postgres_5437_data:
   mongodb_data:
+  redis_data:

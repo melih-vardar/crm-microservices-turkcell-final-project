@@ -12,20 +12,37 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/contracts")
 @RequiredArgsConstructor
 @Tag(name = "Contract API", description = "Endpoints for managing customer contracts")
+@Slf4j
 public class ContractController {
 
     private final ContractService contractService;
+
+    @GetMapping("/test")
+    @Operation(summary = "Test endpoint to verify routing")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Test successful")
+    })
+    public ResponseEntity<Map<String, String>> test() {
+        log.info("Test endpoint accessed in contract-service");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Contract service test endpoint is working");
+        response.put("service", "contract-service");
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     @Operation(summary = "Create a new contract")

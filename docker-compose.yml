@@ -255,6 +255,8 @@ services:
         condition: service_started
       config-server:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5433:5432/user
@@ -263,6 +265,8 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
     restart: on-failure
 
   customer-service:
@@ -277,20 +281,24 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5434:
+      postgres_5435:
         condition: service_healthy
       kafka:
         condition: service_started
       config-server:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5434:5432/customer
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5435:5432/customer
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
       - SPRING_CLOUD_CONFIG_PROFILE=prod
       - CONFIGURL=http://config-server:8070
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
     restart: on-failure
 
   billing-service:
@@ -471,6 +479,23 @@ services:
       - SPRING_APPLICATION_NAME=planservice
     restart: on-failure
 
+  # Redis - Shared token blacklist
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   app-network:
     driver: bridge
@@ -484,3 +509,4 @@ volumes:
   grafana_data:
   prometheus_data:
   mongodb_data:
+  redis_data:

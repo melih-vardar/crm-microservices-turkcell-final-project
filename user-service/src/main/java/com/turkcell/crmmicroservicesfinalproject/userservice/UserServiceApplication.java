@@ -11,7 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ComponentScan(basePackages = {
         "com.turkcell.crmmicroservicesfinalproject.userservice",
-        "io.github.bothuany.security"
+        "io.github.bothuany.security",
+        "io.github.bothuany.security.jwt"
 })
 public class UserServiceApplication {
 
