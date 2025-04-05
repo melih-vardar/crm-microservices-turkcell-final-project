@@ -63,6 +63,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<CustomerResponseDTO> getAllCustomers() {
+        return customerRepository.findAll().stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public CustomerResponseDTO updateCustomer(UUID id, CustomerCreateDTO request) {
         customerBusinessRules.checkIfCustomerExists(id);
@@ -98,6 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Object> getCustomerContracts(UUID customerId) {
         return contractClient.getCustomerContracts(customerId);
     }
+
     private void updateCustomerFromRequest(Customer customer, CustomerCreateDTO request) {
         customer.setFirstName(request.getFirstName());
         customer.setLastName(request.getLastName());

@@ -11,6 +11,8 @@ public interface CustomerService {
 
     CustomerResponseDTO getCustomer(UUID id);
 
+    List<CustomerResponseDTO> getAllCustomers();
+
     CustomerResponseDTO updateCustomer(UUID id, CustomerCreateDTO request);
 
     void deleteCustomer(UUID id);

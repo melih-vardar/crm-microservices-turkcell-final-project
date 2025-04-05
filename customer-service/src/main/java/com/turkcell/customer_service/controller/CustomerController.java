@@ -31,6 +31,12 @@ public class CustomerController {
         return ResponseEntity.ok(Map.of("status", "success", "message", "Customer service is working"));
     }
 
+    @GetMapping
+    public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
+        logAuthenticationDetails("getAllCustomers");
+        return ResponseEntity.ok(customerService.getAllCustomers());
+    }
+
     @PostMapping
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerCreateDTO request) {
         logAuthenticationDetails("createCustomer");
