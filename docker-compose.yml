@@ -281,7 +281,7 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5435:
+      postgres_5434:
         condition: service_healthy
       kafka:
         condition: service_started
