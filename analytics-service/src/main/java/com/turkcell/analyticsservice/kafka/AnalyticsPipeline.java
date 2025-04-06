@@ -1,10 +1,11 @@
 package com.turkcell.analyticsservice.kafka;
 
 
+import com.turkcell.analyticsservice.dto.ForUserDto.ExampleBillDto;
 import com.turkcell.analyticsservice.dto.ForUserDto.TicketExampleDto;
+import com.turkcell.analyticsservice.service.BillBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerSupportBehaviorService;
-import com.turkcell.analyticsservice.service.SubscriptionAnalyticsService;
 import com.turkcell.analyticsservice.service.UserBehaviorService;
 import io.github.bothuany.event.analytics.CreateExampleCustomerEvent;
 import io.github.bothuany.event.analytics.CreateUserAnalyticsEvent;
@@ -23,10 +24,11 @@ import java.util.function.Consumer;
 public class AnalyticsPipeline {
 
     private final UserBehaviorService userBehaviorService;
-    private final SubscriptionAnalyticsService subscriptionAnalyticsService;
     private final CustomerBehaviorService customerBehaviorService;
     private final CustomerSupportBehaviorService customerSupportBehaviorService;
+    private final BillBehaviorService billBehaviorService;
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
+
     @Bean
     public Consumer<CreateUserAnalyticsEvent> CreateAnalyticsFunction(){
         return createUserAnalyticsEvent -> {
@@ -70,6 +72,18 @@ public class AnalyticsPipeline {
                 case "TICKET_CREATED" -> customerSupportBehaviorService.processTicketCreation(ticketExampleDto);
                 case "TICKET_UPDATED" -> customerSupportBehaviorService.processTicketUpdate(ticketExampleDto);
                 case "TICKET_CLOSED" -> customerSupportBehaviorService.processTicketClosure(ticketExampleDto);
+            }
+        };
+    }
+
+    @Bean
+    public Consumer<ExampleBillDto> BillAnalyticsFunction(){
+        return exampleBillDto -> {
+            try{
+                logger.info("received bill analytics: {}", exampleBillDto);
+                billBehaviorService.BillAnalyticsToCustomer(exampleBillDto);
+            }catch (Exception e){
+                logger.error("Failed to process bill analytics function : {}",exampleBillDto,e);
             }
         };
     }
