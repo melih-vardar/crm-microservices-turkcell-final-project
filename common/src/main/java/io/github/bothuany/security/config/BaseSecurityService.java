@@ -18,7 +18,12 @@ public class BaseSecurityService {
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/api/v1/auth/**",
-            "/api/auth/**"
+            "/api/auth/**",
+            "/actuator/health/**",
+            "/actuator/health",
+            "/actuator/info",
+            "/actuator/health/readiness",
+            "/actuator/health/liveness"
     };
 
     private final BaseJwtAuthFilter baseJwtAuthFilter;
