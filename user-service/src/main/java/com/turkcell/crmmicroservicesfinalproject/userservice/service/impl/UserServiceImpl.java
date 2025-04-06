@@ -73,7 +73,6 @@ public class UserServiceImpl implements UserService {
          * + "Best regards,\n[turkcell] Support Team"
          * );
          */
-        sendUserRegistryAnalytics(user);
         // Authenticate user and generate token
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
