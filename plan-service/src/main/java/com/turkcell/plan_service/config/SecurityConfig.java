@@ -51,21 +51,21 @@ public class SecurityConfig {
      * Bu, servisler arası iletişimde JWT token'ı otomatik olarak ekler
      */
     @Bean
-    public RequestInterceptor feignClientInterceptor() {
-        log.info("Configuring Feign client interceptor");
+    public RequestInterceptor requestInterceptor() {
         return requestTemplate -> {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
                     .getRequestAttributes();
             if (attributes != null) {
                 HttpServletRequest request = attributes.getRequest();
                 String authorizationHeader = request.getHeader("Authorization");
-                if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
-                    log.info("Adding Authorization header to Feign request: {}",
-                            authorizationHeader.substring(0, Math.min(15, authorizationHeader.length())) + "...");
+                if (authorizationHeader != null) {
                     requestTemplate.header("Authorization", authorizationHeader);
+                    log.debug("JWT token added to Feign client request");
                 } else {
-                    log.info("No Authorization header found in the request for Feign client");
+                    log.debug("No JWT token found in current request");
                 }
+            } else {
+                log.debug("Request attributes not available");
             }
         };
     }

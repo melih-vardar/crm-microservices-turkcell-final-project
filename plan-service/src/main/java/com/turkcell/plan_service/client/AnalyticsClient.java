@@ -4,6 +4,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(name = "analytics-service")
-public class AnalyticsClient {
+public interface AnalyticsClient {
 
 }
