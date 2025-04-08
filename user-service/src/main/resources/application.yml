@@ -1,14 +1,16 @@
 configurl: http://localhost:8070
 
 spring:
-  application:
-    name: "userservice"
   main:
     allow-bean-definition-overriding: true
-  profiles:
-    active: dev
+  config:
+    import: configserver:${configurl}
+  application:
+    name: "userservice"
   cloud:
     config:
+      profile: prod
+      fail-fast: true
       uri: ${configurl}
-  config:
-    import: optional:configserver:${configurl}
+
+

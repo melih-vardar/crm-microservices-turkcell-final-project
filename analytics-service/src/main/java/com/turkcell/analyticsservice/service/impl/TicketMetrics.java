@@ -6,30 +6,36 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TicketMetrics {
-    private final Counter ticketsCreated;
-    private final Counter ticketsUpdated;
-    private final Counter ticketsClosed;
+    private final Counter ticketsCreatedCounter;
+    private final Counter ticketsUpdatedCounter;
+    private final Counter ticketsClosedCounter;
 
-    public TicketMetrics(MeterRegistry registry) {
-        ticketsCreated = Counter.builder("tickets_created_total")
-                .description("Total tickets created").register(registry);
+    public TicketMetrics(MeterRegistry meterRegistry) {
+        this.ticketsCreatedCounter = Counter.builder("tickets.created.total")
+                .description("Total number of tickets created")
+                .tag("application", "analytics-service")
+                .register(meterRegistry);
 
-        ticketsUpdated = Counter.builder("tickets_updated_total")
-                .description("Total tickets updated").register(registry);
+        this.ticketsUpdatedCounter = Counter.builder("tickets.updated.total")
+                .description("Total number of tickets updated")
+                .tag("application", "analytics-service")
+                .register(meterRegistry);
 
-        ticketsClosed = Counter.builder("tickets_closed_total")
-                .description("Total tickets closed").register(registry);
+        this.ticketsClosedCounter = Counter.builder("tickets.closed.total")
+                .description("Total number of tickets closed")
+                .tag("application", "analytics-service")
+                .register(meterRegistry);
     }
 
     public void incrementTicketsCreated() {
-        ticketsCreated.increment();
+        ticketsCreatedCounter.increment();
     }
 
     public void incrementTicketsUpdated() {
-        ticketsUpdated.increment();
+        ticketsUpdatedCounter.increment();
     }
 
     public void incrementTicketsClosed() {
-        ticketsClosed.increment();
+        ticketsClosedCounter.increment();
     }
 }

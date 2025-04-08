@@ -3,12 +3,14 @@ configurl: http://localhost:8070
 spring:
   main:
     allow-bean-definition-overriding: true
+  config:
+    import: configserver:${configurl}
   application:
-    name: "gatewayserver"
-  profiles:
-    active: dev
+    name: "analyticsservice"
   cloud:
     config:
+      profile: prod
+      fail-fast: true
       uri: ${configurl}
-  config:
-    import: optional:configserver:${configurl}
+
+

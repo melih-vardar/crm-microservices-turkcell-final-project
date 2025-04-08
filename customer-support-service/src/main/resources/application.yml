@@ -1,14 +1,14 @@
 configurl: http://localhost:8070
 
 spring:
+  config:
+    import: configserver:${configurl}
   application:
     name: "customersupportservice"
-  main:
-    allow-bean-definition-overriding: true
-  profiles:
-    active: dev
   cloud:
     config:
+      profile: prod
+      fail-fast: true
       uri: ${configurl}
-  config:
-    import: optional:configserver:${configurl}
+
+

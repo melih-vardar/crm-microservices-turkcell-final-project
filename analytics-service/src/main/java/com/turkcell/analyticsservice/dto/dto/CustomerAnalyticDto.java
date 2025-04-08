@@ -1,4 +1,4 @@
-package com.turkcell.analyticsservice.dto.ForUserDto;
+package com.turkcell.analyticsservice.dto.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,12 +12,13 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateExampleDto {
+public class CustomerAnalyticDto {
      UUID id;
-     String username;
+     String customerId;
+     String firstName;
+     String lastName;
      String email;
      String eventType;
      LocalDateTime dateTime;
-
 
 }

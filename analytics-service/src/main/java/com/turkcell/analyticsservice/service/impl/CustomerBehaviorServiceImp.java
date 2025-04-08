@@ -1,5 +1,6 @@
 package com.turkcell.analyticsservice.service.impl;
 
+import com.turkcell.analyticsservice.dto.dto.CustomerAnalyticDto;
 import com.turkcell.analyticsservice.kafka.AnalyticsPipeline;
 import com.turkcell.analyticsservice.model.CustomerCreateBehavior;
 import com.turkcell.analyticsservice.model.EventType;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,8 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
 
         CustomerCreateBehavior customerCreateBehavior = new CustomerCreateBehavior();
         customerCreateBehavior.setCustomerId(createExampleCustomerEvent.getCustomerId());
-        customerCreateBehavior.setUsername(customerCreateBehavior.getUsername());
+        customerCreateBehavior.setFirstName(customerCreateBehavior.getFirstName());
+        customerCreateBehavior.setLastName(customerCreateBehavior.getLastName());
         customerCreateBehavior.setEmail(customerCreateBehavior.getEmail());
         customerCreateBehavior.setEventType(EventType.valueOf(createExampleCustomerEvent.getEventType()));
         customerCreateBehavior.setDateTime(LocalDateTime.now());
@@ -36,5 +40,19 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
 
         customerCreateBehaviorRepository.save(customerCreateBehavior);
         customerMetrics.incrementCustomerRegistrations();
+    }
+
+    public List<CustomerAnalyticDto> getAllCustomerBehaviors() {
+        List<CustomerCreateBehavior> customerBehaviors = customerCreateBehaviorRepository.findAll();
+        return customerBehaviors.stream().map(customerCreateBehavior -> new CustomerAnalyticDto(
+                customerCreateBehavior.getId(),
+                customerCreateBehavior.getCustomerId().toString(),
+                customerCreateBehavior.getFirstName(),
+                customerCreateBehavior.getLastName(),
+                customerCreateBehavior.getEmail(),
+                customerCreateBehavior.getEventType().name(),
+                customerCreateBehavior.getDateTime()
+        )).collect(Collectors.toList());
+
     }
 }

@@ -21,7 +21,8 @@ public class CustomerCreateBehavior {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private UUID customerId;
-    private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private EventType eventType;
     private LocalDateTime dateTime;

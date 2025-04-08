@@ -7,9 +7,7 @@ import com.turkcell.analyticsservice.service.BillBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerSupportBehaviorService;
 import com.turkcell.analyticsservice.service.UserBehaviorService;
-import io.github.bothuany.event.analytics.CreateExampleCustomerEvent;
-import io.github.bothuany.event.analytics.CreateUserAnalyticsEvent;
-import io.github.bothuany.event.analytics.LoginUserAnalyticsEvent;
+import io.github.bothuany.event.analytics.*;
 import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
@@ -66,24 +64,24 @@ public class AnalyticsPipeline {
     }
 
     @Bean
-    public Consumer<TicketExampleDto> TicketAnalyticsFunction(){
-        return ticketExampleDto -> {
-            switch (ticketExampleDto.getEventType()){
-                case "TICKET_CREATED" -> customerSupportBehaviorService.processTicketCreation(ticketExampleDto);
-                case "TICKET_UPDATED" -> customerSupportBehaviorService.processTicketUpdate(ticketExampleDto);
-                case "TICKET_CLOSED" -> customerSupportBehaviorService.processTicketClosure(ticketExampleDto);
+    public Consumer<TicketAnalyticsEvent> TicketAnalyticsFunction(){
+        return ticketAnalyticsEvent -> {
+            switch (ticketAnalyticsEvent.getEventType()){
+                case "TICKET_CREATED" -> customerSupportBehaviorService.processTicketCreation(ticketAnalyticsEvent);
+                case "TICKET_UPDATED" -> customerSupportBehaviorService.processTicketUpdate(ticketAnalyticsEvent);
+                case "TICKET_CLOSED" -> customerSupportBehaviorService.processTicketClosure(ticketAnalyticsEvent);
             }
         };
     }
 
     @Bean
-    public Consumer<ExampleBillDto> BillAnalyticsFunction(){
-        return exampleBillDto -> {
+    public Consumer<BillAnalyticsEvent> BillAnalyticsFunction(){
+        return billAnalyticsEventl -> {
             try{
-                logger.info("received bill analytics: {}", exampleBillDto);
-                billBehaviorService.BillAnalyticsToCustomer(exampleBillDto);
+                logger.info("received bill analytics: {}", billAnalyticsEventl);
+                billBehaviorService.BillAnalyticsToCustomer(billAnalyticsEventl);
             }catch (Exception e){
-                logger.error("Failed to process bill analytics function : {}",exampleBillDto,e);
+                logger.error("Failed to process bill analytics function : {}",billAnalyticsEventl,e);
             }
         };
     }

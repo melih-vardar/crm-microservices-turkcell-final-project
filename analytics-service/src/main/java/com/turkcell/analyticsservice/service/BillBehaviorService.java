@@ -1,7 +1,9 @@
 package com.turkcell.analyticsservice.service;
 
-import com.turkcell.analyticsservice.dto.ForUserDto.ExampleBillDto;
+
+import io.github.bothuany.event.analytics.BillAnalyticsEvent;
 
 public interface BillBehaviorService {
-    void BillAnalyticsToCustomer(ExampleBillDto exampleBillDto);
+    void BillAnalyticsToCustomer(BillAnalyticsEvent billAnalyticsEvent);
+    
 }

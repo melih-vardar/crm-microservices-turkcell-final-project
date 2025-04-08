@@ -1,10 +1,10 @@
 package com.turkcell.analyticsservice.service.impl;
 
-import com.turkcell.analyticsservice.dto.ForUserDto.ExampleBillDto;
 import com.turkcell.analyticsservice.kafka.AnalyticsPipeline;
 import com.turkcell.analyticsservice.model.BillBehavior;
 import com.turkcell.analyticsservice.repository.BillBehaviorRepository;
 import com.turkcell.analyticsservice.service.BillBehaviorService;
+import io.github.bothuany.event.analytics.BillAnalyticsEvent;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +19,19 @@ public class BillBehaviorServiceImpl implements BillBehaviorService {
     private final BillMetrics billMetrics;
 
     @Override
-    public void BillAnalyticsToCustomer(ExampleBillDto exampleBillDto) {
+    public void BillAnalyticsToCustomer(BillAnalyticsEvent billAnalyticsEvent) {
         logger.info("Bill Analytics to Customer");
         BillBehavior billBehavior = new BillBehavior();
-        billBehavior.setCustomerId(exampleBillDto.getCustomerId());
-        billBehavior.setAmount(exampleBillDto.getAmount());
-        billBehavior.setDueDate(exampleBillDto.getDueDate());
-        billBehavior.setCreatedAt(exampleBillDto.getCreatedAt());
+        billBehavior.setCustomerId(billAnalyticsEvent.getCustomerId());
+        billBehavior.setAmount(billAnalyticsEvent.getAmount());
+        billBehavior.setDueDate(billAnalyticsEvent.getDueDate());
+        billBehavior.setCreatedAt(billAnalyticsEvent.getCreatedAt());
         logger.info("converted BillBehavior {}", billBehavior);
         billBehaviorRepository.save(billBehavior);
         billMetrics.incrementBill();
     }
+
+
+
+
 }
