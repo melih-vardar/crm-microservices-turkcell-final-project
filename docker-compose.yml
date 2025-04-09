@@ -447,6 +447,29 @@ services:
       - SPRING_CLOUD_CONFIG_PROFILE=dev
       - CONFIGURL=http://config-server:8070
     restart: on-failure
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8090:8090"
+    networks:
+      - app-network
+    environment:
+      - CONFIGURL=http://config-server:8070
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CLOUD_CONFIG_PROFILE=dev
+    depends_on:
+      kafka:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    restart: on-failure
+
+
 
   # Redis - Shared token blacklist
   redis:
