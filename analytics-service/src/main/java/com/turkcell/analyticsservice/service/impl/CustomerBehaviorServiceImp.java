@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +28,6 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
     @Override
     public void registerAnalyticsToCustomer(CreateExampleCustomerEvent createExampleCustomerEvent) {
         logger.info("Registering analytics to Customer start ");
-
         CustomerCreateBehavior customerCreateBehavior = new CustomerCreateBehavior();
         customerCreateBehavior.setCustomerId(createExampleCustomerEvent.getCustomerId());
         customerCreateBehavior.setFirstName(customerCreateBehavior.getFirstName());
@@ -35,9 +35,7 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
         customerCreateBehavior.setEmail(customerCreateBehavior.getEmail());
         customerCreateBehavior.setEventType(EventType.valueOf(createExampleCustomerEvent.getEventType()));
         customerCreateBehavior.setDateTime(LocalDateTime.now());
-
         logger.info("converted userBehavior {}", customerCreateBehavior);
-
         customerCreateBehaviorRepository.save(customerCreateBehavior);
         customerMetrics.incrementCustomerRegistrations();
     }
@@ -53,6 +51,18 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
                 customerCreateBehavior.getEventType().name(),
                 customerCreateBehavior.getDateTime()
         )).collect(Collectors.toList());
-
+    }
+    @Override
+    public CustomerAnalyticDto getCustomerAnalytic(UUID customerId) {
+        CustomerCreateBehavior customerBehavior = customerCreateBehaviorRepository.findByCustomerId(customerId);
+        CustomerAnalyticDto customerAnalyticDto = new CustomerAnalyticDto();
+        customerAnalyticDto.setId(customerBehavior.getId());
+        customerAnalyticDto.setCustomerId(customerBehavior.getCustomerId().toString());
+        customerAnalyticDto.setFirstName(customerBehavior.getFirstName());
+        customerAnalyticDto.setLastName(customerBehavior.getLastName());
+        customerAnalyticDto.setEmail(customerBehavior.getEmail());
+        customerAnalyticDto.setEventType(customerBehavior.getEventType().name());
+        customerAnalyticDto.setDateTime(customerBehavior.getDateTime());
+        return customerAnalyticDto;
     }
 }

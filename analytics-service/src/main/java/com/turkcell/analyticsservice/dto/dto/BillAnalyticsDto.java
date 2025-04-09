@@ -1,4 +1,4 @@
-package com.turkcell.analyticsservice.dto.ForUserDto;
+package com.turkcell.analyticsservice.dto.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,13 +7,17 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ExampleBillDto {
+public class BillAnalyticsDto {
+    UUID id;
     String customerId;
     BigDecimal amount;
     LocalDateTime dueDate;
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
+
 }

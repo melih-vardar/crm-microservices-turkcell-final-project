@@ -1,8 +1,5 @@
 package com.turkcell.analyticsservice.kafka;
 
-
-import com.turkcell.analyticsservice.dto.ForUserDto.ExampleBillDto;
-import com.turkcell.analyticsservice.dto.ForUserDto.TicketExampleDto;
 import com.turkcell.analyticsservice.service.BillBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerSupportBehaviorService;

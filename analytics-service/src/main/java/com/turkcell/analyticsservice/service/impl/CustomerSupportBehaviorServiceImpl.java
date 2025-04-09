@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +51,18 @@ public class CustomerSupportBehaviorServiceImpl implements CustomerSupportBehavi
                 customerSupportBehavior.getTicketStatus().name(),
                 customerSupportBehavior.getEventTime()
         )).collect(Collectors.toList());
+    }
+
+    @Override
+    public TicketAnalyticsDto findTicketAnalyticsById(UUID customerId) {
+        CustomerSupportBehavior customerSupportBehavior = repository.findByCustomerId(customerId);
+        TicketAnalyticsDto ticketAnalyticsDto = new TicketAnalyticsDto();
+        ticketAnalyticsDto.setId(customerSupportBehavior.getId());
+        ticketAnalyticsDto.setCustomerId(customerSupportBehavior.getCustomerId());
+        ticketAnalyticsDto.setTicketId(customerSupportBehavior.getTicketId());
+        ticketAnalyticsDto.setEventType(customerSupportBehavior.getEventType().name());
+        ticketAnalyticsDto.setEventTime(customerSupportBehavior.getEventTime());
+        return ticketAnalyticsDto;
     }
 
 

@@ -14,8 +14,8 @@ public interface UserBehaviorService {
     void registerAnalyticsToUser(CreateUserAnalyticsEvent createUserAnalyticsEvent);
     void sendUserLoginAnalytics(LoginUserAnalyticsEvent loginUserAnalyticsEvent);
     List<GetAllUserAnalyticsDto> getAllCreateUserAnalytics();
-    public GetUserBehaviorDto getCreateUserBehaviorAnalytic(String email);
-    public List<GetAllLoginUserDto> GetAllLoginUserAnalytics();
+    GetUserBehaviorDto getCreateUserBehaviorAnalytic(String email);
+    List<GetAllLoginUserDto> GetAllLoginUserAnalytics();
 
 
 
