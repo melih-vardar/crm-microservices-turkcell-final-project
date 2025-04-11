@@ -1,4 +1,4 @@
-name: Build and Deploy Microservices
+name: Build and Deploy to AWS EKS
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  DOCKERHUB_USERNAME: bothuany
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
 jobs:
   build-and-push:
@@ -41,7 +41,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
@@ -50,8 +50,8 @@ jobs:
           context: ./${{ matrix.service }}
           push: true
           tags: |
-            ${{ env.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
-            ${{ env.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
 
   deploy-to-kubernetes:
     needs: build-and-push
@@ -60,15 +60,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up kubeconfig
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Update kubeconfig
         run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
+          aws eks update-kubeconfig --name crm-cluster --region eu-central-1
 
       - name: Update Kubernetes manifests
         run: |
-          # Replace placeholders with actual values
           find ./k8s -type f -name "*.yaml" -exec sed -i "s/\${DOCKERHUB_USERNAME}/${{ secrets.DOCKERHUB_USERNAME }}/g" {} \;
 
       - name: Deploy to Kubernetes
@@ -83,14 +87,14 @@ jobs:
 
           # Wait for infrastructure to be ready
           echo "Waiting for infrastructure components to be ready..."
-          sleep 30
+          sleep 60
 
           # Deploy core services
           kubectl apply -f k8s/06-core-services.yaml
 
           # Wait for core services to be ready
           echo "Waiting for core services to be ready..."
-          sleep 60
+          sleep 90
 
           # Deploy microservices
           kubectl apply -f k8s/08-microservices.yaml
@@ -100,4 +104,4 @@ jobs:
       - name: Verify deployment
         run: |
           kubectl get all -n crm-system
-          echo "Access your application at http://$(kubectl get ingress gateway-ingress -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+          echo "Access your application at http://$(kubectl get svc gateway-server -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"

@@ -168,6 +168,7 @@ metadata:
   name: gateway-server
   namespace: crm-system
 spec:
+  type: LoadBalancer
   replicas: 1
   selector:
     matchLabels:
@@ -256,10 +257,11 @@ metadata:
   name: gateway-server
   namespace: crm-system
 spec:
+  type: LoadBalancer
   selector:
     app: gateway-server
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
