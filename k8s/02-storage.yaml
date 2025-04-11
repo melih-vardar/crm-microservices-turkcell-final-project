@@ -10,7 +10,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: postgres-user-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -24,7 +23,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: postgres-customer-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -38,7 +36,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: postgres-billing-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -52,7 +49,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: postgres-analytics-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -66,7 +62,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: postgres-contract-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -80,7 +75,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: postgres-plan-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -94,7 +88,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: mongodb-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -108,7 +101,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  volumeName: redis-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -122,7 +114,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-  volumeName: prometheus-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -136,4 +127,3 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  volumeName: grafana-pv
