@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "analytics-service-collection",
+		"name": "Analytics Service",
+		"description": "Collection for Analytics Service endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "your_jwt_token_here",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "User Behavior Analytics",
+			"item": [
+				{
+					"name": "Get All User Creation Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/user-behavior/user-create-analytics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "user-behavior", "user-create-analytics"]
+						}
+					}
+				},
+				{
+					"name": "Get User Behavior Analytics by Email",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/user-behavior/user-analytics/by-email?email=user@example.com",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "user-behavior", "user-analytics", "by-email"],
+							"query": [
+								{
+									"key": "email",
+									"value": "user@example.com"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Login Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/user-behavior/login-analytics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "user-behavior", "login-analytics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Customer Support Analytics",
+			"item": [
+				{
+					"name": "Get All Ticket Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/customer-support-behavior",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "customer-support-behavior"]
+						}
+					}
+				},
+				{
+					"name": "Get Ticket Analytics by Customer ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/customer-support-behavior/{{customerId}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "customer-support-behavior", "{{customerId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Customer Behavior Analytics",
+			"item": [
+				{
+					"name": "Get All Customer Behaviors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/customer-behavior",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "customer-behavior"]
+						}
+					}
+				},
+				{
+					"name": "Get Customer Analytics by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/customer-behavior/{{customerId}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "customer-behavior", "{{customerId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Bill Behavior Analytics",
+			"item": [
+				{
+					"name": "Get All Bill Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/bill-behavior",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "bill-behavior"]
+						}
+					}
+				},
+				{
+					"name": "Get Bill Analytics by Customer ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/bill-behavior/{{customerId}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "bill-behavior", "{{customerId}}"]
+						}
+					}
+				}
+			]
+		}
+	]
+} 

@@ -1,0 +1,204 @@
+{
+  "info": {
+    "_postman_id": "contract-service-collection",
+    "name": "Contract Service API Collection",
+    "description": "Turkcell CRM Microservices - Contract Service API endpoints collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Contract Management",
+      "item": [
+        {
+          "name": "Create Contract",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"planId\": \"{{plan_id}}\",\n    \"startDate\": \"2024-03-01\",\n    \"endDate\": \"2025-03-01\",\n    \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contracts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contracts"]
+            },
+            "description": "Create a new contract (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Get Contract by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contracts/{{contract_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contracts", "{{contract_id}}"]
+            },
+            "description": "Get contract details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Get Contracts by Customer ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contracts/customer/{{customer_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contracts", "customer", "{{customer_id}}"]
+            },
+            "description": "Get all contracts for a customer (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Update Contract",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"planId\": \"{{plan_id}}\",\n    \"startDate\": \"2024-03-01\",\n    \"endDate\": \"2025-03-01\",\n    \"status\": \"TERMINATED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contracts/{{contract_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contracts", "{{contract_id}}"]
+            },
+            "description": "Update contract details (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Delete Contract",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contracts/{{contract_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contracts", "{{contract_id}}"]
+            },
+            "description": "Delete a contract (requires ADMIN role)"
+          }
+        }
+      ],
+      "description": "Contract management endpoints"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Store contract ID after creation",
+          "if (pm.response.code === 201) {",
+          "    if (pm.response.json() && pm.response.json().id) {",
+          "        pm.environment.set('contract_id', pm.response.json().id);",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8030",
+      "type": "string"
+    },
+    {
+      "key": "customer_rep_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "customer_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "plan_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "contract_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+} 

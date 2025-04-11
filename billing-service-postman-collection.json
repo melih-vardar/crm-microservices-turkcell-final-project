@@ -1,0 +1,246 @@
+{
+  "info": {
+    "_postman_id": "i8b52d7e-4f8b-4ded-a1bb-db3c92f7a356",
+    "name": "Billing Service API Collection",
+    "description": "Turkcell CRM Microservices - Billing Service API endpoints collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Bill Management",
+      "item": [
+        {
+          "name": "Create Bill",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"contractId\": \"{{contract_id}}\",\n    \"amount\": 199.99,\n    \"dueDate\": \"2024-05-01\",\n    \"description\": \"Monthly subscription bill\",\n    \"status\": \"UNPAID\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/bills",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bills"]
+            },
+            "description": "Create a new bill (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Bill by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bills/{{bill_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bills", "{{bill_id}}"]
+            },
+            "description": "Get bill details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Unpaid Bills",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bills/unpaid",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bills", "unpaid"]
+            },
+            "description": "Get all unpaid bills (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Bill management endpoints"
+    },
+    {
+      "name": "Payment Management",
+      "item": [
+        {
+          "name": "Process Payment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"billId\": \"{{bill_id}}\",\n    \"amount\": 199.99,\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"cardNumber\": \"4111111111111111\",\n    \"expiryDate\": \"12/25\",\n    \"cvv\": \"123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments"]
+            },
+            "description": "Process a payment for a bill (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/{{payment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "{{payment_id}}"]
+            },
+            "description": "Get payment details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Methods",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/methods",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "methods"]
+            },
+            "description": "Get available payment methods (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Payment management endpoints"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Store bill ID after creation",
+          "if (pm.response.code === 200) {",
+          "    if (pm.response.json() && pm.response.json().id) {",
+          "        pm.environment.set('bill_id', pm.response.json().id);",
+          "    }",
+          "}",
+          "",
+          "// Store payment ID after processing",
+          "if (pm.response.code === 200) {",
+          "    if (pm.response.json() && pm.response.json().id) {",
+          "        pm.environment.set('payment_id', pm.response.json().id);",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8050",
+      "type": "string"
+    },
+    {
+      "key": "customer_rep_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "customer_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "contract_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "bill_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "payment_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+} 
