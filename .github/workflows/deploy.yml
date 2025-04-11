@@ -79,6 +79,7 @@ jobs:
         run: |
           kubectl apply -f k8s/00-namespace.yaml
           kubectl apply -f k8s/01-configmaps.yaml
+          kubectl apply -f k8s/aws-ebs-sc.yaml
           kubectl apply -f k8s/02-storage.yaml
           kubectl apply -f k8s/03-databases.yaml
           kubectl apply -f k8s/04-kafka.yaml

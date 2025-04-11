@@ -4,11 +4,13 @@ metadata:
   name: postgres-user-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: postgres-user-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -16,11 +18,13 @@ metadata:
   name: postgres-customer-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: postgres-customer-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -28,11 +32,13 @@ metadata:
   name: postgres-billing-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: postgres-billing-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -40,11 +46,13 @@ metadata:
   name: postgres-analytics-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: postgres-analytics-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -52,11 +60,13 @@ metadata:
   name: postgres-contract-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: postgres-contract-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -64,11 +74,13 @@ metadata:
   name: postgres-plan-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: postgres-plan-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -76,11 +88,13 @@ metadata:
   name: mongodb-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: mongodb-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -88,11 +102,13 @@ metadata:
   name: redis-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
+  volumeName: redis-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -100,11 +116,13 @@ metadata:
   name: prometheus-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
+  volumeName: prometheus-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -112,8 +130,10 @@ metadata:
   name: grafana-data
   namespace: crm-system
 spec:
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
+  volumeName: grafana-pv
