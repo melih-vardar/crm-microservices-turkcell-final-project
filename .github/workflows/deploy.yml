@@ -6,78 +6,70 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: docker.io
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  AWS_REGION: eu-central-1
+  EKS_CLUSTER_NAME: crm-cluster
 
 jobs:
-  detect-changes:
+  changes:
+    name: Detect changes
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.filter.outputs.changes }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Detect changed services
-        id: changes
+      - name: Filter changes
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            config-server:
+              - 'config-server/**'
+            discovery-server:
+              - 'discovery-server/**'
+            gateway-server:
+              - 'gateway-server/**'
+            user-service:
+              - 'user-service/**'
+            customer-service:
+              - 'customer-service/**'
+            billing-service:
+              - 'billing-service/**'
+            analytics-service:
+              - 'analytics-service/**'
+            contract-service:
+              - 'contract-service/**'
+            plan-service:
+              - 'plan-service/**'
+            notification-service:
+              - 'notification-service/**'
+            customer-support-service:
+              - 'customer-support-service/**'
+            kubernetes:
+              - 'k8s/**'
+
+      - name: Create matrix
+        id: create-matrix
         run: |
-          # Check if this is the first commit
-          if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
-            # Not the first commit, can compare with previous
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          else
-            # First commit, list all files
-            CHANGED_FILES=$(git ls-tree --name-only -r HEAD)
-          fi
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
+          CHANGES=$(echo '${{ toJSON(steps.filter.outputs) }}')
+          SERVICES=$(echo $CHANGES | jq -c '[keys[] | select(. != "kubernetes" && . != "all" && . != "all_count" && ${CHANGES}[.] == "true")]')
+          echo "Changes detected: $SERVICES"
+          echo "changes=$SERVICES" >> $GITHUB_OUTPUT
 
-          # Detect changed services
-          declare -a SERVICES=()
-          for SERVICE in config-server discovery-server gateway-server user-service customer-service billing-service analytics-service contract-service plan-service notification-service customer-support-service; do
-            if echo "$CHANGED_FILES" | grep -q "^$SERVICE/"; then
-              SERVICES+=("$SERVICE")
-              echo "Service has changes: $SERVICE"
-            fi
-          done
-
-          # Check for k8s config changes
-          K8S_CHANGES=false
-          if echo "$CHANGED_FILES" | grep -q "^k8s/"; then
-            K8S_CHANGES=true
-            echo "Kubernetes configurations changed"
-          fi
-
-          # Create JSON array of services
-          JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//')
-          echo "matrix=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
-          echo "k8s_changed=$K8S_CHANGES" >> $GITHUB_OUTPUT
-
-      - name: Set matrix
-        id: set-matrix
-        run: |
-          # Get the JSON array from previous step
-          SERVICES_JSON="${{ steps.changes.outputs.matrix }}"
-          echo "Services to build: $SERVICES_JSON"
-
-          # Create valid matrix JSON
-          if [ -z "$SERVICES_JSON" ] || [ "$SERVICES_JSON" = "[]" ]; then
-            echo "matrix={\"service\":[]}" >> $GITHUB_OUTPUT
-          else
-            echo "matrix={\"service\":$SERVICES_JSON}" >> $GITHUB_OUTPUT
-          fi
-
-  build-and-push:
-    needs: detect-changes
-    if: ${{ toJson(fromJson(needs.detect-changes.outputs.matrix).service) != '[]' }}
+  build:
+    name: Build and push images
+    needs: changes
+    if: needs.changes.outputs.matrix != '[]' && needs.changes.outputs.matrix != ''
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix:
+        service: ${{ fromJson(needs.changes.outputs.matrix) }}
       fail-fast: false
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up JDK 11
@@ -85,6 +77,10 @@ jobs:
         with:
           java-version: "11"
           distribution: "temurin"
+          cache: maven
+
+      - name: Echo service name
+        run: echo "Building service ${{ matrix.service }}"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -92,7 +88,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: ./${{ matrix.service }}
@@ -100,11 +99,14 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache,mode=max
 
-  deploy-to-kubernetes:
-    needs: [detect-changes, build-and-push]
-    if: always() && (needs.detect-changes.result == 'success')
+  deploy:
+    name: Deploy to Kubernetes
     runs-on: ubuntu-latest
+    needs: [changes, build]
+    if: always() && needs.changes.result == 'success'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -114,53 +116,76 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --name crm-cluster --region eu-central-1
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
-      - name: Update Kubernetes manifests
+      - name: Replace Docker username in manifests
         run: |
           find ./k8s -type f -name "*.yaml" -exec sed -i "s/\${DOCKERHUB_USERNAME}/${{ secrets.DOCKERHUB_USERNAME }}/g" {} \;
 
-      - name: Deploy to Kubernetes
+      - name: Deploy infrastructure
         run: |
           kubectl apply -f k8s/00-namespace.yaml
+
+          # ConfigMaps
           kubectl apply -f k8s/01-configmaps.yaml
+          kubectl apply -f k8s/07-config-maps.yaml
 
-          # Apply Storage Class first
+          # Storage
           kubectl apply -f k8s/aws-ebs-sc.yaml
-
-          # Apply storage configuration (PVCs)
           kubectl apply -f k8s/02-storage.yaml
 
+          # Databases and dependencies
           kubectl apply -f k8s/03-databases.yaml
           kubectl apply -f k8s/04-kafka.yaml
           kubectl apply -f k8s/05-monitoring.yaml
+
+          # LoadBalancer services
           kubectl apply -f k8s/grafana-lb.yaml
           kubectl apply -f k8s/discovery-server-lb.yaml
-          kubectl apply -f k8s/07-config-maps.yaml
 
-          # Wait for infrastructure to be ready
-          echo "Waiting for infrastructure components to be ready..."
-          sleep 60
+          echo "Infrastructure deployed"
 
-          # Deploy core services
+      - name: Wait for infrastructure
+        run: |
+          echo "Waiting for infrastructure to be ready..."
+          kubectl -n crm-system wait --for=condition=ready pod -l app=postgres-user --timeout=120s || true
+          kubectl -n crm-system wait --for=condition=ready pod -l app=mongodb --timeout=120s || true
+          kubectl -n crm-system wait --for=condition=ready pod -l app=redis --timeout=120s || true
+          kubectl -n crm-system wait --for=condition=ready pod -l app=kafka --timeout=120s || true
+          sleep 30
+
+      - name: Deploy core services
+        run: |
           kubectl apply -f k8s/06-core-services.yaml
+          echo "Core services deployed"
 
-          # Wait for core services to be ready
+      - name: Wait for core services
+        run: |
           echo "Waiting for core services to be ready..."
-          sleep 90
+          kubectl -n crm-system wait --for=condition=ready pod -l app=config-server --timeout=120s || true
+          kubectl -n crm-system wait --for=condition=ready pod -l app=discovery-server --timeout=120s || true
+          kubectl -n crm-system wait --for=condition=ready pod -l app=gateway-server --timeout=120s || true
+          sleep 30
 
-          # Deploy microservices
+      - name: Deploy microservices
+        run: |
           kubectl apply -f k8s/08-microservices.yaml
-
-          echo "Deployment completed"
+          echo "Microservices deployed"
 
       - name: Verify deployment
         run: |
           kubectl get all -n crm-system
-          echo "Access your application at http://$(kubectl get svc gateway-server -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
-          echo "Access Grafana at http://$(kubectl get svc grafana-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
-          echo "Access Discovery Server at http://$(kubectl get svc discovery-server-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'):8888"
+
+          # Get access URLs
+          GATEWAY_URL=$(kubectl get svc gateway-server -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
+          GRAFANA_URL=$(kubectl get svc grafana-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
+          DISCOVERY_URL=$(kubectl get svc discovery-server-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
+
+          echo "===== Access Information ====="
+          echo "API Gateway: http://$GATEWAY_URL"
+          echo "Grafana: http://$GRAFANA_URL"
+          echo "Eureka Discovery: http://$DISCOVERY_URL:8888"
+          echo "============================"
