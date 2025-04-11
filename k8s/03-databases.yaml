@@ -25,6 +25,8 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "user"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           readinessProbe:
             exec:
               command:
@@ -83,6 +85,8 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "customer"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           readinessProbe:
             exec:
               command:
@@ -150,6 +154,8 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "billing"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           readinessProbe:
             exec:
               command:
@@ -217,6 +223,8 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "analytics"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           readinessProbe:
             exec:
               command:
@@ -284,6 +292,8 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "contract"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           readinessProbe:
             exec:
               command:
@@ -351,6 +361,8 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "plan"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           readinessProbe:
             exec:
               command:
