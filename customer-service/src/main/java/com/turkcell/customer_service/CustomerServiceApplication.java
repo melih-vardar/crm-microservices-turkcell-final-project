@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 })
 public class CustomerServiceApplication {
 	public static void main(String[] args) {
+		// CI/CD test
 		SpringApplication.run(CustomerServiceApplication.class, args);
 	}
 }

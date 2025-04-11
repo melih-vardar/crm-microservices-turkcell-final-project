@@ -54,15 +54,57 @@ jobs:
       - name: Create matrix
         id: create-matrix
         run: |
-          CHANGES=$(echo '${{ toJSON(steps.filter.outputs) }}')
-          SERVICES=$(echo $CHANGES | jq -c '[keys[] | select(. != "kubernetes" && . != "all" && . != "all_count" && ${CHANGES}[.] == "true")]')
-          echo "Changes detected: $SERVICES"
-          echo "changes=$SERVICES" >> $GITHUB_OUTPUT
+          # Tüm değişiklikleri görüntüle
+          echo "All outputs from filter: "
+          echo '${{ toJSON(steps.filter.outputs) }}'
+
+          # Servisleri array olarak oluştur
+          SERVICES=()
+
+          # Her servis için kontrol et
+          if [[ "${{ steps.filter.outputs.config-server }}" == "true" ]]; then
+            SERVICES+=("config-server")
+          fi
+          if [[ "${{ steps.filter.outputs.discovery-server }}" == "true" ]]; then
+            SERVICES+=("discovery-server")
+          fi
+          if [[ "${{ steps.filter.outputs.gateway-server }}" == "true" ]]; then
+            SERVICES+=("gateway-server")
+          fi
+          if [[ "${{ steps.filter.outputs.user-service }}" == "true" ]]; then
+            SERVICES+=("user-service")
+          fi
+          if [[ "${{ steps.filter.outputs.customer-service }}" == "true" ]]; then
+            SERVICES+=("customer-service")
+          fi
+          if [[ "${{ steps.filter.outputs.billing-service }}" == "true" ]]; then
+            SERVICES+=("billing-service")
+          fi
+          if [[ "${{ steps.filter.outputs.analytics-service }}" == "true" ]]; then
+            SERVICES+=("analytics-service")
+          fi
+          if [[ "${{ steps.filter.outputs.contract-service }}" == "true" ]]; then
+            SERVICES+=("contract-service")
+          fi
+          if [[ "${{ steps.filter.outputs.plan-service }}" == "true" ]]; then
+            SERVICES+=("plan-service")
+          fi
+          if [[ "${{ steps.filter.outputs.notification-service }}" == "true" ]]; then
+            SERVICES+=("notification-service")
+          fi
+          if [[ "${{ steps.filter.outputs.customer-support-service }}" == "true" ]]; then
+            SERVICES+=("customer-support-service")
+          fi
+
+          # Array'i JSON formatına çevir
+          JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//')
+          echo "Changes detected in: [${JSON_ARRAY}]"
+          echo "changes=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
 
   build:
     name: Build and push images
     needs: changes
-    if: needs.changes.outputs.matrix != '[]' && needs.changes.outputs.matrix != ''
+    if: ${{ needs.changes.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -106,7 +148,7 @@ jobs:
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     needs: [changes, build]
-    if: always() && needs.changes.result == 'success'
+    if: always() && (needs.changes.result == 'success')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

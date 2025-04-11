@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 })
 public class NotificationServiceApplication {
 	public static void main(String[] args) {
+		// CI/CD test
 		SpringApplication.run(NotificationServiceApplication.class, args);
 	}
 }

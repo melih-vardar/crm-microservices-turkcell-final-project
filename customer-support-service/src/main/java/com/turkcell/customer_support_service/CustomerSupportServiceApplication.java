@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Import;
 })
 public class CustomerSupportServiceApplication {
     public static void main(String[] args) {
+        // CI/CD test
         SpringApplication.run(CustomerSupportServiceApplication.class, args);
     }
 }

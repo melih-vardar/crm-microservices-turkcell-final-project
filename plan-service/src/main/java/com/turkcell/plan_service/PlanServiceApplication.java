@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 })
 public class PlanServiceApplication {
     public static void main(String[] args) {
+        // CI/CD test
         SpringApplication.run(PlanServiceApplication.class, args);
     }
 }

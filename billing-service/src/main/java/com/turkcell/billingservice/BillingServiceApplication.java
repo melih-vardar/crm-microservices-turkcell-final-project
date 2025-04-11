@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import;
 })
 public class BillingServiceApplication {
     public static void main(String[] args) {
+        // CI/CD test
         SpringApplication.run(BillingServiceApplication.class, args);
     }
 }
