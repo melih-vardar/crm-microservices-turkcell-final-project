@@ -12,9 +12,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 		DataSourceTransactionManagerAutoConfiguration.class
 })
 public class NotificationServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(NotificationServiceApplication.class, args);
 	}
-
 }

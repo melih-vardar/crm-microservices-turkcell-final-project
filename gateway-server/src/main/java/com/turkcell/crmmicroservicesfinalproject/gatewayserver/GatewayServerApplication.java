@@ -9,9 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 public class GatewayServerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GatewayServerApplication.class, args);
     }
-
 }

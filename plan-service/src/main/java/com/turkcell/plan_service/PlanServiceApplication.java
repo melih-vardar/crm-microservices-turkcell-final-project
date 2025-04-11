@@ -15,9 +15,7 @@ import org.springframework.context.annotation.Import;
         "io.github.bothuany.security"
 })
 public class PlanServiceApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(PlanServiceApplication.class, args);
     }
-
 }

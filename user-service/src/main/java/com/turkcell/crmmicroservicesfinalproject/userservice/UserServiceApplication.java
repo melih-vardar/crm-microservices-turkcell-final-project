@@ -15,9 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "io.github.bothuany.security.jwt"
 })
 public class UserServiceApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
     }
-
 }

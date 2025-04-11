@@ -14,9 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 		"io.github.bothuany.security"
 })
 public class ContractServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ContractServiceApplication.class, args);
 	}
-
 }
