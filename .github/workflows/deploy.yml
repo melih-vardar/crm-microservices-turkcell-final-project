@@ -10,24 +10,63 @@ env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed services
+        id: changes
+        run: |
+          # Son committen değişen dosyaları tespit et
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          echo "Changed files: $CHANGED_FILES"
+
+          # Değişen servisleri belirle
+          SERVICES=()
+          for SERVICE in config-server discovery-server gateway-server user-service customer-service billing-service analytics-service contract-service plan-service notification-service customer-support-service; do
+            if echo "$CHANGED_FILES" | grep -q "$SERVICE/"; then
+              SERVICES+=("$SERVICE")
+              echo "$SERVICE service has changes"
+            fi
+          done
+
+          # Eğer hiç servis değişmemişse k8s konfigürasyonlarını kontrol et
+          if [ ${#SERVICES[@]} -eq 0 ]; then
+            if echo "$CHANGED_FILES" | grep -q "k8s/"; then
+              echo "Only Kubernetes configurations changed, skipping build"
+            else
+              echo "No services or Kubernetes configurations changed"
+            fi
+          fi
+
+          # JSON formatında çıktı oluştur
+          JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//g')
+          echo "matrix=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
+
+      - name: Set matrix
+        id: set-matrix
+        run: |
+          SERVICES_JSON=$(echo "${{ steps.changes.outputs.matrix }}")
+          if [ -z "$SERVICES_JSON" ] || [ "$SERVICES_JSON" == "[]" ]; then
+            echo "No services to build, setting empty matrix"
+            echo "matrix={\"service\":[]}" >> $GITHUB_OUTPUT
+          else
+            echo "Services to build: $SERVICES_JSON"
+            echo "matrix={\"service\":$SERVICES_JSON}" >> $GITHUB_OUTPUT
+          fi
+
   build-and-push:
+    needs: detect-changes
+    if: ${{ toJson(fromJson(needs.detect-changes.outputs.matrix).service) != '[]' }}
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        service:
-          [
-            config-server,
-            discovery-server,
-            gateway-server,
-            user-service,
-            customer-service,
-            billing-service,
-            analytics-service,
-            contract-service,
-            plan-service,
-            notification-service,
-            customer-support-service,
-          ]
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,7 +93,8 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
 
   deploy-to-kubernetes:
-    needs: build-and-push
+    needs: [detect-changes, build-and-push]
+    if: always() && (needs.detect-changes.result == 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
