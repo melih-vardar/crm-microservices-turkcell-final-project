@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -50,6 +51,7 @@ public class ContractController {
             @ApiResponse(responseCode = "201", description = "Contract created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid contract data or business rule violation")
     })
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<ContractResponseDTO> createContract(@Valid @RequestBody ContractCreateDTO request) {
         ContractResponseDTO response = contractService.createContract(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -61,6 +63,7 @@ public class ContractController {
             @ApiResponse(responseCode = "200", description = "Contract found"),
             @ApiResponse(responseCode = "404", description = "Contract not found")
     })
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<ContractResponseDTO> getContract(@PathVariable UUID id) {
         ContractResponseDTO response = contractService.getContract(id);
         return ResponseEntity.ok(response);
@@ -73,6 +76,7 @@ public class ContractController {
             @ApiResponse(responseCode = "400", description = "Invalid contract data or business rule violation"),
             @ApiResponse(responseCode = "404", description = "Contract not found")
     })
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<ContractResponseDTO> updateContract(
             @PathVariable UUID id,
             @Valid @RequestBody ContractCreateDTO request) {
@@ -86,6 +90,7 @@ public class ContractController {
             @ApiResponse(responseCode = "204", description = "Contract deactivated successfully"),
             @ApiResponse(responseCode = "404", description = "Contract not found")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteContract(@PathVariable UUID id) {
         contractService.deleteContract(id);
         return ResponseEntity.noContent().build();
@@ -96,6 +101,7 @@ public class ContractController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Contracts retrieved successfully")
     })
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<List<ContractResponseDTO>> getContractsByCustomerId(@PathVariable UUID customerId) {
         List<ContractResponseDTO> contracts = contractService.getContractsByCustomerId(customerId);
         return ResponseEntity.ok(contracts);

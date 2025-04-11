@@ -4,6 +4,7 @@ import com.turkcell.analyticsservice.dto.dto.CustomerAnalyticDto;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,12 @@ public class CustomerBehaviorController {
     private final CustomerBehaviorService customerBehaviorService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CustomerAnalyticDto>> getAllCustomerBehaviors() {
         return ResponseEntity.ok(customerBehaviorService.getAllCustomerBehaviors());
     }
     @GetMapping("/{customerId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CustomerAnalyticDto> getCustomerAnalytic(@PathVariable UUID customerId) {
         return ResponseEntity.ok(customerBehaviorService.getCustomerAnalytic(customerId));
     }

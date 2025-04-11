@@ -32,24 +32,28 @@ public class CustomerController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
         logAuthenticationDetails("getAllCustomers");
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerCreateDTO request) {
         logAuthenticationDetails("createCustomer");
         return new ResponseEntity<>(customerService.createCustomer(request), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable UUID id) {
         logAuthenticationDetails("getCustomer");
         return ResponseEntity.ok(customerService.getCustomer(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable UUID id,
             @Valid @RequestBody CustomerCreateDTO request) {
         logAuthenticationDetails("updateCustomer");
@@ -57,6 +61,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         logAuthenticationDetails("deleteCustomer");
         customerService.deleteCustomer(id);
@@ -64,12 +69,14 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}/bills")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<List<Object>> getCustomerBills(@PathVariable UUID id) {
         logAuthenticationDetails("getCustomerBills");
         return ResponseEntity.ok(customerService.getCustomerBills(id));
     }
 
     @GetMapping("/{id}/contracts")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<List<Object>> getCustomerContracts(@PathVariable UUID id) {
         logAuthenticationDetails("getCustomerContracts");
         return ResponseEntity.ok(customerService.getCustomerContracts(id));
