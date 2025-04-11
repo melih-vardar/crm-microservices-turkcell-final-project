@@ -1,0 +1,166 @@
+{
+  "info": {
+    "_postman_id": "notification-service-collection",
+    "name": "Notification Service API Collection",
+    "description": "Turkcell CRM Microservices - Notification Service API endpoints collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Notification Management",
+      "item": [
+        {
+          "name": "Send Email Notification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"to\": \"customer@example.com\",\n    \"subject\": \"Welcome to Turkcell\",\n    \"body\": \"Thank you for choosing Turkcell!\",\n    \"type\": \"EMAIL\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notifications/email",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "email"]
+            },
+            "description": "Send an email notification (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Send SMS Notification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"to\": \"+905551234567\",\n    \"message\": \"Welcome to Turkcell!\",\n    \"type\": \"SMS\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notifications/sms",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "sms"]
+            },
+            "description": "Send an SMS notification (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Get Notification History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/history",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "history"]
+            },
+            "description": "Get notification history (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        },
+        {
+          "name": "Get Notification by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/{{notification_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "{{notification_id}}"]
+            },
+            "description": "Get notification details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+          }
+        }
+      ],
+      "description": "Notification management endpoints"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Store notification ID after creation",
+          "if (pm.response.code === 201) {",
+          "    if (pm.response.json() && pm.response.json().id) {",
+          "        pm.environment.set('notification_id', pm.response.json().id);",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8070",
+      "type": "string"
+    },
+    {
+      "key": "customer_rep_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "notification_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+} 

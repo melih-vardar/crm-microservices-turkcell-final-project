@@ -1,0 +1,376 @@
+{
+  "info": {
+    "_postman_id": "plan-service-collection",
+    "name": "Plan Service API Collection",
+    "description": "Turkcell CRM Microservices - Plan Service API endpoints collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Test Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/plans/test",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans", "test"]
+            },
+            "description": "Test if the plan service is working"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/plans/test",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans", "test"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"status\": \"success\",\n    \"message\": \"Plan service is working\",\n    \"timestamp\": \"2023-06-01T12:00:00Z\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints that are accessible without authentication"
+    },
+    {
+      "name": "Plan Management",
+      "item": [
+        {
+          "name": "Create Plan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/plans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans"]
+            },
+            "description": "Create a new plan (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/plans",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2023-06-01T12:00:00Z\",\n    \"updatedAt\": \"2023-06-01T12:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Plan by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/plans/{{plan_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans", "{{plan_id}}"]
+            },
+            "description": "Get plan details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440000"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2023-06-01T12:00:00Z\",\n    \"updatedAt\": \"2023-06-01T12:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Plans",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/plans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans"]
+            },
+            "description": "Get all plans (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/plans",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile Plan\",\n        \"description\": \"Unlimited data and calls\",\n        \"price\": 199.99,\n        \"duration\": 30,\n        \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n        \"status\": \"ACTIVE\",\n        \"createdAt\": \"2023-06-01T12:00:00Z\",\n        \"updatedAt\": \"2023-06-01T12:00:00Z\"\n    },\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"name\": \"Basic Mobile Plan\",\n        \"description\": \"Limited data and calls\",\n        \"price\": 99.99,\n        \"duration\": 30,\n        \"features\": [\"5GB Data\", \"100 Minutes Calls\", \"4G Access\"],\n        \"status\": \"ACTIVE\",\n        \"createdAt\": \"2023-06-01T12:00:00Z\",\n        \"updatedAt\": \"2023-06-01T12:00:00Z\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Update Plan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Premium Mobile Plan Updated\",\n    \"description\": \"Unlimited data and calls with 5G\",\n    \"price\": 249.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\", \"International Roaming\"],\n    \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/plans/{{plan_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans", "{{plan_id}}"]
+            },
+            "description": "Update plan details (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Premium Mobile Plan Updated\",\n    \"description\": \"Unlimited data and calls with 5G\",\n    \"price\": 249.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\", \"International Roaming\"],\n    \"status\": \"ACTIVE\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440000"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plan Updated\",\n    \"description\": \"Unlimited data and calls with 5G\",\n    \"price\": 249.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\", \"International Roaming\"],\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2023-06-01T12:00:00Z\",\n    \"updatedAt\": \"2023-06-01T12:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Plan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/plans/{{plan_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans", "{{plan_id}}"]
+            },
+            "description": "Delete a plan (requires ADMIN role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440000"]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "description": "Plan management endpoints"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Store plan ID after creation",
+          "if (pm.response.code === 201) {",
+          "    if (pm.response.json() && pm.response.json().id) {",
+          "        pm.environment.set('plan_id', pm.response.json().id);",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8040",
+      "type": "string"
+    },
+    {
+      "key": "customer_rep_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "plan_id",
+      "value": "",
+      "type": "default"
+    }
+  ]
+} 
