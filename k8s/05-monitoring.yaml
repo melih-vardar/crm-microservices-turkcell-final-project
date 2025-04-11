@@ -95,6 +95,10 @@ spec:
       labels:
         app: prometheus
     spec:
+      securityContext:
+        fsGroup: 65534
+        runAsUser: 65534
+        runAsGroup: 65534
       containers:
         - name: prometheus
           image: prom/prometheus
@@ -1129,11 +1133,16 @@ spec:
       labels:
         app: grafana
     spec:
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
+        runAsNonRoot: true
       containers:
         - name: grafana
           image: grafana/grafana:9.5.2
           ports:
             - containerPort: 3000
+              name: http-grafana
           env:
             - name: GF_SECURITY_ADMIN_USER
               value: "admin"
@@ -1141,6 +1150,18 @@ spec:
               value: "admin"
             - name: GF_INSTALL_PLUGINS
               value: "grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http-grafana
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http-grafana
+            initialDelaySeconds: 60
+            periodSeconds: 30
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
@@ -1148,18 +1169,6 @@ spec:
               mountPath: /etc/grafana/provisioning/datasources
             - name: grafana-dashboards
               mountPath: /etc/grafana/provisioning/dashboards
-          readinessProbe:
-            httpGet:
-              path: /api/health
-              port: 3000
-            initialDelaySeconds: 30
-            periodSeconds: 15
-          livenessProbe:
-            httpGet:
-              path: /api/health
-              port: 3000
-            initialDelaySeconds: 60
-            periodSeconds: 30
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:

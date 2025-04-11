@@ -83,16 +83,7 @@ jobs:
           # Apply Storage Class first
           kubectl apply -f k8s/aws-ebs-sc.yaml
 
-          # Clean up existing PVCs to avoid conflicts
-          echo "Cleaning up existing PVCs..."
-          kubectl delete pvc --all -n crm-system --ignore-not-found=true
-
-          # Clean up any manual PVs if they exist
-          echo "Cleaning up existing manual PVs..."
-          kubectl delete pv postgres-user-pv postgres-customer-pv postgres-billing-pv postgres-analytics-pv postgres-contract-pv postgres-plan-pv mongodb-pv redis-pv prometheus-pv grafana-pv --ignore-not-found=true
-
-          # Apply new PVCs
-          echo "Creating new PVCs with EBS storage class..."
+          # Apply storage configuration (PVCs)
           kubectl apply -f k8s/02-storage.yaml
 
           kubectl apply -f k8s/03-databases.yaml
