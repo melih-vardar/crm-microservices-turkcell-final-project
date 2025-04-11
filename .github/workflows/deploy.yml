@@ -89,6 +89,8 @@ jobs:
           kubectl apply -f k8s/03-databases.yaml
           kubectl apply -f k8s/04-kafka.yaml
           kubectl apply -f k8s/05-monitoring.yaml
+          kubectl apply -f k8s/grafana-lb.yaml
+          kubectl apply -f k8s/discovery-server-lb.yaml
           kubectl apply -f k8s/07-config-maps.yaml
 
           # Wait for infrastructure to be ready
@@ -111,3 +113,5 @@ jobs:
         run: |
           kubectl get all -n crm-system
           echo "Access your application at http://$(kubectl get svc gateway-server -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
+          echo "Access Grafana at http://$(kubectl get svc grafana-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
+          echo "Access Discovery Server at http://$(kubectl get svc discovery-server-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'):8888"
