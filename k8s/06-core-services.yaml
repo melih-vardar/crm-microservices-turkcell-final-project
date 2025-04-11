@@ -168,13 +168,10 @@ metadata:
   name: gateway-server
   namespace: crm-system
 spec:
-  type: LoadBalancer
   replicas: 1
   selector:
     matchLabels:
       app: gateway-server
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
