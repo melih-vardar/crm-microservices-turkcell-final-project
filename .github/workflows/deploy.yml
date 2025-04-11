@@ -99,7 +99,14 @@ jobs:
           # Array'i JSON formatına çevir
           JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//')
           echo "Changes detected in: [${JSON_ARRAY}]"
-          echo "changes=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
+
+          # Empty matrix protection - if nothing changed, don't output any matrix
+          if [ -z "$JSON_ARRAY" ]; then
+            echo "No services changed"
+            echo "changes=[]" >> $GITHUB_OUTPUT
+          else
+            echo "changes=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
+          fi
 
   build:
     name: Build and push images
@@ -141,14 +148,13 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache,mode=max
 
   deploy:
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     needs: [changes, build]
-    if: always() && (needs.changes.result == 'success')
+    # Run if changes job succeeded and either build succeeded or was skipped
+    if: always() && needs.changes.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
