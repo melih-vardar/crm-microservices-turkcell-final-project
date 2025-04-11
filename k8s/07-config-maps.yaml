@@ -1,0 +1,824 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-configs
+  namespace: crm-system
+data:
+  userservice-prod.yml: |
+    # User Service Configuration
+    spring:
+      application:
+        name: userservice
+      datasource:
+        url: jdbc:postgresql://postgres-user:5432/user
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+          connection-timeout: 30000
+          maximum-pool-size: 5
+          minimum-idle: 2
+          idle-timeout: 120000
+          max-lifetime: 1800000
+          connection-test-query: SELECT 1
+          pool-name: UserServiceHikariPool
+          auto-commit: true
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: true
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: user-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: user-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8010
+      
+    # Management settings
+    management:
+      health:
+        redis:
+          enabled: false
+        diskspace:
+          enabled: true
+        db:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,db,diskSpace
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  customerservice-prod.yml: |
+    # Customer Service Configuration
+    spring:
+      application:
+        name: customerservice
+      datasource:
+        url: jdbc:postgresql://postgres-customer:5432/customer
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+          connection-timeout: 30000
+          maximum-pool-size: 5
+          minimum-idle: 2
+          idle-timeout: 120000
+          max-lifetime: 1800000
+          connection-test-query: SELECT 1
+          pool-name: CustomerServiceHikariPool
+          auto-commit: true
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: true
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: customer-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: customer-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8020
+      
+    # Management settings
+    management:
+      health:
+        redis:
+          enabled: false
+        diskspace:
+          enabled: true
+        db:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,db,diskSpace
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  billingservice-prod.yml: |
+    # Billing Service Configuration
+    spring:
+      application:
+        name: billingservice
+      datasource:
+        url: jdbc:postgresql://postgres-billing:5432/billing
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+          connection-timeout: 30000
+          maximum-pool-size: 5
+          minimum-idle: 2
+          idle-timeout: 120000
+          max-lifetime: 1800000
+          connection-test-query: SELECT 1
+          pool-name: BillingServiceHikariPool
+          auto-commit: true
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: true
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: billing-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: billing-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8050
+      
+    # Management settings
+    management:
+      health:
+        redis:
+          enabled: false
+        diskspace:
+          enabled: true
+        db:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,db,diskSpace
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  analyticsservice-prod.yml: |
+    # Analytics Service Configuration
+    spring:
+      application:
+        name: analyticsservice
+      datasource:
+        url: jdbc:postgresql://postgres-analytics:5432/analytics
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+          connection-timeout: 30000
+          maximum-pool-size: 5
+          minimum-idle: 2
+          idle-timeout: 120000
+          max-lifetime: 1800000
+          connection-test-query: SELECT 1
+          pool-name: AnalyticsServiceHikariPool
+          auto-commit: true
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: true
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: analytics-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: analytics-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8071
+      tomcat:
+        max-threads: 50
+        min-spare-threads: 20
+
+    # Specific Actuator Configuration for Kubernetes
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,db,diskSpace
+      health:
+        livenessstate:
+          enabled: true
+        readinessstate:
+          enabled: true
+        redis:
+          enabled: false
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+        register-with-eureka: true
+        fetch-registry: true
+      instance:
+        prefer-ip-address: true
+
+  contractservice-prod.yml: |
+    # Contract Service Configuration
+    spring:
+      application:
+        name: contractservice
+      datasource:
+        url: jdbc:postgresql://postgres-contract:5432/contract
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+          connection-timeout: 30000
+          maximum-pool-size: 5
+          minimum-idle: 2
+          idle-timeout: 120000
+          max-lifetime: 1800000
+          connection-test-query: SELECT 1
+          pool-name: ContractServiceHikariPool
+          auto-commit: true
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: true
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: contract-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: contract-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8030
+      
+    # Management settings
+    management:
+      health:
+        redis:
+          enabled: false
+        diskspace:
+          enabled: true
+        db:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,db,diskSpace
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  customersupportservice-prod.yml: |
+    # Customer Support Service Configuration
+    spring:
+      application:
+        name: customersupportservice
+      # Disable non-essential Auto Configuration 
+      autoconfigure:
+        exclude:
+          - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+          - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+          - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      # MongoDB configuration
+      data:
+        mongodb:
+          host: mongodb
+          port: 27017
+          database: customersupport
+          authentication-database: admin
+          connection-timeout: 5000
+          auto-index-creation: true
+          # Direct connection options
+          connect-timeout: 10000
+          socket-timeout: 10000
+          max-wait-time: 10000
+          server-selection-timeout: 10000
+          # Connection pool settings
+          min-connections-per-host: 5
+          max-connections-per-host: 10
+          max-connection-idle-time: 30000
+          max-connection-life-time: 60000
+        # Redis configuration
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: support-service-redis
+      # Redis configuration
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: support-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+      # Kafka configuration
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Allow bean overriding to resolve conflicts
+      main:
+        allow-bean-definition-overriding: true
+
+    # Logging for troubleshooting
+    logging:
+      level:
+        org.springframework.data.mongodb: DEBUG
+        org.springframework.data.redis: DEBUG
+        org.mongodb.driver: DEBUG
+        com.turkcell.crm.customersupport: DEBUG
+        org.springframework.boot.autoconfigure: DEBUG
+
+    server:
+      port: 8060
+
+    # Management settings
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,mongo,diskSpace
+      health:
+        db:
+          enabled: true
+        diskspace:
+          enabled: true
+        mongo:
+          enabled: true
+        redis:
+          enabled: false
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  planservice-prod.yml: |
+    # Plan Service Configuration
+    spring:
+      application:
+        name: planservice
+      datasource:
+        url: jdbc:postgresql://postgres-plan:5432/plan
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+        hikari:
+          connection-timeout: 30000
+          maximum-pool-size: 5
+          minimum-idle: 2
+          idle-timeout: 120000
+          max-lifetime: 1800000
+          connection-test-query: SELECT 1
+          pool-name: PlanServiceHikariPool
+          auto-commit: true
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: false
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: true
+      kafka:
+        bootstrap-servers: kafka:9092
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: plan-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: plan-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8040
+      
+    # Management settings
+    management:
+      health:
+        redis:
+          enabled: false
+        diskspace:
+          enabled: true
+        db:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState,db,diskSpace
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  notificationservice-prod.yml: |
+    # Notification Service Configuration
+    spring:
+      application:
+        name: notificationservice
+      kafka:
+        bootstrap-servers: kafka:9092
+        consumer:
+          auto-offset-reset: earliest
+          group-id: notification-service
+      # Redis configuration
+      data:
+        redis:
+          host: redis
+          port: 6379
+          database: 0
+          timeout: 10000
+          connect-timeout: 10000
+          client-name: notification-service-redis
+      redis:
+        host: redis
+        port: 6379
+        timeout: 10000
+        connect-timeout: 10000
+        max-attempts: 5
+        retry:
+          max-attempts: 3
+          initial-interval: 1000
+        lettuce:
+          shutdown-timeout: 5000
+          client-name: notification-service-lettuce
+          pool:
+            enabled: true
+            max-active: 8
+            max-idle: 8
+            min-idle: 2
+            max-wait: 5000
+
+    server:
+      port: 8090
+      
+    # Management settings
+    management:
+      health:
+        redis:
+          enabled: false
+        diskspace:
+          enabled: true
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+          group:
+            readiness:
+              include: readinessState
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+      instance:
+        prefer-ip-address: true
+
+  gatewayserver-prod.yml: |
+    # Gateway Server Configuration
+    spring:
+      application:
+        name: gatewayserver
+      cloud:
+        gateway:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/users/**
+            - id: customer-service
+              uri: lb://CUSTOMER-SERVICE
+              predicates:
+                - Path=/api/customers/**
+            - id: billing-service
+              uri: lb://BILLING-SERVICE
+              predicates:
+                - Path=/api/billing/**
+            - id: contract-service
+              uri: lb://CONTRACT-SERVICE
+              predicates:
+                - Path=/api/contracts/**
+            - id: plan-service
+              uri: lb://PLAN-SERVICE
+              predicates:
+                - Path=/api/plans/**
+            - id: customer-support-service
+              uri: lb://CUSTOMER-SUPPORT-SERVICE
+              predicates:
+                - Path=/api/support/**
+            - id: analytics-service
+              uri: lb://ANALYTICS-SERVICE
+              predicates:
+                - Path=/api/analytics/**
+
+    server:
+      port: 8080
+      tomcat:
+        max-threads: 50
+        min-spare-threads: 20
+
+    eureka:
+      client:
+        serviceUrl:
+          defaultZone: http://discovery-server:8888/eureka
+        register-with-eureka: true
+        fetch-registry: true
+      instance:
+        prefer-ip-address: true
+
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+        shutdown:
+          enabled: true
+
+    logging:
+      level:
+        root: INFO
+        org.springframework.cloud.gateway: DEBUG
+        org.springframework.web: INFO
+
+  application-prod.yml: |
+    # Common Settings for all services
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,info,metrics,prometheus
+      endpoint:
+        health:
+          show-details: always
+          probes:
+            enabled: true
+      health:
+        livenessstate:
+          enabled: true
+        readinessstate:
+          enabled: true
+
+    spring:
+      main:
+        allow-bean-definition-overriding: true
+      cloud:
+        loadbalancer:
+          ribbon:
+            enabled: false
+
+    logging:
+      level:
+        root: INFO
+        org.springframework.web: INFO
+        com.turkcell.crm: INFO
+        org.hibernate.SQL: INFO
+        com.zaxxer.hikari: INFO
+
+    eureka:
+      instance:
+        prefer-ip-address: true
+        lease-renewal-interval-in-seconds: 10
+        lease-expiration-duration-in-seconds: 30
+      client:
+        registry-fetch-interval-seconds: 10

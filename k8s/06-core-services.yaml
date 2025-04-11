@@ -1,0 +1,282 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      initContainers:
+        - name: check-volume-mount
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'echo "Checking config volume" && ls -la /config && echo "Volume check complete"',
+            ]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      containers:
+        - name: config-server
+          image: bothuany/config-server:latest
+          ports:
+            - containerPort: 8070
+          env:
+            - name: SPRING_APPLICATION_NAME
+              value: "configserver"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SERVER_PORT
+              value: "8070"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8070
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8070
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: application-configs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server
+  namespace: crm-system
+spec:
+  selector:
+    app: config-server
+  ports:
+    - port: 8070
+      targetPort: 8070
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-server
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery-server
+  template:
+    metadata:
+      labels:
+        app: discovery-server
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done; echo "Config Server is ready"',
+            ]
+      containers:
+        - name: discovery-server
+          image: bothuany/discovery-server:latest
+          ports:
+            - containerPort: 8888
+          env:
+            - name: SPRING_APPLICATION_NAME
+              value: "discoveryserver"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SERVER_PORT
+              value: "8888"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "true"
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "false"
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              value: "true"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 8
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-server
+  namespace: crm-system
+spec:
+  selector:
+    app: discovery-server
+  ports:
+    - port: 8888
+      targetPort: 8888
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-server
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gateway-server
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done; echo "Config Server is ready"',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done; echo "Discovery Server is ready"',
+            ]
+      containers:
+        - name: gateway-server
+          image: bothuany/gateway-server:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_APPLICATION_NAME
+              value: "gatewayserver"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              value: "true"
+            - name: SPRING_CLOUD_GATEWAY_HTTPCLIENT_CONNECT-TIMEOUT
+              value: "30000"
+            - name: SPRING_CLOUD_GATEWAY_HTTPCLIENT_RESPONSE-TIMEOUT
+              value: "30000"
+            - name: SERVER_TOMCAT_MAX_THREADS
+              value: "50"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 15
+            failureThreshold: 15
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 240
+            periodSeconds: 20
+            timeoutSeconds: 15
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "768Mi"
+              cpu: "1000m"
+            requests:
+              memory: "384Mi"
+              cpu: "300m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-server
+  namespace: crm-system
+spec:
+  selector:
+    app: gateway-server
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  namespace: crm-system
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway-server
+                port:
+                  number: 8080

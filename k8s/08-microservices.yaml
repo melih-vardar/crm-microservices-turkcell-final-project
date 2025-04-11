@@ -1,0 +1,1257 @@
+---
+# User Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: user
+            - name: PGHOST
+              value: postgres-user
+          command:
+            [
+              "sh",
+              "-c",
+              'until pg_isready -h postgres-user -p 5432 && psql -h postgres-user -U postgres -d user -c "SELECT 1"; do echo "Waiting for postgres-user"; sleep 2; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: user-service
+          image: bothuany/user-service:latest
+          ports:
+            - containerPort: 8010
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: SPRING_APPLICATION_NAME
+              value: "userservice"
+            - name: SERVER_PORT
+              value: "8010"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-user:5432/user"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_CONNECTION_HOSTNAME
+              value: "redis"
+            - name: SPRING_REDIS_CONNECTION_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE
+              value: "8"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8010
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8010
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: crm-system
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 8010
+      targetPort: 8010
+---
+# Customer Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-service
+  template:
+    metadata:
+      labels:
+        app: customer-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: customer
+            - name: PGHOST
+              value: postgres-customer
+          command:
+            [
+              "sh",
+              "-c",
+              'until pg_isready -h postgres-customer -p 5432 && psql -h postgres-customer -U postgres -d customer -c "SELECT 1"; do echo "Waiting for postgres-customer"; sleep 2; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: customer-service
+          image: bothuany/customer-service:latest
+          ports:
+            - containerPort: 8020
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: SPRING_APPLICATION_NAME
+              value: "customerservice"
+            - name: SERVER_PORT
+              value: "8020"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-customer:5432/customer"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_CONNECTION_HOSTNAME
+              value: "redis"
+            - name: SPRING_REDIS_CONNECTION_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE
+              value: "8"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8020
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8020
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+  namespace: crm-system
+spec:
+  selector:
+    app: customer-service
+  ports:
+    - port: 8020
+      targetPort: 8020
+---
+# Contract Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contract-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contract-service
+  template:
+    metadata:
+      labels:
+        app: contract-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: contract
+            - name: PGHOST
+              value: postgres-contract
+          command:
+            [
+              "sh",
+              "-c",
+              'until pg_isready -h postgres-contract -p 5432 && psql -h postgres-contract -U postgres -d contract -c "SELECT 1"; do echo "Waiting for postgres-contract"; sleep 2; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: contract-service
+          image: bothuany/contract-service:latest
+          ports:
+            - containerPort: 8030
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-contract:5432/contract"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8030
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8030
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contract-service
+  namespace: crm-system
+spec:
+  selector:
+    app: contract-service
+  ports:
+    - port: 8030
+      targetPort: 8030
+---
+# Plan Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plan-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plan-service
+  template:
+    metadata:
+      labels:
+        app: plan-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: plan
+            - name: PGHOST
+              value: postgres-plan
+          command:
+            [
+              "sh",
+              "-c",
+              'until pg_isready -h postgres-plan -p 5432 && psql -h postgres-plan -U postgres -d plan -c "SELECT 1"; do echo "Waiting for postgres-plan"; sleep 2; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: plan-service
+          image: bothuany/plan-service:latest
+          ports:
+            - containerPort: 8040
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-plan:5432/plan"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8040
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8040
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plan-service
+  namespace: crm-system
+spec:
+  selector:
+    app: plan-service
+  ports:
+    - port: 8040
+      targetPort: 8040
+---
+# Billing Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing-service
+  template:
+    metadata:
+      labels:
+        app: billing-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: billing
+            - name: PGHOST
+              value: postgres-billing
+          command:
+            [
+              "sh",
+              "-c",
+              'until pg_isready -h postgres-billing -p 5432 && psql -h postgres-billing -U postgres -d billing -c "SELECT 1"; do echo "Waiting for postgres-billing"; sleep 2; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+        - name: check-user-service
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://user-service:8010/actuator/health | grep UP; do echo "Waiting for User Service"; sleep 3; done;',
+            ]
+      containers:
+        - name: billing-service
+          image: bothuany/billing-service:latest
+          ports:
+            - containerPort: 8050
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: SPRING_APPLICATION_NAME
+              value: "billingservice"
+            - name: SERVER_PORT
+              value: "8050"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-billing:5432/billing"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: SPRING_REDIS_LETTUCE_CLIENT_NAME
+              value: "billing-service-redis"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m -Dspring.redis.host=redis -Dspring.redis.port=6379"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8050
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8050
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-service
+  namespace: crm-system
+spec:
+  selector:
+    app: billing-service
+  ports:
+    - port: 8050
+      targetPort: 8050
+---
+# Customer Support Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-support-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-support-service
+  template:
+    metadata:
+      labels:
+        app: customer-support-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-mongodb-ready
+          image: mongo:4.4
+          command:
+            [
+              "sh",
+              "-c",
+              'until mongo --host mongodb:27017 --eval "printjson(db.serverStatus())" > /dev/null 2>&1; do echo "Waiting for MongoDB..."; sleep 5; done; echo "MongoDB is available!"',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: customer-support-service
+          image: bothuany/customer-support-service:latest
+          ports:
+            - containerPort: 8060
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: SPRING_APPLICATION_NAME
+              value: "customersupportservice"
+            - name: SERVER_PORT
+              value: "8060"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_DATA_MONGODB_HOST
+              value: "mongodb"
+            - name: SPRING_DATA_MONGODB_PORT
+              value: "27017"
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: "customersupport"
+            - name: SPRING_DATA_MONGODB_AUTO_INDEX_CREATION
+              value: "true"
+            - name: SPRING_AUTOCONFIGURE_EXCLUDE
+              value: "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB
+              value: "DEBUG"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m -Dmanagement.health.redis.enabled=false"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_HEALTH_REDIS_ENABLED
+              value: "false"
+            - name: SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8060
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8060
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-support-service
+  namespace: crm-system
+spec:
+  selector:
+    app: customer-support-service
+  ports:
+    - port: 8060
+      targetPort: 8060
+---
+# Analytics Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analytics-service
+  template:
+    metadata:
+      labels:
+        app: analytics-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              value: postgres
+            - name: PGDATABASE
+              value: analytics
+            - name: PGHOST
+              value: postgres-analytics
+          command:
+            [
+              "sh",
+              "-c",
+              'until pg_isready -h postgres-analytics -p 5432 && psql -h postgres-analytics -U postgres -d analytics -c "SELECT 1"; do echo "Waiting for postgres-analytics"; sleep 2; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: analytics-service
+          image: bothuany/analytics-service:latest
+          ports:
+            - containerPort: 8071
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: SPRING_APPLICATION_NAME
+              value: "analyticsservice"
+            - name: SERVER_PORT
+              value: "8071"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-analytics:5432/analytics"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: SPRING_REDIS_LETTUCE_CLIENT_NAME
+              value: "analytics-service-redis"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m -Dspring.redis.host=redis -Dspring.redis.port=6379"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8071
+            initialDelaySeconds: 180
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 15
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8071
+            initialDelaySeconds: 240
+            periodSeconds: 20
+            timeoutSeconds: 15
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: analytics-service
+  namespace: crm-system
+spec:
+  selector:
+    app: analytics-service
+  ports:
+    - port: 8071
+      targetPort: 8071
+---
+# Notification Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      initContainers:
+        - name: check-config-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://config-server:8070/actuator/health | grep UP; do echo "Waiting for Config Server"; sleep 3; done;',
+            ]
+        - name: check-discovery-server
+          image: curlimages/curl:7.83.1
+          command:
+            [
+              "sh",
+              "-c",
+              'until curl -s http://discovery-server:8888/actuator/health | grep UP; do echo "Waiting for Discovery Server"; sleep 3; done;',
+            ]
+        - name: check-kafka-ready
+          image: busybox:1.28
+          command:
+            [
+              "sh",
+              "-c",
+              'until nc -z -w5 kafka 9092; do echo "Waiting for kafka"; sleep 5; done; echo "Kafka is available"',
+            ]
+        - name: check-redis-ready
+          image: redis:alpine
+          command:
+            [
+              "sh",
+              "-c",
+              'until redis-cli -h redis ping; do echo "Waiting for Redis"; sleep 2; done; echo "Redis is available"',
+            ]
+      containers:
+        - name: notification-service
+          image: bothuany/notification-service:latest
+          ports:
+            - containerPort: 8090
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_CLOUD_CONFIG_PROFILE
+              value: "prod"
+            - name: CONFIGURL
+              value: "http://config-server:8070"
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8070"
+            - name: SPRING_APPLICATION_NAME
+              value: "notificationservice"
+            - name: SERVER_PORT
+              value: "8090"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+              value: "earliest"
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "notification-service"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_URL
+              value: "redis://redis:6379"
+            - name: SPRING_REDIS_LETTUCE_POOL_ENABLED
+              value: "true"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://discovery-server:8888/eureka"
+            - name: EUREKA_INSTANCE_PREFERIPADDRESS
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "*"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+              value: "always"
+            - name: MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED
+              value: "true"
+            - name: MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED
+              value: "true"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_ORIGINS
+              value: "*"
+            - name: MANAGEMENT_ENDPOINTS_WEB_CORS_ALLOWED_METHODS
+              value: "GET,POST"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8090
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8090
+            initialDelaySeconds: 180
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 8
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: crm-system
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - port: 8090
+      targetPort: 8090

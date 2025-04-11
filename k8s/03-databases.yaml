@@ -1,0 +1,516 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-user
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-user
+  template:
+    metadata:
+      labels:
+        app: postgres-user
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "user"
+          readinessProbe:
+            exec:
+              command:
+                ["psql", "-w", "-U", "postgres", "-d", "user", "-c", "SELECT 1"]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-user-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-user
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-user
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-customer
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-customer
+  template:
+    metadata:
+      labels:
+        app: postgres-customer
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "customer"
+          readinessProbe:
+            exec:
+              command:
+                [
+                  "psql",
+                  "-w",
+                  "-U",
+                  "postgres",
+                  "-d",
+                  "customer",
+                  "-c",
+                  "SELECT 1",
+                ]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-customer-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-customer
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-customer
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-billing
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-billing
+  template:
+    metadata:
+      labels:
+        app: postgres-billing
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "billing"
+          readinessProbe:
+            exec:
+              command:
+                [
+                  "psql",
+                  "-w",
+                  "-U",
+                  "postgres",
+                  "-d",
+                  "billing",
+                  "-c",
+                  "SELECT 1",
+                ]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-billing-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-billing
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-billing
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-analytics
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-analytics
+  template:
+    metadata:
+      labels:
+        app: postgres-analytics
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "analytics"
+          readinessProbe:
+            exec:
+              command:
+                [
+                  "psql",
+                  "-w",
+                  "-U",
+                  "postgres",
+                  "-d",
+                  "analytics",
+                  "-c",
+                  "SELECT 1",
+                ]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-analytics-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-analytics
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-analytics
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-contract
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-contract
+  template:
+    metadata:
+      labels:
+        app: postgres-contract
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "contract"
+          readinessProbe:
+            exec:
+              command:
+                [
+                  "psql",
+                  "-w",
+                  "-U",
+                  "postgres",
+                  "-d",
+                  "contract",
+                  "-c",
+                  "SELECT 1",
+                ]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-contract-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-contract
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-contract
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-plan
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-plan
+  template:
+    metadata:
+      labels:
+        app: postgres-plan
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "plan"
+          readinessProbe:
+            exec:
+              command:
+                ["psql", "-w", "-U", "postgres", "-d", "plan", "-c", "SELECT 1"]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-plan-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-plan
+  namespace: crm-system
+spec:
+  selector:
+    app: postgres-plan
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:4.4
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: "customersupport"
+          command: ["mongod", "--bind_ip", "0.0.0.0"]
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 40
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 6
+          volumeMounts:
+            - name: mongodb-storage
+              mountPath: /data/db
+              subPath: mongo
+      volumes:
+        - name: mongodb-storage
+          persistentVolumeClaim:
+            claimName: mongodb-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: crm-system
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: crm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.0-alpine
+          command:
+            - "redis-server"
+            - "--maxmemory 256mb"
+            - "--maxmemory-policy allkeys-lru"
+            - "--bind 0.0.0.0"
+            - "--protected-mode no"
+          ports:
+            - containerPort: 6379
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+      volumes:
+        - name: redis-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: crm-system
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
