@@ -23,41 +23,49 @@ jobs:
       - name: Detect changed services
         id: changes
         run: |
-          # Son committen değişen dosyaları tespit et
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
-          echo "Changed files: $CHANGED_FILES"
+          # Check if this is the first commit
+          if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+            # Not the first commit, can compare with previous
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          else
+            # First commit, list all files
+            CHANGED_FILES=$(git ls-tree --name-only -r HEAD)
+          fi
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
 
-          # Değişen servisleri belirle
-          SERVICES=()
+          # Detect changed services
+          declare -a SERVICES=()
           for SERVICE in config-server discovery-server gateway-server user-service customer-service billing-service analytics-service contract-service plan-service notification-service customer-support-service; do
-            if echo "$CHANGED_FILES" | grep -q "$SERVICE/"; then
+            if echo "$CHANGED_FILES" | grep -q "^$SERVICE/"; then
               SERVICES+=("$SERVICE")
-              echo "$SERVICE service has changes"
+              echo "Service has changes: $SERVICE"
             fi
           done
 
-          # Eğer hiç servis değişmemişse k8s konfigürasyonlarını kontrol et
-          if [ ${#SERVICES[@]} -eq 0 ]; then
-            if echo "$CHANGED_FILES" | grep -q "k8s/"; then
-              echo "Only Kubernetes configurations changed, skipping build"
-            else
-              echo "No services or Kubernetes configurations changed"
-            fi
+          # Check for k8s config changes
+          K8S_CHANGES=false
+          if echo "$CHANGED_FILES" | grep -q "^k8s/"; then
+            K8S_CHANGES=true
+            echo "Kubernetes configurations changed"
           fi
 
-          # JSON formatında çıktı oluştur
-          JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//g')
+          # Create JSON array of services
+          JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//')
           echo "matrix=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
+          echo "k8s_changed=$K8S_CHANGES" >> $GITHUB_OUTPUT
 
       - name: Set matrix
         id: set-matrix
         run: |
-          SERVICES_JSON=$(echo "${{ steps.changes.outputs.matrix }}")
-          if [ -z "$SERVICES_JSON" ] || [ "$SERVICES_JSON" == "[]" ]; then
-            echo "No services to build, setting empty matrix"
+          # Get the JSON array from previous step
+          SERVICES_JSON="${{ steps.changes.outputs.matrix }}"
+          echo "Services to build: $SERVICES_JSON"
+
+          # Create valid matrix JSON
+          if [ -z "$SERVICES_JSON" ] || [ "$SERVICES_JSON" = "[]" ]; then
             echo "matrix={\"service\":[]}" >> $GITHUB_OUTPUT
           else
-            echo "Services to build: $SERVICES_JSON"
             echo "matrix={\"service\":$SERVICES_JSON}" >> $GITHUB_OUTPUT
           fi
 
@@ -67,6 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      fail-fast: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -101,7 +110,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

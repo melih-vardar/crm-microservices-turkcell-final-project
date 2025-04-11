@@ -27,7 +27,7 @@ spec:
               mountPath: /config
       containers:
         - name: config-server
-          image: bothuany/config-server:latest
+          image: batuce/config-server:latest
           ports:
             - containerPort: 8070
           env:
@@ -106,7 +106,7 @@ spec:
             ]
       containers:
         - name: discovery-server
-          image: bothuany/discovery-server:latest
+          image: batuce/discovery-server:latest
           ports:
             - containerPort: 8888
           env:
@@ -196,7 +196,7 @@ spec:
             ]
       containers:
         - name: gateway-server
-          image: bothuany/gateway-server:latest
+          image: batuce/gateway-server:latest
           ports:
             - containerPort: 8080
           env:

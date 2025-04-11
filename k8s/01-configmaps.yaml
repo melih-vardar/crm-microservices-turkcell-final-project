@@ -8,4 +8,4 @@ data:
   CONFIGURL: "http://config-server:8070"
   SPRING_CLOUD_CONFIG_PROFILE: "prod"
   EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8888/eureka"
-  DOCKERHUB_USERNAME: "bothuany"
+  DOCKERHUB_USERNAME: "batuce"

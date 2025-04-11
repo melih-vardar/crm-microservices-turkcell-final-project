@@ -67,7 +67,7 @@ spec:
             ]
       containers:
         - name: user-service
-          image: bothuany/user-service:latest
+          image: batuce/user-service:latest
           ports:
             - containerPort: 8010
           env:
@@ -231,7 +231,7 @@ spec:
             ]
       containers:
         - name: customer-service
-          image: bothuany/customer-service:latest
+          image: batuce/customer-service:latest
           ports:
             - containerPort: 8020
           env:
@@ -395,7 +395,7 @@ spec:
             ]
       containers:
         - name: contract-service
-          image: bothuany/contract-service:latest
+          image: batuce/contract-service:latest
           ports:
             - containerPort: 8030
           env:
@@ -547,7 +547,7 @@ spec:
             ]
       containers:
         - name: plan-service
-          image: bothuany/plan-service:latest
+          image: batuce/plan-service:latest
           ports:
             - containerPort: 8040
           env:
@@ -707,7 +707,7 @@ spec:
             ]
       containers:
         - name: billing-service
-          image: bothuany/billing-service:latest
+          image: batuce/billing-service:latest
           ports:
             - containerPort: 8050
           env:
@@ -858,7 +858,7 @@ spec:
             ]
       containers:
         - name: customer-support-service
-          image: bothuany/customer-support-service:latest
+          image: batuce/customer-support-service:latest
           ports:
             - containerPort: 8060
           env:
@@ -1024,7 +1024,7 @@ spec:
             ]
       containers:
         - name: analytics-service
-          image: bothuany/analytics-service:latest
+          image: batuce/analytics-service:latest
           ports:
             - containerPort: 8071
           env:
@@ -1168,7 +1168,7 @@ spec:
             ]
       containers:
         - name: notification-service
-          image: bothuany/notification-service:latest
+          image: batuce/notification-service:latest
           ports:
             - containerPort: 8090
           env:
