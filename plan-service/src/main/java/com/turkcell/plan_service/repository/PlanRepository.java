@@ -7,4 +7,8 @@ import java.util.UUID;
 
 public interface PlanRepository extends JpaRepository<Plan, UUID> {
 
+    Plan findByName(String name);
+
+    Plan findByNameAndDurationInMonths(String name, int durationInMonths);
+
 }

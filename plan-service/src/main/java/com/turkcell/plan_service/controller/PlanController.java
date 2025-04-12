@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/plans")
+@RequestMapping("/api/plans")
 @RequiredArgsConstructor
 public class PlanController {
     private final PlanService planService;
@@ -41,4 +41,17 @@ public class PlanController {
         planService.deletePlan(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/name/{name}")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    public ResponseEntity<PlanResponseDTO> getPlanByName(@PathVariable String name) {
+        return ResponseEntity.ok(planService.getPlanByName(name));
+    }
+
+    @GetMapping("/api/plans/filter")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    public ResponseEntity<PlanResponseDTO> getPlanByNameAndMonth(@RequestParam("name") String name, @RequestParam("month") int month){
+        return ResponseEntity.ok(planService.getPlanWithDurationMonth(name,month));
+    }
+
 }

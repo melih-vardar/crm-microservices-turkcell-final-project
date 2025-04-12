@@ -12,5 +12,7 @@ public interface PlanService {
 
     PlanResponseDTO updatePlan(UUID id, PlanCreateDTO planCreateDTO);
 
+    PlanResponseDTO getPlanByName(String name);
+    PlanResponseDTO getPlanWithDurationMonth(String name, int month);
     void deletePlan(UUID id);
 }

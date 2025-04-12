@@ -4,13 +4,16 @@ import com.turkcell.billingservice.clients.*;
 import com.turkcell.billingservice.dtos.*;
 import com.turkcell.billingservice.entities.Bill;
 import com.turkcell.billingservice.entities.Payment;
-import com.turkcell.billingservice.events.BillCreatedEvent;
-import com.turkcell.billingservice.events.KafkaProducerService;
 import com.turkcell.billingservice.exceptions.BusinessException;
 import com.turkcell.billingservice.exceptions.ResourceNotFoundException;
 import com.turkcell.billingservice.repositories.BillRepository;
 import com.turkcell.billingservice.repositories.PaymentRepository;
+import io.github.bothuany.event.analytics.BillAnalyticsEvent;
+import io.github.bothuany.event.notification.EmailNotificationEvent;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +32,8 @@ public class BillingService {
     private final CustomerClient customerClient;
     private final ContractClient contractClient;
     private final PaymentClient paymentClient;
-    private final NotificationClient notificationClient;
-    private final KafkaProducerService kafkaProducer;
+    private final StreamBridge streamBridge;
+    private static final Logger logger = LoggerFactory.getLogger(BillingService.class);
 
     @Transactional
     public BillResponseDTO createBill(BillCreateDTO billCreateDTO) {
@@ -55,23 +58,24 @@ public class BillingService {
         Bill savedBill = billRepository.save(bill);
 
         // Fatura oluşturuldu bildirimi gönder
-        EmailNotificationDTO notification = new EmailNotificationDTO(
-            customer.getEmail(),
-            "New Bill Created",
-            String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
-                savedBill.getAmount(), savedBill.getDueDate())
-        );
-        notificationClient.sendEmailNotification(notification);
+        EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
+        emailNotificationEvent.setEmail(customer.getEmail());
+        emailNotificationEvent.setSubject("new bill created");
+        emailNotificationEvent.setMessage(String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
+                savedBill.getAmount(), savedBill.getDueDate()));
 
-        // Analytics servisine event gönder
-        BillCreatedEvent event = new BillCreatedEvent(
-            savedBill.getId(),
-            savedBill.getCustomerId(),
-            savedBill.getAmount(),
-            savedBill.getDueDate(),
-            savedBill.getCreatedAt()
-        );
-        kafkaProducer.sendBillCreatedEvent(event);
+        logger.info("Sending email notification {}", emailNotificationEvent);
+        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+
+
+        BillAnalyticsEvent billAnalyticsEvent = new BillAnalyticsEvent();
+        billAnalyticsEvent.setCustomerId(bill.getCustomerId());
+        billAnalyticsEvent.setAmount(bill.getAmount());
+        billAnalyticsEvent.setDueDate(bill.getDueDate());
+        billAnalyticsEvent.setCreatedAt(bill.getCreatedAt());
+
+        logger.info("Sending bill analytics event {}", billAnalyticsEvent);
+        streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
 
         return convertToBillResponseDTO(savedBill);
     }
@@ -129,13 +133,15 @@ public class BillingService {
 
         // Ödeme bildirimi gönder
         CustomerDTO customer = customerClient.getCustomerById(bill.getCustomerId());
-        EmailNotificationDTO notification = new EmailNotificationDTO(
-            customer.getEmail(),
-            "Payment Successful",
-            String.format("Your payment of %s has been processed successfully. Transaction ID: %s",
-                payment.getAmount(), payment.getTransactionId())
-        );
-        notificationClient.sendEmailNotification(notification);
+
+        EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
+        emailNotificationEvent.setEmail(customer.getEmail());
+        emailNotificationEvent.setSubject("Payment Successful");
+        emailNotificationEvent.setMessage(String.format("Your payment of %s has been processed successfully. Transaction ID: %s",
+                payment.getAmount(), payment.getTransactionId()));
+
+        logger.info("Sending email for payment notification {}", emailNotificationEvent);
+        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
 
         return convertToPaymentResponseDTO(savedPayment);
     }

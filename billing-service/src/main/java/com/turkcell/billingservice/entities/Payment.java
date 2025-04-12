@@ -31,7 +31,7 @@ public class Payment {
     @Column(nullable = false)
     private String paymentMethod;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String transactionId;
 
     @Column(nullable = false)

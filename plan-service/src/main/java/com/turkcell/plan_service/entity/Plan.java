@@ -20,15 +20,14 @@ public class Plan {
     @UuidGenerator
     private UUID id;
 
-    @Convert(converter = AttributeEncryptor.class)
     private String name;
 
-    @Convert(converter = AttributeEncryptor.class)
     private String description;
 
-    @Convert(converter = AttributeEncryptor.class)
     private double price;
 
-    @Convert(converter = AttributeEncryptor.class)
     private int durationInMonths;
+
+
+
 }

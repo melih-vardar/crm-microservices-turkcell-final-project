@@ -1,5 +1,6 @@
 package com.turkcell.crmmicroservicesfinalproject.contractservice.service.impl;
 
+import com.turkcell.crmmicroservicesfinalproject.contractservice.client.PlanClient;
 import com.turkcell.crmmicroservicesfinalproject.contractservice.entity.Contract;
 import com.turkcell.crmmicroservicesfinalproject.contractservice.repository.ContractRepository;
 import com.turkcell.crmmicroservicesfinalproject.contractservice.service.ContractService;
@@ -23,13 +24,13 @@ public class ContractServiceImpl implements ContractService {
 
     private final ContractRepository contractRepository;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final PlanClient planClient;
 
     @Override
     @Transactional
     public ContractResponseDTO createContract(ContractCreateDTO request) {
         // Validate dates
         validateDates(request);
-
         // Check if customer already has an active contract with same plan type
         List<Contract> existingContracts = contractRepository.findByCustomerId(request.getCustomerId());
         boolean hasSamePlanType = existingContracts.stream()

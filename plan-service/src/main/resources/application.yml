@@ -1,13 +1,15 @@
 configurl: http://localhost:8070
 
 spring:
+  profiles:
+    active: local
   config:
     import: configserver:${configurl}
   application:
     name: "planservice"
   cloud:
     config:
-      profile: prod
+      profile: local
       fail-fast: true
       uri: ${configurl}
 

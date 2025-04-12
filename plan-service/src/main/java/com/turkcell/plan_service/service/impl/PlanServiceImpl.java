@@ -14,6 +14,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PlanServiceImpl implements PlanService {
+
     private final PlanRepository planRepository;
     private final PlanBusinessRules planBusinessRules;
 
@@ -40,6 +41,29 @@ public class PlanServiceImpl implements PlanService {
         updatePlanFromRequest(plan, planCreateDTO);
 
         return convertToResponseDTO(planRepository.save(plan));
+    }
+        // hatalı
+    @Override
+    public PlanResponseDTO getPlanByName(String name) {
+        Plan plan = planRepository.findByName(name);
+        PlanResponseDTO planResponseDTO = new PlanResponseDTO();
+        planResponseDTO.setId(plan.getId());
+        planResponseDTO.setName(plan.getName());
+        planResponseDTO.setDescription(plan.getDescription());
+        planResponseDTO.setPrice(plan.getPrice());
+        return planResponseDTO;
+    }
+
+    @Override
+    public PlanResponseDTO getPlanWithDurationMonth(String name, int month) {
+        Plan plan = planRepository.findByNameAndDurationInMonths(name,month);
+
+        PlanResponseDTO planResponseDTO = new PlanResponseDTO();
+        planResponseDTO.setId(plan.getId());
+        planResponseDTO.setName(plan.getName());
+        planResponseDTO.setDescription(plan.getDescription());
+        planResponseDTO.setPrice(plan.getPrice());
+        return planResponseDTO;
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.turkcell.billingservice.rules;
 
-import com.turkcell.billingservice.entities.Invoice;
 import com.turkcell.billingservice.exceptions.BusinessException;
-import com.turkcell.billingservice.repositories.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
