@@ -78,20 +78,13 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaymentMethod(paymentRequest.getPaymentMethod());
         payment.setTransactionId(transactionId);
         payment.setSuccess(isSuccess);
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setCreatedAt(LocalDateTime.now());
         payment.setCardLastFour(paymentRequest.getCardNumber().substring(12));
-        paymentRepository.save(payment);
         // Basit bir simülasyon
         updateBillStatus(bill, isSuccess);
+        paymentRepository.save(payment);
 
-        boolean paymentSuccess = simulatePayment(paymentRequest);
-
-        if (paymentSuccess) {
-            bill.setBillStatus(BillStatus.PAID);
-            bill.setPaid(true);
-            bill.setPaymentDate(LocalDateTime.now());
-        } else {
-            bill.setBillStatus(BillStatus.FAILED);
-        }
         PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
         paymentResponseDTO.setId(payment.getId());
         paymentResponseDTO.setBillId(bill.getId());
@@ -127,7 +120,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (isSuccess) {
             bill.setBillStatus(BillStatus.PAID);
             bill.setPaid(true);
-            CustomerResponseDTO customer = customerClient.getCustomerById(bill.getCustomerId());
+            CustomerResponseDTO customer = customerClient.getCustomer(UUID.fromString(bill.getCustomerId()));
             // Fatura oluşturuldu bildirimi gönder
             EmailNotificationEvent emailNotificationEventpaid = new EmailNotificationEvent();
             emailNotificationEventpaid.setEmail(customer.getEmail());
@@ -135,9 +128,10 @@ public class PaymentServiceImpl implements PaymentService {
             emailNotificationEventpaid.setMessage(String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
                     bill.getAmount(), bill.getDueDate()));
             logger.info("Sending email notification {}", emailNotificationEventpaid);
-            streamBridge.send("emailNotification-out-0", emailNotificationEventpaid);
+            //streamBridge.send("emailNotification-out-0", emailNotificationEventpaid);
 
             bill.setPaymentDate(LocalDateTime.now());
+
         } else {
             bill.setBillStatus(BillStatus.FAILED);
             logger.warn("Ödeme başarısız - Fatura ID: {}", bill.getId());

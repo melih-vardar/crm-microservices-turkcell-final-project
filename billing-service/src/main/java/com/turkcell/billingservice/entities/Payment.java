@@ -43,4 +43,6 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_id", nullable = false)
     private Bill bill;
+
+
 }

@@ -9,7 +9,7 @@ spring:
     name: "contractservice"
   cloud:
     config:
-      profile: prod
+      profile: local
       fail-fast: true
       uri: ${configurl}
 

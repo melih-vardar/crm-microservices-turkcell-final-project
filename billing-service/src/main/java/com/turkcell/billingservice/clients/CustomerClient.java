@@ -5,8 +5,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "customerservice")
+import java.util.UUID;
+
+@FeignClient(name = "customerservice",path = "/api/customers")
 public interface CustomerClient {
     @GetMapping("/{id}")
-    CustomerResponseDTO getCustomerById(@PathVariable String id);
+    CustomerResponseDTO getCustomer(@PathVariable UUID id);
 } 

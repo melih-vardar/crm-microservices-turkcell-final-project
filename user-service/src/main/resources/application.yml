@@ -11,7 +11,7 @@ spring:
     name: "userservice"
   cloud:
     config:
-      profile: prod
+      profile: local
       fail-fast: true
       uri: ${configurl}
 

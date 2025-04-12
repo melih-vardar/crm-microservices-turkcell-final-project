@@ -39,23 +39,19 @@ public class BillingController {
 
     @GetMapping("/customer/{customerId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<List<BillResponseDTO>> getBillsByCustomerId(
-            @PathVariable UUID customerId) {
+    public ResponseEntity<List<BillResponseDTO>> getBillsByCustomerId(@PathVariable String customerId) {
 
         return ResponseEntity.ok(billingService.getBillsByCustomerId(customerId));
     }
     @PutMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<BillResponseDTO> updateBill(
-            @PathVariable UUID billId,
-            @Valid @RequestBody BillUpdateDTO updateDTO) {
+    public ResponseEntity<BillResponseDTO> updateBill(@PathVariable UUID billId, @Valid @RequestBody BillUpdateDTO updateDTO) {
 
         return ResponseEntity.ok(billingService.updateBill(billId, updateDTO));
     }
     @DeleteMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<Void> deleteBill(
-            @PathVariable UUID billId) {
+    public ResponseEntity<Void> deleteBill(@PathVariable UUID billId) {
 
         billingService.deleteBill(billId);
         return ResponseEntity.noContent().build();

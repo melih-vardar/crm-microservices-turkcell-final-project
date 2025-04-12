@@ -39,7 +39,7 @@ public class BillingServiceImpl implements BilingService {
     @Transactional
     public BillResponseDTO createBill(String customerId,String contractId){
 
-        CustomerResponseDTO customer = customerClient.getCustomerById(customerId);
+        CustomerResponseDTO customer = customerClient.getCustomer(UUID.fromString(customerId));
         billingBusinessRules.checkIfCustomerExists(customer);
 
         ContractDetailedResponseDTO contractDetailedResponseDTO = contractClient.getContractDetailed(UUID.fromString(contractId));
@@ -51,6 +51,7 @@ public class BillingServiceImpl implements BilingService {
         bill.setAmount(BigDecimal.valueOf(contractDetailedResponseDTO.getPlan().getPrice()));
         bill.setDueDate(LocalDateTime.now().plusDays(30));
         bill.setPaid(false);
+        bill.setCreatedAt(LocalDateTime.now());
         bill.setBillStatus(BillStatus.PENDING);//bill starter mode
 
         billRepository.save(bill);
@@ -62,7 +63,7 @@ public class BillingServiceImpl implements BilingService {
         emailNotificationEvent.setMessage(String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
                 bill.getAmount(), bill.getDueDate()));
         logger.info("Sending email notification {}", emailNotificationEvent);
-        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+        //streamBridge.send("emailNotification-out-0", emailNotificationEvent);
 
 
         BillAnalyticsEvent billAnalyticsEvent = new BillAnalyticsEvent();
@@ -72,7 +73,7 @@ public class BillingServiceImpl implements BilingService {
         billAnalyticsEvent.setCreatedAt(bill.getCreatedAt());
 
         logger.info("Sending bill analytics event {}", billAnalyticsEvent);
-        streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
+        //streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
 
         return getBillResponseDTO(bill);
     }
@@ -81,9 +82,9 @@ public class BillingServiceImpl implements BilingService {
                 .orElseThrow(() -> new BusinessException("Bill not found with id: " + billId));
         return getBillResponseDTO(bill);
     }
-    public List<BillResponseDTO> getBillsByCustomerId(UUID customerId) {
+    public List<BillResponseDTO> getBillsByCustomerId(String customerId) {
         // Müşteri var mı kontrolü
-        CustomerResponseDTO customer = customerClient.getCustomerById(customerId.toString());
+        CustomerResponseDTO customer = customerClient.getCustomer(UUID.fromString(customerId));
         if (customer == null) {
             throw new BusinessException("Customer not found with id: " + customerId);
         }

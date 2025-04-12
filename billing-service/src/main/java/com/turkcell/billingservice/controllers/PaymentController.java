@@ -22,9 +22,7 @@ public class PaymentController {
 
     @PostMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<PaymentResponseDTO> processPayment(
-            @PathVariable UUID billId,
-            @Valid @RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<PaymentResponseDTO> processPayment(@PathVariable UUID billId, @Valid @RequestBody PaymentRequest paymentRequest) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -33,10 +31,12 @@ public class PaymentController {
 
     // ID ile Ödeme Getir
     @GetMapping("/{paymentId}")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<PaymentResponseDTO> getPaymentById(@PathVariable UUID paymentId) {
         return ResponseEntity.ok(paymentService.getPaymentById(paymentId));
     }
     @GetMapping
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }

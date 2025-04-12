@@ -2,6 +2,7 @@ package com.turkcell.billingservice.dtos;
 
 import com.turkcell.billingservice.entities.PaymentMethod;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PaymentRequest {
 
-    @NotBlank(message = "Ödeme yöntemi boş olamaz")
+    @NotNull(message = "Ödeme yöntemi boş olamaz")
     private PaymentMethod paymentMethod; // CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER
 
     @NotBlank(message = "Kart numarası boş olamaz")

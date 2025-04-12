@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface BilingService {
     BillResponseDTO createBill(String customerId,String contractId);
-    List<BillResponseDTO> getBillsByCustomerId(UUID customerId);
+    List<BillResponseDTO> getBillsByCustomerId(String customerId);
     BillResponseDTO getBillById(UUID billId);
-    public BillResponseDTO updateBill(UUID billId, BillUpdateDTO billUpdateDTO);
+    BillResponseDTO updateBill(UUID billId, BillUpdateDTO billUpdateDTO);
     void deleteBill(UUID billId);
 }
 
