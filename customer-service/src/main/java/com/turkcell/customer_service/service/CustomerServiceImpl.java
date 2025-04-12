@@ -155,17 +155,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private void sendCustomerAnalytics(Customer customer) {
-
-        CreateExampleCustomerEvent createExampleCustomerEvent = new CreateExampleCustomerEvent();
-        createExampleCustomerEvent.setCustomerId(customer.getId());
-        createExampleCustomerEvent.setFirstname(customer.getFirstName());
-        createExampleCustomerEvent.setLastname(customer.getLastName());
-        createExampleCustomerEvent.setEmail(customer.getEmail());
-        createExampleCustomerEvent.setEventType("CUSTOMER_CREATE");
-        createExampleCustomerEvent.setEventTime(LocalDateTime.now());
-        logger.info("Sending Customer Analytics event: {}", createExampleCustomerEvent);
-        streamBridge.send("CreateCustomerAnalytics-out-0", createExampleCustomerEvent);
-
+        try {
+            CreateExampleCustomerEvent createExampleCustomerEvent = new CreateExampleCustomerEvent();
+            createExampleCustomerEvent.setCustomerId(customer.getId());
+            createExampleCustomerEvent.setFirstname(customer.getFirstName());
+            createExampleCustomerEvent.setLastname(customer.getLastName());
+            createExampleCustomerEvent.setEmail(customer.getEmail());
+            createExampleCustomerEvent.setEventType("CUSTOMER_CREATE");
+            createExampleCustomerEvent.setEventTime(LocalDateTime.now());
+            logger.info("Sending Customer Analytics event: {}", createExampleCustomerEvent);
+            streamBridge.send("CreateCustomerAnalytics-out-0", createExampleCustomerEvent);
+        } catch (Exception e) {
+            // Log error but allow application to continue
+            logger.error("Error while sending customer analytics: {}", e.getMessage(), e);
+        }
     }
 
 }

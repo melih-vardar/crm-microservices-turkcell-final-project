@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/customer-support")
+@RequestMapping("/api/customer-support")
 @RequiredArgsConstructor
 public class CustomerSupportController {
     private final CustomerSupportService customerSupportService;
@@ -31,7 +31,8 @@ public class CustomerSupportController {
 
     @PutMapping("/tickets/{id}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable UUID id, @RequestBody TicketCreateDTO ticketCreateDTO) {
+    public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable UUID id,
+            @RequestBody TicketCreateDTO ticketCreateDTO) {
         return ResponseEntity.ok(customerSupportService.updateTicket(id, ticketCreateDTO));
     }
 

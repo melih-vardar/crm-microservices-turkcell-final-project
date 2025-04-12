@@ -3,7 +3,6 @@ package com.turkcell.customer_support_service.entity;
 import io.github.bothuany.enums.IssueTypes;
 import io.github.bothuany.enums.TicketStatus;
 import io.github.bothuany.security.encryption.AttributeEncryptor;
-import jakarta.persistence.Convert;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,12 +19,11 @@ public class CustomerSupport {
 
     private IssueTypes issueType;
 
-    @Convert(converter = AttributeEncryptor.class)
     private String description;
 
     private TicketStatus status;
 
-    public CustomerSupport(IssueTypes issueType, UUID customerId,String description, TicketStatus status) {
+    public CustomerSupport(IssueTypes issueType, UUID customerId, String description, TicketStatus status) {
         this.id = UUID.randomUUID(); // Generate UUID for id
         this.customerId = customerId;
         this.issueType = issueType;

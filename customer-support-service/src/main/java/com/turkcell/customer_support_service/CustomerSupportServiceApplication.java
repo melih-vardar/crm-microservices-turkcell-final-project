@@ -3,18 +3,16 @@ package com.turkcell.customer_support_service;
 import io.github.bothuany.security.encryption.EncryptionConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
-<<<<<<< Updated upstream
-//buranın içerisine yapıştır exclude = {
-//        DataSourceAutoConfiguration.class,
-//        HibernateJpaAutoConfiguration.class
-//}
-=======
->>>>>>> Stashed changes
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class,
+        HibernateJpaAutoConfiguration.class
+})
 @EnableFeignClients
 @Import(EncryptionConfig.class)
 @ComponentScan(basePackages = {

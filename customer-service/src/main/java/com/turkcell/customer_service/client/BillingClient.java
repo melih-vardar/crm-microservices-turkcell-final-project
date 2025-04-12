@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "billing-service")
+@FeignClient(name = "billingservice")
 public interface BillingClient {
     @GetMapping("/api/v1/billing/invoices/customer/{customerId}")
     List<Object> getCustomerBills(@PathVariable("id") UUID customerId);

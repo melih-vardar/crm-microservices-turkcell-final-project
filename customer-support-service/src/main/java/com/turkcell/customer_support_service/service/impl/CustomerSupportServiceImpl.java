@@ -35,7 +35,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
         CustomerSupport customerSupport = new CustomerSupport();
         updateTicketFromRequest(customerSupport, ticket);
-        sendTicketForAnalytics(customerSupport,"TICKET_CREATED");
+        sendTicketForAnalytics(customerSupport, "TICKET_CREATED");
         return convertToResponseDTO(customerSupportRepository.save(customerSupport));
     }
 
@@ -46,7 +46,7 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
         CustomerSupport customerSupport = customerSupportRepository.findById(id).get();
         updateTicketFromRequest(customerSupport, ticket);
-        sendTicketForAnalytics(customerSupport,"TICKET_UPDATED");
+        sendTicketForAnalytics(customerSupport, "TICKET_UPDATED");
         return convertToResponseDTO(customerSupportRepository.save(customerSupport));
     }
 
@@ -66,14 +66,15 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
     @Override
     public List<TicketResponseDTO> getAllTickets() {
-        return customerSupportRepository.findAll().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+        return customerSupportRepository.findAll().stream().map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void deleteTicket(UUID id) {
         customerSupportBusinessRules.checkIfTicketExists(id);
         CustomerSupport customerSupport = customerSupportRepository.findById(id).get();
-        sendTicketForAnalytics(customerSupport,"TICKET_CLOSED");
+        sendTicketForAnalytics(customerSupport, "TICKET_CLOSED");
         customerSupportRepository.deleteById(id);
     }
 
@@ -94,16 +95,19 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
         return ticketResponseDTO;
     }
 
-    private void sendTicketForAnalytics(CustomerSupport customerSupport,String eventName){
-        TicketAnalyticsEvent ticketAnalyticsEvent = new TicketAnalyticsEvent();
-        ticketAnalyticsEvent.setTicketId(customerSupport.getId());
-        ticketAnalyticsEvent.setCustomerId(customerSupport.getCustomerId());
-        ticketAnalyticsEvent.setEventType(eventName);
-        ticketAnalyticsEvent.setEventTime(LocalDateTime.now());
+    private void sendTicketForAnalytics(CustomerSupport customerSupport, String eventName) {
+        try {
+            TicketAnalyticsEvent ticketAnalyticsEvent = new TicketAnalyticsEvent();
+            ticketAnalyticsEvent.setTicketId(customerSupport.getId());
+            ticketAnalyticsEvent.setCustomerId(customerSupport.getCustomerId());
+            ticketAnalyticsEvent.setEventType(eventName);
+            ticketAnalyticsEvent.setEventTime(LocalDateTime.now());
 
-        logger.info("sending ticket for customer support {}",customerSupport.getCustomerId());
-        streamBridge.send("TicketAnalytics-out-0",ticketAnalyticsEvent);
-
-
+            logger.info("Sending ticket for customer support {}", customerSupport.getCustomerId());
+            streamBridge.send("TicketAnalytics-out-0", ticketAnalyticsEvent);
+        } catch (Exception e) {
+            // Log error but allow application to continue
+            logger.error("Error while sending analytics data: {}", e.getMessage(), e);
+        }
     }
 }

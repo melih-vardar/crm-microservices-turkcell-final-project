@@ -334,30 +334,35 @@ public class UserServiceImpl implements UserService {
     }
 
     private void sendUserRegistryAnalytics(User user) {
-        CreateUserAnalyticsEvent createUserAnalyticsEvent = new CreateUserAnalyticsEvent();
-        createUserAnalyticsEvent.setUsername(user.getUsername());
-        createUserAnalyticsEvent.setEmail(user.getEmail());
-        createUserAnalyticsEvent.setUserid(user.getId());
-        createUserAnalyticsEvent.setEventType("USER_REGISTER");
-        createUserAnalyticsEvent.setDateTime(LocalDateTime.now());
-        streamBridge.send("CreateUserAnalytics-out-0", createUserAnalyticsEvent);
-        logger.info("Created user analytics event: {}", createUserAnalyticsEvent.getEventType());
+        try {
+            CreateUserAnalyticsEvent createUserAnalyticsEvent = new CreateUserAnalyticsEvent();
+            createUserAnalyticsEvent.setUsername(user.getUsername());
+            createUserAnalyticsEvent.setEmail(user.getEmail());
+            createUserAnalyticsEvent.setUserid(user.getId());
+            createUserAnalyticsEvent.setEventType("USER_REGISTER");
+            createUserAnalyticsEvent.setDateTime(LocalDateTime.now());
+            streamBridge.send("CreateUserAnalytics-out-0", createUserAnalyticsEvent);
+            logger.info("Created user analytics event: {}", createUserAnalyticsEvent.getEventType());
+        } catch (Exception e) {
+            // Log error but allow application to continue
+            logger.error("Error while sending user registration analytics: {}", e.getMessage(), e);
+        }
     }
 
     private void sendUserLoginAnalytics(User user) {
-        logger.info("sendUserLoginAnalytics called for user: {}", user.getUsername());
-        LoginUserAnalyticsEvent loginUserAnalyticsEvent = new LoginUserAnalyticsEvent();
-        loginUserAnalyticsEvent.setUserId(String.valueOf(user.getId()));
-        loginUserAnalyticsEvent.setEmail(user.getEmail());
-        loginUserAnalyticsEvent.setEventType("USER_LOGIN");
-        loginUserAnalyticsEvent.setLoginStartTime(System.currentTimeMillis());
+        try {
+            logger.info("sendUserLoginAnalytics called for user: {}", user.getUsername());
+            LoginUserAnalyticsEvent loginUserAnalyticsEvent = new LoginUserAnalyticsEvent();
+            loginUserAnalyticsEvent.setUserId(String.valueOf(user.getId()));
+            loginUserAnalyticsEvent.setEmail(user.getEmail());
+            loginUserAnalyticsEvent.setEventType("USER_LOGIN");
+            loginUserAnalyticsEvent.setLoginStartTime(System.currentTimeMillis());
 
-        boolean result = streamBridge.send("LoginUserAnalytics-out-0", loginUserAnalyticsEvent);
-        if (!result) {
-            logger.error("Failed to send analytics event for user: {}", user.getUsername());
+            boolean result = streamBridge.send("LoginUserAnalytics-out-0", loginUserAnalyticsEvent);
+            logger.info("Event sent: {}, Send result: {}", loginUserAnalyticsEvent.getEventType(), result);
+        } catch (Exception e) {
+            // Log error but allow application to continue
+            logger.error("Error while sending user login analytics: {}", e.getMessage(), e);
         }
-
-        logger.info("Event sent: {}, Send result: {}", loginUserAnalyticsEvent.getEventType(), result);
-
     }
 }

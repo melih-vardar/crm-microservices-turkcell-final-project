@@ -57,46 +57,54 @@ public class BillingService {
 
         Bill savedBill = billRepository.save(bill);
 
-        // Fatura oluşturuldu bildirimi gönder
-        EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
-        emailNotificationEvent.setEmail(customer.getEmail());
-        emailNotificationEvent.setSubject("new bill created");
-        emailNotificationEvent.setMessage(String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
-                savedBill.getAmount(), savedBill.getDueDate()));
+        // Save bill notification sending
+        try {
+            EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
+            emailNotificationEvent.setEmail(customer.getEmail());
+            emailNotificationEvent.setSubject("New Bill Created");
+            emailNotificationEvent.setMessage(String.format("A new bill of %s has been created with due date %s",
+                    savedBill.getAmount(), savedBill.getDueDate()));
 
-        logger.info("Sending email notification {}", emailNotificationEvent);
-        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+            logger.info("Sending email notification {}", emailNotificationEvent);
+            streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+        } catch (Exception e) {
+            logger.error("Error sending bill notification email: {}", e.getMessage(), e);
+        }
 
+        // Analytics sending
+        try {
+            BillAnalyticsEvent billAnalyticsEvent = new BillAnalyticsEvent();
+            billAnalyticsEvent.setCustomerId(bill.getCustomerId());
+            billAnalyticsEvent.setAmount(bill.getAmount());
+            billAnalyticsEvent.setDueDate(bill.getDueDate());
+            billAnalyticsEvent.setCreatedAt(bill.getCreatedAt());
 
-        BillAnalyticsEvent billAnalyticsEvent = new BillAnalyticsEvent();
-        billAnalyticsEvent.setCustomerId(bill.getCustomerId());
-        billAnalyticsEvent.setAmount(bill.getAmount());
-        billAnalyticsEvent.setDueDate(bill.getDueDate());
-        billAnalyticsEvent.setCreatedAt(bill.getCreatedAt());
-
-        logger.info("Sending bill analytics event {}", billAnalyticsEvent);
-        streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
+            logger.info("Sending bill analytics event {}", billAnalyticsEvent);
+            streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
+        } catch (Exception e) {
+            logger.error("Error sending bill analytics data: {}", e.getMessage(), e);
+        }
 
         return convertToBillResponseDTO(savedBill);
     }
 
     public BillResponseDTO getBillById(UUID id) {
         Bill bill = billRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Bill not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Bill not found with id: " + id));
         return convertToBillResponseDTO(bill);
     }
 
     public List<BillResponseDTO> getUnpaidBills() {
         return billRepository.findByPaidFalse()
-            .stream()
-            .map(this::convertToBillResponseDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::convertToBillResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public PaymentResponseDTO processPayment(PaymentDTO paymentDTO) {
         Bill bill = billRepository.findById(paymentDTO.getBillId())
-            .orElseThrow(() -> new ResourceNotFoundException("Bill not found with id: " + paymentDTO.getBillId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Bill not found with id: " + paymentDTO.getBillId()));
 
         if (bill.isPaid()) {
             throw new BusinessException("Bill is already paid");
@@ -112,11 +120,10 @@ public class BillingService {
 
         // Ödeme servisi çağrısı
         PaymentRequestDTO paymentRequest = new PaymentRequestDTO(
-            bill.getId().toString(),
-            paymentDTO.getAmount(),
-            paymentDTO.getPaymentMethod(),
-            bill.getCustomerId()
-        );
+                bill.getId().toString(),
+                paymentDTO.getAmount(),
+                paymentDTO.getPaymentMethod(),
+                bill.getCustomerId());
         PaymentResponseDTO paymentResponse = paymentClient.processPayment(paymentRequest);
 
         Payment payment = new Payment();
@@ -132,23 +139,28 @@ public class BillingService {
         billRepository.save(bill);
 
         // Ödeme bildirimi gönder
-        CustomerDTO customer = customerClient.getCustomerById(bill.getCustomerId());
+        try {
+            CustomerDTO customer = customerClient.getCustomerById(bill.getCustomerId());
 
-        EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
-        emailNotificationEvent.setEmail(customer.getEmail());
-        emailNotificationEvent.setSubject("Payment Successful");
-        emailNotificationEvent.setMessage(String.format("Your payment of %s has been processed successfully. Transaction ID: %s",
-                payment.getAmount(), payment.getTransactionId()));
+            EmailNotificationEvent emailNotificationEvent = new EmailNotificationEvent();
+            emailNotificationEvent.setEmail(customer.getEmail());
+            emailNotificationEvent.setSubject("Payment Successful");
+            emailNotificationEvent
+                    .setMessage(String.format("Your payment of %s has been processed successfully. Transaction ID: %s",
+                            payment.getAmount(), payment.getTransactionId()));
 
-        logger.info("Sending email for payment notification {}", emailNotificationEvent);
-        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+            logger.info("Sending email for payment notification {}", emailNotificationEvent);
+            streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+        } catch (Exception e) {
+            logger.error("Error sending payment notification email: {}", e.getMessage(), e);
+        }
 
         return convertToPaymentResponseDTO(savedPayment);
     }
 
     public PaymentResponseDTO getPaymentById(UUID id) {
         Payment payment = paymentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
         return convertToPaymentResponseDTO(payment);
     }
 
@@ -158,26 +170,24 @@ public class BillingService {
 
     private BillResponseDTO convertToBillResponseDTO(Bill bill) {
         return new BillResponseDTO(
-            bill.getId(),
-            bill.getCustomerId(),
-            bill.getAmount(),
-            bill.getDueDate(),
-            bill.isPaid(),
-            bill.getCreatedAt(),
-            bill.getUpdatedAt()
-        );
+                bill.getId(),
+                bill.getCustomerId(),
+                bill.getAmount(),
+                bill.getDueDate(),
+                bill.isPaid(),
+                bill.getCreatedAt(),
+                bill.getUpdatedAt());
     }
 
     private PaymentResponseDTO convertToPaymentResponseDTO(Payment payment) {
         return new PaymentResponseDTO(
-            payment.getId(),
-            payment.getBill().getId(),
-            payment.getAmount(),
-            payment.getPaymentMethod(),
-            payment.getTransactionId(),
-            payment.getPaymentDate(),
-            payment.getCreatedAt(),
-            payment.getUpdatedAt()
-        );
+                payment.getId(),
+                payment.getBill().getId(),
+                payment.getAmount(),
+                payment.getPaymentMethod(),
+                payment.getTransactionId(),
+                payment.getPaymentDate(),
+                payment.getCreatedAt(),
+                payment.getUpdatedAt());
     }
 }
