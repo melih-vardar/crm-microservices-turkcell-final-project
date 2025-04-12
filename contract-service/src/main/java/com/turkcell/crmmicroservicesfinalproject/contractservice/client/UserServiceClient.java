@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.UUID;
 
-@FeignClient(name = "user-service")
+@FeignClient(name = "userservice")
 public interface UserServiceClient {
 
     @GetMapping("/api/users/role/{id}")

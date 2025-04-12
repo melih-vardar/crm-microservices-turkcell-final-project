@@ -1,9 +1,9 @@
 services:
   # DATABASES
   # User service database
-  postgres_5433:
+  postgres5433:
     image: postgres:latest
-    container_name: postgres_5433
+    container_name: postgres5433
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -12,14 +12,14 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_5433_data:/var/lib/postgresql/data
+      - postgres5433_data:/var/lib/postgresql/data
     networks:
       - app-network
 
   # Customer service database
-  postgres_5435:
+  postgres5435:
     image: postgres:latest
-    container_name: postgres_5435
+    container_name: postgres5435
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -28,14 +28,14 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - postgres_5435_data:/var/lib/postgresql/data
+      - postgres5435_data:/var/lib/postgresql/data
     networks:
       - app-network
 
   # Billing service database
-  postgres_5434:
+  postgres5434:
     image: postgres:latest
-    container_name: postgres_5434
+    container_name: postgres5434
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -44,14 +44,14 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgres_5434_data:/var/lib/postgresql/data
+      - postgres5434_data:/var/lib/postgresql/data
     networks:
       - app-network
 
   # Contract service database
-  postgres_5436:
+  postgres5436:
     image: postgres:latest
-    container_name: postgres_5436
+    container_name: postgres5436
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -62,7 +62,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5436_data:/var/lib/postgresql/data
+      - postgres5436_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -70,9 +70,9 @@ services:
       retries: 5
 
   # Plan service database
-  postgres_5437:
+  postgres5437:
     image: postgres:latest
-    container_name: postgres_5437
+    container_name: postgres5437
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -81,7 +81,7 @@ services:
     ports:
       - "5437:5432"
     volumes:
-      - postgres_5437_data:/var/lib/postgresql/data
+      - postgres5437_data:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -192,11 +192,11 @@ services:
     depends_on:
       - discovery-server
       - config-server
-      - postgres_5436
+      - postgres5436
       - kafka
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5436:5432/contract
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres5436:5432/contract
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
@@ -238,11 +238,11 @@ services:
     depends_on:
       - discovery-server
       - config-server
-      - postgres_5437
+      - postgres5437
       - kafka
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_5437:5432/plan
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres5437:5432/plan
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8888/eureka
@@ -270,10 +270,10 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_5433_data:
-  postgres_5434_data:
-  postgres_5435_data:
-  postgres_5436_data:
-  postgres_5437_data:
+  postgres5433_data:
+  postgres5434_data:
+  postgres5435_data:
+  postgres5436_data:
+  postgres5437_data:
   mongodb_data:
   redis_data:

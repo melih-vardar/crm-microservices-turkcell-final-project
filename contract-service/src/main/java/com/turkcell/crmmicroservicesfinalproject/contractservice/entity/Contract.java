@@ -1,6 +1,5 @@
 package com.turkcell.crmmicroservicesfinalproject.contractservice.entity;
 
-import io.github.bothuany.enums.PlanType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -29,8 +28,8 @@ public class Contract {
     @Column(name = "customer_id", nullable = false)
     private UUID customerId;
 
-    @Column(name = "plan_type", nullable = false)
-    private PlanType planType;
+    @Column(name = "plan_id", nullable = false)
+    private UUID planId;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;

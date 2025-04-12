@@ -1,9 +1,9 @@
 services:
   # DATABASES
   # User service database
-  postgres_5433:
+  postgres5433:
     image: postgres:latest
-    container_name: postgres_5433
+    container_name: postgres5433
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -14,7 +14,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5433_data:/var/lib/postgresql/data
+      - postgres5433_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -22,9 +22,9 @@ services:
       retries: 5
 
   # Customer service database
-  postgres_5435:
+  postgres5435:
     image: postgres:latest
-    container_name: postgres_5435
+    container_name: postgres5435
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -35,7 +35,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5435_data:/var/lib/postgresql/data
+      - postgres5435_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -43,9 +43,9 @@ services:
       retries: 5
 
   # Billing service database
-  postgres_5434:
+  postgres5434:
     image: postgres:latest
-    container_name: postgres_5434
+    container_name: postgres5434
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -56,7 +56,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5434_data:/var/lib/postgresql/data
+      - postgres5434_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -64,9 +64,9 @@ services:
       retries: 5
 
   # Analytics service database
-  postgres_5471:
+  postgres5471:
     image: postgres:latest
-    container_name: postgres_5471
+    container_name: postgres5471
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -77,7 +77,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5471:/var/lib/postgresql/data
+      - postgres5471:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -85,9 +85,9 @@ services:
       retries: 5
 
   # Contract service database
-  postgres_5436:
+  postgres5436:
     image: postgres:latest
-    container_name: postgres_5436
+    container_name: postgres5436
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -98,7 +98,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5436_data:/var/lib/postgresql/data
+      - postgres5436_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -248,7 +248,7 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5433:
+      postgres5433:
         condition: service_healthy
       kafka:
         condition: service_started
@@ -274,7 +274,7 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5434:
+      postgres5434:
         condition: service_healthy
       kafka:
         condition: service_started
@@ -300,7 +300,7 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5434:
+      postgres5434:
         condition: service_healthy
       kafka:
         condition: service_started
@@ -334,7 +334,7 @@ services:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
-      postgres_5471:
+      postgres5471:
         condition: service_healthy
     restart: on-failure
 
@@ -350,7 +350,7 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5436:
+      postgres5436:
         condition: service_healthy
       kafka:
         condition: service_started
@@ -404,9 +404,9 @@ services:
     restart: on-failure
 
   # Plan Service Database
-  postgres_5437:
+  postgres5437:
     image: postgres:latest
-    container_name: postgres_5437
+    container_name: postgres5437
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -417,7 +417,7 @@ services:
     networks:
       - app-network
     volumes:
-      - postgres_5437_data:/var/lib/postgresql/data
+      - postgres5437_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -436,7 +436,7 @@ services:
     depends_on:
       discovery-server:
         condition: service_healthy
-      postgres_5437:
+      postgres5437:
         condition: service_healthy
       kafka:
         condition: service_started
@@ -492,12 +492,12 @@ networks:
   app-network:
     driver: bridge
 volumes:
-  postgres_5433_data:
-  postgres_5434_data:
-  postgres_5435_data:
-  postgres_5436_data:
-  postgres_5437_data:
-  postgres_5471:
+  postgres5433_data:
+  postgres5434_data:
+  postgres5435_data:
+  postgres5436_data:
+  postgres5437_data:
+  postgres5471:
   grafana_data:
   prometheus_data:
   mongodb_data:

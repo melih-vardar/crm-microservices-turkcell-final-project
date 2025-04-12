@@ -37,7 +37,7 @@ public class PlanController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PlanResponseDTO> deletePlan(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletePlan(@PathVariable UUID id) {
         planService.deletePlan(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -48,10 +48,11 @@ public class PlanController {
         return ResponseEntity.ok(planService.getPlanByName(name));
     }
 
-    @GetMapping("/api/plans/filter")
+    @GetMapping("/name/{name}/duration/{month}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<PlanResponseDTO> getPlanByNameAndMonth(@RequestParam("name") String name, @RequestParam("month") int month){
-        return ResponseEntity.ok(planService.getPlanWithDurationMonth(name,month));
+    public ResponseEntity<PlanResponseDTO> getPlanWithDurationMonth(
+            @PathVariable String name,
+            @PathVariable int month) {
+        return ResponseEntity.ok(planService.getPlanWithDurationMonth(name, month));
     }
-
 }

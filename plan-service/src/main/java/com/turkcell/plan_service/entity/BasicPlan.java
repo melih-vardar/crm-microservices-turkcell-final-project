@@ -1,5 +1,6 @@
 package com.turkcell.plan_service.entity;
 
+import io.github.bothuany.enums.PlanType;
 import io.github.bothuany.security.encryption.AttributeEncryptor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,20 +10,22 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
-@Entity(name = "plans")
+@Entity(name = "basic_plans")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Plan {
+public class BasicPlan {
     @Id
     @UuidGenerator
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "basic_plan_id")
-    private BasicPlan basicPlan;
+    @Convert(converter = AttributeEncryptor.class)
+    private String name;
 
-    private double price;
+    @Convert(converter = AttributeEncryptor.class)
+    private String description;
 
-    private int durationInMonths;
+    @Enumerated(EnumType.STRING)
+    @Convert(converter = AttributeEncryptor.class)
+    private PlanType planType;
 }

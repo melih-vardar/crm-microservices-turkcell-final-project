@@ -1,11 +1,15 @@
 package com.turkcell.plan_service.service.impl;
 
+import com.turkcell.plan_service.entity.BasicPlan;
 import com.turkcell.plan_service.entity.Plan;
+import com.turkcell.plan_service.repository.BasicPlanRepository;
 import com.turkcell.plan_service.repository.PlanRepository;
 import com.turkcell.plan_service.service.PlanService;
+import io.github.bothuany.dtos.plan.BasicPlanResponseDTO;
 import io.github.bothuany.dtos.plan.PlanCreateDTO;
 import io.github.bothuany.dtos.plan.PlanResponseDTO;
 import com.turkcell.plan_service.rules.PlanBusinessRules;
+import io.github.bothuany.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,7 @@ import java.util.UUID;
 public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
+    private final BasicPlanRepository basicPlanRepository;
     private final PlanBusinessRules planBusinessRules;
 
     @Override
@@ -42,28 +47,23 @@ public class PlanServiceImpl implements PlanService {
 
         return convertToResponseDTO(planRepository.save(plan));
     }
-        // hatalı
+
     @Override
     public PlanResponseDTO getPlanByName(String name) {
-        Plan plan = planRepository.findByName(name);
-        PlanResponseDTO planResponseDTO = new PlanResponseDTO();
-        planResponseDTO.setId(plan.getId());
-        planResponseDTO.setName(plan.getName());
-        planResponseDTO.setDescription(plan.getDescription());
-        planResponseDTO.setPrice(plan.getPrice());
-        return planResponseDTO;
+        Plan plan = planRepository.findByBasicPlanName(name);
+        if (plan == null) {
+            throw new BusinessException("Plan not found with name: " + name);
+        }
+        return convertToResponseDTO(plan);
     }
 
     @Override
     public PlanResponseDTO getPlanWithDurationMonth(String name, int month) {
-        Plan plan = planRepository.findByNameAndDurationInMonths(name,month);
-
-        PlanResponseDTO planResponseDTO = new PlanResponseDTO();
-        planResponseDTO.setId(plan.getId());
-        planResponseDTO.setName(plan.getName());
-        planResponseDTO.setDescription(plan.getDescription());
-        planResponseDTO.setPrice(plan.getPrice());
-        return planResponseDTO;
+        Plan plan = planRepository.findByBasicPlanNameAndDurationInMonths(name, month);
+        if (plan == null) {
+            throw new BusinessException("Plan not found with name: " + name + " and duration: " + month + " months");
+        }
+        return convertToResponseDTO(plan);
     }
 
     @Override
@@ -74,17 +74,27 @@ public class PlanServiceImpl implements PlanService {
     }
 
     private void updatePlanFromRequest(Plan plan, PlanCreateDTO planCreateDTO) {
-        plan.setDescription(planCreateDTO.getDescription());
-        plan.setName(planCreateDTO.getName());
+        BasicPlan basicPlan = basicPlanRepository.findById(planCreateDTO.getBasicPlanId())
+                .orElseThrow(() -> new RuntimeException("Basic plan not found"));
+
+        plan.setBasicPlan(basicPlan);
         plan.setPrice(planCreateDTO.getPrice());
         plan.setDurationInMonths(planCreateDTO.getDurationInMonths());
     }
 
     private PlanResponseDTO convertToResponseDTO(Plan plan) {
         PlanResponseDTO planResponseDTO = new PlanResponseDTO();
-        planResponseDTO.setDescription(plan.getDescription());
-        planResponseDTO.setName(plan.getName());
+        planResponseDTO.setId(plan.getId());
         planResponseDTO.setPrice(plan.getPrice());
+        planResponseDTO.setDurationInMonths(plan.getDurationInMonths());
+
+        BasicPlanResponseDTO basicPlanResponseDTO = new BasicPlanResponseDTO();
+        basicPlanResponseDTO.setId(plan.getBasicPlan().getId());
+        basicPlanResponseDTO.setName(plan.getBasicPlan().getName());
+        basicPlanResponseDTO.setDescription(plan.getBasicPlan().getDescription());
+        basicPlanResponseDTO.setPlanType(plan.getBasicPlan().getPlanType());
+
+        planResponseDTO.setBasicPlan(basicPlanResponseDTO);
 
         return planResponseDTO;
     }

@@ -2,6 +2,7 @@ package com.turkcell.crmmicroservicesfinalproject.contractservice.controller;
 
 import com.turkcell.crmmicroservicesfinalproject.contractservice.service.ContractService;
 import io.github.bothuany.dtos.contract.ContractCreateDTO;
+import io.github.bothuany.dtos.contract.ContractDetailedResponseDTO;
 import io.github.bothuany.dtos.contract.ContractResponseDTO;
 import io.github.bothuany.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,6 +70,18 @@ public class ContractController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}/detailed")
+    @Operation(summary = "Get a detailed contract by ID with customer and plan information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Detailed contract found"),
+            @ApiResponse(responseCode = "404", description = "Contract not found")
+    })
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    public ResponseEntity<ContractDetailedResponseDTO> getContractDetailed(@PathVariable UUID id) {
+        ContractDetailedResponseDTO response = contractService.getContractDetailed(id);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing contract")
     @ApiResponses(value = {
@@ -97,13 +110,27 @@ public class ContractController {
     }
 
     @GetMapping("/customer/{customerId}")
-    @Operation(summary = "Get all contracts for a customer")
+    @Operation(summary = "Get contracts by customer ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Contracts retrieved successfully")
+            @ApiResponse(responseCode = "200", description = "Contracts found"),
+            @ApiResponse(responseCode = "404", description = "Customer not found")
     })
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<List<ContractResponseDTO>> getContractsByCustomerId(@PathVariable UUID customerId) {
-        List<ContractResponseDTO> contracts = contractService.getContractsByCustomerId(customerId);
-        return ResponseEntity.ok(contracts);
+        List<ContractResponseDTO> response = contractService.getContractsByCustomerId(customerId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/customer/{customerId}/detailed")
+    @Operation(summary = "Get detailed contracts by customer ID with customer and plan information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Detailed contracts found"),
+            @ApiResponse(responseCode = "404", description = "Customer not found")
+    })
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    public ResponseEntity<List<ContractDetailedResponseDTO>> getDetailedContractsByCustomerId(
+            @PathVariable UUID customerId) {
+        List<ContractDetailedResponseDTO> response = contractService.getDetailedContractsByCustomerId(customerId);
+        return ResponseEntity.ok(response);
     }
 }
