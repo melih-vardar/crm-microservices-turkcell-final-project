@@ -1,14 +1,14 @@
 package com.turkcell.billingservice.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentResponseDTO {
@@ -19,5 +19,4 @@ public class PaymentResponseDTO {
     private String transactionId;
     private LocalDateTime paymentDate;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 } 

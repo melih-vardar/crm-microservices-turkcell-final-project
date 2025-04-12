@@ -1,10 +1,12 @@
 package com.turkcell.billingservice.controllers;
 
 import com.turkcell.billingservice.dtos.*;
-import com.turkcell.billingservice.services.BillingService;
+import com.turkcell.billingservice.services.BilingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,52 +15,49 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/bills")
 @RequiredArgsConstructor
 @Tag(name = "Billing Service", description = "Billing service API endpoints")
 public class BillingController {
 
-    private final BillingService billingService;
+    private final BilingService billingService;
 
-    @PostMapping("/bills")
+    @PostMapping("/{customerId}/{contractId}")
     @Operation(summary = "Create a new bill")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<BillResponseDTO> createBill(@RequestBody BillCreateDTO billCreateDTO) {
-        return ResponseEntity.ok(billingService.createBill(billCreateDTO));
+    public ResponseEntity<BillResponseDTO> createBill(@PathVariable String customerId, @PathVariable String contractId) {
+        BillResponseDTO createdBill = billingService.createBill(customerId, contractId);
+        return new ResponseEntity<>(createdBill, HttpStatus.CREATED);
     }
 
-    @GetMapping("/bills/{id}")
+    @GetMapping("/{billId}")
     @Operation(summary = "Get bill by ID")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<BillResponseDTO> getBillById(@PathVariable UUID id) {
-        return ResponseEntity.ok(billingService.getBillById(id));
+    public ResponseEntity<BillResponseDTO> getBillById(@PathVariable UUID billId) {
+        return ResponseEntity.ok(billingService.getBillById(billId));
     }
 
-    @GetMapping("/bills/unpaid")
-    @Operation(summary = "Get unpaid bills")
+    @GetMapping("/customer/{customerId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<List<BillResponseDTO>> getUnpaidBills() {
-        return ResponseEntity.ok(billingService.getUnpaidBills());
-    }
+    public ResponseEntity<List<BillResponseDTO>> getBillsByCustomerId(
+            @PathVariable UUID customerId) {
 
-    @PostMapping("/payments")
-    @Operation(summary = "Process a payment")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<PaymentResponseDTO> processPayment(@RequestBody PaymentDTO paymentDTO) {
-        return ResponseEntity.ok(billingService.processPayment(paymentDTO));
+        return ResponseEntity.ok(billingService.getBillsByCustomerId(customerId));
     }
-
-    @GetMapping("/payments/{id}")
-    @Operation(summary = "Get payment by ID")
+    @PutMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<PaymentResponseDTO> getPaymentById(@PathVariable UUID id) {
-        return ResponseEntity.ok(billingService.getPaymentById(id));
+    public ResponseEntity<BillResponseDTO> updateBill(
+            @PathVariable UUID billId,
+            @Valid @RequestBody BillUpdateDTO updateDTO) {
+
+        return ResponseEntity.ok(billingService.updateBill(billId, updateDTO));
     }
-
-    @GetMapping("/payments/methods")
-    @Operation(summary = "Get available payment methods")
+    @DeleteMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<List<String>> getPaymentMethods() {
-        return ResponseEntity.ok(billingService.getPaymentMethods());
+    public ResponseEntity<Void> deleteBill(
+            @PathVariable UUID billId) {
+
+        billingService.deleteBill(billId);
+        return ResponseEntity.noContent().build();
     }
 }

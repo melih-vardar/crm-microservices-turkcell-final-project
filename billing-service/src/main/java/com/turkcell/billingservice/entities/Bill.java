@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +22,7 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private UUID contractId;
     @Column(nullable = false)
     private String customerId;
 
@@ -32,9 +35,19 @@ public class Bill {
     @Column(name = "is_paid", nullable = false)
     private boolean paid = false;
 
+    @Column(name = "bill_status")
+    private BillStatus billStatus;
+
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
+
 } 

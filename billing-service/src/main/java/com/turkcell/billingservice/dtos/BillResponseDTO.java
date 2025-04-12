@@ -1,22 +1,24 @@
 package com.turkcell.billingservice.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.turkcell.billingservice.entities.BillStatus;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillResponseDTO {
-    private UUID id;
-    private String customerId;
-    private BigDecimal amount;
-    private LocalDateTime dueDate;
-    private boolean isPaid;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    UUID id;
+    UUID contractId;
+    String customerId;
+    BigDecimal amount;
+    LocalDateTime dueDate;
+    String billStatus;
+    List<PaymentResponseDTO> payments;
+    LocalDateTime createdAt;
 } 

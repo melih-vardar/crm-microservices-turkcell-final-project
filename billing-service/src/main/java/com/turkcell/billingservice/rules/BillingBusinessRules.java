@@ -1,49 +1,28 @@
 package com.turkcell.billingservice.rules;
 
 import com.turkcell.billingservice.exceptions.BusinessException;
+import io.github.bothuany.dtos.contract.ContractDetailedResponseDTO;
+import io.github.bothuany.dtos.customer.CustomerResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
-@Service
+@Component
 @RequiredArgsConstructor
 public class BillingBusinessRules {
-    private final InvoiceRepository invoiceRepository;
 
-    public void checkIfInvoiceExists(UUID id) {
-        if (!invoiceRepository.existsById(id)) {
-            throw new BusinessException("Fatura bulunamadı: " + id);
+    // Customer validasyonu
+    public void checkIfCustomerExists(CustomerResponseDTO customer) {
+        if (customer == null) {
+            throw new BusinessException("Customer not found");
         }
     }
-
-    public void checkIfInvoiceAlreadyPaid(UUID id) {
-        Invoice invoice = invoiceRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Fatura bulunamadı"));
-        if (invoice.isPaid()) {
-            throw new BusinessException("Fatura zaten ödenmiş");
+    // Contract validasyonu
+    public void checkIfContractIsActive(ContractDetailedResponseDTO contractDetailedResponseDTO) {
+        if (contractDetailedResponseDTO == null) {
+            throw new BusinessException("Contract not found");
         }
-    }
-
-    public void validatePaymentAmount(UUID invoiceId, double paymentAmount) {
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new BusinessException("Fatura bulunamadı"));
-        if (paymentAmount != invoice.getAmount()) {
-            throw new BusinessException("Ödeme tutarı fatura tutarı ile eşleşmiyor");
-        }
-    }
-
-    public void validateDueDate(String dueDate) {
-        LocalDate date = LocalDate.parse(dueDate);
-        if (date.isBefore(LocalDate.now())) {
-            throw new BusinessException("Son ödeme tarihi geçmiş tarih olamaz");
-        }
-    }
-
-    public void validateAmount(double amount) {
-        if (amount <= 0) {
-            throw new BusinessException("Fatura tutarı sıfır veya negatif olamaz");
+        if (!contractDetailedResponseDTO.isActive()) {
+            throw new BusinessException("Contract is not active");
         }
     }
 }

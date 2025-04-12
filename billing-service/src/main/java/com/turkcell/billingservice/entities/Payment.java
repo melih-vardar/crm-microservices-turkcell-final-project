@@ -21,25 +21,26 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bill_id", nullable = false)
-    private Bill bill;
-
     @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private String paymentMethod;
-
-    @Column(unique = true, nullable = false)
+    @Enumerated
+    private PaymentMethod paymentMethod;
+    @Column(name = "transaction_id")
     private String transactionId;
-
+    private boolean success;
     @Column(nullable = false)
     private LocalDateTime paymentDate;
-
+    @Column(name = "card_last_four")
+    private String cardLastFour;
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bill_id", nullable = false)
+    private Bill bill;
 }

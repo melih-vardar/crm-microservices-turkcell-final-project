@@ -1,0 +1,16 @@
+package com.turkcell.billingservice.services;
+
+import com.turkcell.billingservice.dtos.BillResponseDTO;
+import com.turkcell.billingservice.dtos.BillUpdateDTO;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface BilingService {
+    BillResponseDTO createBill(String customerId,String contractId);
+    List<BillResponseDTO> getBillsByCustomerId(UUID customerId);
+    BillResponseDTO getBillById(UUID billId);
+    public BillResponseDTO updateBill(UUID billId, BillUpdateDTO billUpdateDTO);
+    void deleteBill(UUID billId);
+}
+

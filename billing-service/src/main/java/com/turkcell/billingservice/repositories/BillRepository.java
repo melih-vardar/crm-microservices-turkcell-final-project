@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, UUID> {
     List<Bill> findByPaidFalse();
-} 
+
+    List<Bill> findByCustomerId(UUID customerId);
+}
