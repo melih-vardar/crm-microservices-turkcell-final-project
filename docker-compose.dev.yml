@@ -210,7 +210,7 @@ services:
       dockerfile: Dockerfile
     container_name: customer-support-service
     ports:
-      - "8070:8070"
+      - "8060:8060"
     networks:
       - app-network
     depends_on:
