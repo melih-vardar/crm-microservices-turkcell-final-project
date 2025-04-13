@@ -24,7 +24,7 @@ public class BillingController {
 
     @PostMapping("/{customerId}/{contractId}")
     @Operation(summary = "Create a new bill")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<BillResponseDTO> createBill(@PathVariable String customerId,
             @PathVariable String contractId) {
         BillResponseDTO createdBill = billingService.createBill(customerId, contractId);
@@ -33,27 +33,27 @@ public class BillingController {
 
     @GetMapping("/{billId}")
     @Operation(summary = "Get bill by ID")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<BillResponseDTO> getBillById(@PathVariable UUID billId) {
         return ResponseEntity.ok(billingService.getBillById(billId));
     }
 
     @GetMapping("/customer/{customerId}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<BillResponseDTO>> getBillsByCustomerId(@PathVariable String customerId) {
 
         return ResponseEntity.ok(billingService.getBillsByCustomerId(customerId));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     @Operation(summary = "Get all bills")
     public ResponseEntity<List<BillResponseDTO>> getAllBills() {
         return ResponseEntity.ok(billingService.getAllBills());
     }
 
     @PutMapping("/{billId}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<BillResponseDTO> updateBill(@PathVariable UUID billId,
             @Valid @RequestBody BillUpdateDTO updateDTO) {
 
@@ -61,7 +61,7 @@ public class BillingController {
     }
 
     @DeleteMapping("/{billId}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBill(@PathVariable UUID billId) {
 
         billingService.deleteBill(billId);

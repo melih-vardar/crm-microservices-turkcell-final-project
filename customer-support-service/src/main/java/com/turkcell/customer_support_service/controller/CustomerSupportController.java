@@ -20,19 +20,19 @@ public class CustomerSupportController {
     private final CustomerSupportService customerSupportService;
 
     @PostMapping("/tickets")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<TicketResponseDTO> createTicket(@RequestBody TicketCreateDTO ticketCreateDTO) {
         return new ResponseEntity<>(customerSupportService.createTicket(ticketCreateDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/tickets/{id}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<TicketResponseDTO> getTicketById(@PathVariable UUID id) {
         return ResponseEntity.ok(customerSupportService.getTicketById(id));
     }
 
     @PutMapping("/tickets/{id}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<TicketResponseDTO> updateTicket(@PathVariable UUID id,
             @RequestBody TicketCreateDTO ticketCreateDTO) {
         return ResponseEntity.ok(customerSupportService.updateTicket(id, ticketCreateDTO));
@@ -46,7 +46,7 @@ public class CustomerSupportController {
     }
 
     @GetMapping("/tickets")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<TicketResponseDTO>> getAllTickets() {
         return ResponseEntity.ok(customerSupportService.getAllTickets());
     }

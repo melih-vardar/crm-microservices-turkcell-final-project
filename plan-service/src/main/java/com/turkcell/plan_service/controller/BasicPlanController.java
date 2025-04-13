@@ -19,25 +19,25 @@ public class BasicPlanController {
     private final BasicPlanService basicPlanService;
 
     @PostMapping
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<BasicPlanResponseDTO> createBasicPlan(@RequestBody BasicPlanCreateDTO basicPlanCreateDTO) {
         return new ResponseEntity<>(basicPlanService.createBasicPlan(basicPlanCreateDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<BasicPlanResponseDTO> getBasicPlanById(@PathVariable UUID id) {
         return ResponseEntity.ok(basicPlanService.getBasicPlanById(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<BasicPlanResponseDTO>> getAllBasicPlans() {
         return ResponseEntity.ok(basicPlanService.getAllBasicPlans());
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<BasicPlanResponseDTO> updateBasicPlan(@PathVariable UUID id,
             @RequestBody BasicPlanCreateDTO basicPlanCreateDTO) {
         return ResponseEntity.ok(basicPlanService.updateBasicPlan(id, basicPlanCreateDTO));

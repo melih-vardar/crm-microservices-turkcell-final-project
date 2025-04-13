@@ -61,7 +61,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         logAuthenticationDetails("deleteCustomer");
         customerService.deleteCustomer(id);

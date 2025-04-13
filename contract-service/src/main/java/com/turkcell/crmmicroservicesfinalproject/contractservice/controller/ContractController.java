@@ -52,7 +52,7 @@ public class ContractController {
             @ApiResponse(responseCode = "201", description = "Contract created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid contract data or business rule violation")
     })
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<ContractResponseDTO> createContract(@Valid @RequestBody ContractCreateDTO request) {
         ContractResponseDTO response = contractService.createContract(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -64,7 +64,7 @@ public class ContractController {
             @ApiResponse(responseCode = "200", description = "Contract found"),
             @ApiResponse(responseCode = "404", description = "Contract not found")
     })
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<ContractResponseDTO> getContract(@PathVariable UUID id) {
         ContractResponseDTO response = contractService.getContract(id);
         return ResponseEntity.ok(response);
@@ -76,7 +76,7 @@ public class ContractController {
             @ApiResponse(responseCode = "200", description = "Detailed contract found"),
             @ApiResponse(responseCode = "404", description = "Contract not found")
     })
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<ContractDetailedResponseDTO> getContractDetailed(@PathVariable UUID id) {
         ContractDetailedResponseDTO response = contractService.getContractDetailed(id);
         return ResponseEntity.ok(response);
@@ -89,7 +89,7 @@ public class ContractController {
             @ApiResponse(responseCode = "400", description = "Invalid contract data or business rule violation"),
             @ApiResponse(responseCode = "404", description = "Contract not found")
     })
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<ContractResponseDTO> updateContract(
             @PathVariable UUID id,
             @Valid @RequestBody ContractCreateDTO request) {
@@ -115,7 +115,7 @@ public class ContractController {
             @ApiResponse(responseCode = "200", description = "Contracts found"),
             @ApiResponse(responseCode = "404", description = "Customer not found")
     })
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<ContractResponseDTO>> getContractsByCustomerId(@PathVariable UUID customerId) {
         List<ContractResponseDTO> response = contractService.getContractsByCustomerId(customerId);
         return ResponseEntity.ok(response);
@@ -127,7 +127,7 @@ public class ContractController {
             @ApiResponse(responseCode = "200", description = "Detailed contracts found"),
             @ApiResponse(responseCode = "404", description = "Customer not found")
     })
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<ContractDetailedResponseDTO>> getDetailedContractsByCustomerId(
             @PathVariable UUID customerId) {
         List<ContractDetailedResponseDTO> response = contractService.getDetailedContractsByCustomerId(customerId);

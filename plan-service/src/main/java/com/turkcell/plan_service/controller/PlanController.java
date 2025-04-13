@@ -19,19 +19,19 @@ public class PlanController {
     private final PlanService planService;
 
     @PostMapping
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PlanResponseDTO> createPlan(@RequestBody PlanCreateDTO planCreateDTO) {
         return new ResponseEntity<>(planService.createPlan(planCreateDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PlanResponseDTO> getPlanById(@PathVariable UUID id) {
         return ResponseEntity.ok(planService.getPlanById(id));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PlanResponseDTO> updatePlan(@PathVariable UUID id, @RequestBody PlanCreateDTO planCreateDTO) {
         return ResponseEntity.ok(planService.updatePlan(id, planCreateDTO));
     }
@@ -44,13 +44,13 @@ public class PlanController {
     }
 
     @GetMapping("/name/{name}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PlanResponseDTO> getPlanByName(@PathVariable String name) {
         return ResponseEntity.ok(planService.getPlanByName(name));
     }
 
     @GetMapping("/name/{name}/duration/{month}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PlanResponseDTO> getPlanWithDurationMonth(
             @PathVariable String name,
             @PathVariable int month) {
@@ -58,7 +58,7 @@ public class PlanController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<PlanResponseDTO>> getAllPlans() {
         return ResponseEntity.ok(planService.getAllPlans());
     }

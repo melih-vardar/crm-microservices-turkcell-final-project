@@ -22,7 +22,7 @@ public class PaymentController {
     private final PaymentService paymentService;
     // ödeme işlemi yap
     @PostMapping("/{billId}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PaymentResponseDTO> processPayment(@PathVariable UUID billId, @Valid @RequestBody PaymentRequest paymentRequest) {
 
         return ResponseEntity
@@ -31,24 +31,24 @@ public class PaymentController {
     }
     //fatura numarası ile ödeme getir
     @GetMapping("/paymentByBill/{billId}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PaymentResponseDTO> getPaymentByBill(@PathVariable UUID billId) {
         return ResponseEntity.ok(paymentService.getPaymentByBillId(billId));
     }
     // ID ile Ödeme Getir
     @GetMapping("/{paymentId}")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<PaymentResponseDTO> getPaymentById(@PathVariable UUID paymentId) {
         return ResponseEntity.ok(paymentService.getPaymentById(paymentId));
     }
     // bütün ödemerli getir
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
     @GetMapping("/status")
-    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE') or hasRole('ADMIN')")
     public ResponseEntity<List<PaymentResponseDTO>> getPaymentsByStatus(@RequestParam boolean status) {
 
         return ResponseEntity.ok(paymentService.getPaymentsByStatus(status));

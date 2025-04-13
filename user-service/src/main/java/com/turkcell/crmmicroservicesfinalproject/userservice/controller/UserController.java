@@ -1,10 +1,7 @@
 package com.turkcell.crmmicroservicesfinalproject.userservice.controller;
 
-import com.turkcell.crmmicroservicesfinalproject.userservice.model.User;
 import com.turkcell.crmmicroservicesfinalproject.userservice.service.UserService;
-import io.github.bothuany.dtos.user.JwtResponseDTO;
 import io.github.bothuany.dtos.user.Role;
-import io.github.bothuany.dtos.user.UserLoginDTO;
 import io.github.bothuany.dtos.user.UserRegisterDTO;
 import io.github.bothuany.dtos.user.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,10 +9,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -98,9 +93,12 @@ public class UserController {
 
     @GetMapping("/me")
     @Operation(summary = "Get current user information", description = "Retrieves information for the currently authenticated user", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal User user) {
-        // TODO
-        return ResponseEntity.ok(userService.getUserById(user.getId()));
+    public ResponseEntity<UserResponseDTO> getCurrentUser(@RequestHeader("Authorization") String token) {
+        // Remove "Bearer " prefix from the token
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return ResponseEntity.ok(userService.getCurrentUser(token));
     }
 
     @GetMapping("/{id}/roles")
