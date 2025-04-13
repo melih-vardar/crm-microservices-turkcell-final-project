@@ -9,7 +9,7 @@ spring:
     name: "notificationservice"
   cloud:
     config:
-      profile: dev
+      profile: prod
       fail-fast: true
       uri: ${configurl}
 
