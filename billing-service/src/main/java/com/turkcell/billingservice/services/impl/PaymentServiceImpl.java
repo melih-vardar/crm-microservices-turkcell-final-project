@@ -117,7 +117,7 @@ public class PaymentServiceImpl implements PaymentService {
             emailNotificationEventpaid.setMessage(String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
                     bill.getAmount(), bill.getDueDate()));
             logger.info("Sending email notification {}", emailNotificationEventpaid);
-            //streamBridge.send("emailNotification-out-0", emailNotificationEventpaid);
+            streamBridge.send("emailNotification-out-0", emailNotificationEventpaid);
 
             bill.setPaymentDate(LocalDateTime.now());
 

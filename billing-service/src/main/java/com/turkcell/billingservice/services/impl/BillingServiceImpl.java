@@ -62,7 +62,7 @@ public class BillingServiceImpl implements BilingService {
         emailNotificationEvent.setMessage(String.format("A new bill has been created for you. Amount: %s, Due Date: %s",
                 bill.getAmount(), bill.getDueDate()));
         logger.info("Sending email notification {}", emailNotificationEvent);
-        //streamBridge.send("emailNotification-out-0", emailNotificationEvent);
+        streamBridge.send("emailNotification-out-0", emailNotificationEvent);
 
 
         BillAnalyticsEvent billAnalyticsEvent = new BillAnalyticsEvent();
@@ -72,7 +72,7 @@ public class BillingServiceImpl implements BilingService {
         billAnalyticsEvent.setCreatedAt(bill.getCreatedAt());
 
         logger.info("Sending bill analytics event {}", billAnalyticsEvent);
-        //streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
+        streamBridge.send("BillAnalytics-out-0", billAnalyticsEvent);
 
         return getBillResponseDTO(bill);
     }
