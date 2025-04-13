@@ -8,11 +8,17 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BilingService {
-    BillResponseDTO createBill(String customerId,String contractId);
-    List<BillResponseDTO> getBillsByCustomerId(String customerId);
-    BillResponseDTO getBillById(UUID billId);
-    BillResponseDTO updateBill(UUID billId, BillUpdateDTO billUpdateDTO);
-    void deleteBill(UUID billId);
-    void saveBill(Bill bill);
-}
+    BillResponseDTO createBill(String customerId, String contractId);
 
+    List<BillResponseDTO> getBillsByCustomerId(String customerId);
+
+    BillResponseDTO getBillById(UUID billId);
+
+    BillResponseDTO updateBill(UUID billId, BillUpdateDTO billUpdateDTO);
+
+    void deleteBill(UUID billId);
+
+    void saveBill(Bill bill);
+
+    List<BillResponseDTO> getAllBills();
+}

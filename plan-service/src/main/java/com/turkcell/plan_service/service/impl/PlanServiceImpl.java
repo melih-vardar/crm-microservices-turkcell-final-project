@@ -13,7 +13,9 @@ import io.github.bothuany.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +73,14 @@ public class PlanServiceImpl implements PlanService {
         planBusinessRules.checkIfPlanExists(id);
 
         planRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PlanResponseDTO> getAllPlans() {
+        return planRepository.findAll()
+                .stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     private void updatePlanFromRequest(Plan plan, PlanCreateDTO planCreateDTO) {

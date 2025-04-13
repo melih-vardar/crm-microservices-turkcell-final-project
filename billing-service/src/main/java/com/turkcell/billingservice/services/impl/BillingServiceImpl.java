@@ -141,6 +141,14 @@ public class BillingServiceImpl implements BilingService {
         billRepository.save(bill);
     }
 
+    @Override
+    public List<BillResponseDTO> getAllBills() {
+        List<Bill> bills = billRepository.findAll();
+        return bills.stream()
+                .map(this::getBillResponseDTO)
+                .collect(Collectors.toList());
+    }
+
     private BillResponseDTO getBillResponseDTO(Bill bill) {
         BillResponseDTO dto = new BillResponseDTO();
         dto.setId(bill.getId());
