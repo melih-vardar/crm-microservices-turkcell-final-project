@@ -48,8 +48,6 @@ jobs:
               - 'notification-service/**'
             customer-support-service:
               - 'customer-support-service/**'
-            kubernetes:
-              - 'k8s/**'
 
       - name: Create matrix
         id: create-matrix
