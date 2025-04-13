@@ -23,7 +23,9 @@ public class BaseSecurityService {
             "/actuator/health",
             "/actuator/info",
             "/actuator/health/readiness",
-            "/actuator/health/liveness"
+            "/actuator/health/liveness",
+            "/actuator/prometheus",
+            "/actuator/**"
     };
 
     private final BaseJwtAuthFilter baseJwtAuthFilter;
