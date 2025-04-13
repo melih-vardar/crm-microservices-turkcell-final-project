@@ -25,7 +25,8 @@ public class BillingController {
     @PostMapping("/{customerId}/{contractId}")
     @Operation(summary = "Create a new bill")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<BillResponseDTO> createBill(@PathVariable String customerId, @PathVariable String contractId) {
+    public ResponseEntity<BillResponseDTO> createBill(@PathVariable String customerId,
+            @PathVariable String contractId) {
         BillResponseDTO createdBill = billingService.createBill(customerId, contractId);
         return new ResponseEntity<>(createdBill, HttpStatus.CREATED);
     }
@@ -44,12 +45,21 @@ public class BillingController {
         return ResponseEntity.ok(billingService.getBillsByCustomerId(customerId));
     }
 
+    @GetMapping
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    @Operation(summary = "Get all bills")
+    public ResponseEntity<List<BillResponseDTO>> getAllBills() {
+        return ResponseEntity.ok(billingService.getAllBills());
+    }
+
     @PutMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
-    public ResponseEntity<BillResponseDTO> updateBill(@PathVariable UUID billId, @Valid @RequestBody BillUpdateDTO updateDTO) {
+    public ResponseEntity<BillResponseDTO> updateBill(@PathVariable UUID billId,
+            @Valid @RequestBody BillUpdateDTO updateDTO) {
 
         return ResponseEntity.ok(billingService.updateBill(billId, updateDTO));
     }
+
     @DeleteMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<Void> deleteBill(@PathVariable UUID billId) {

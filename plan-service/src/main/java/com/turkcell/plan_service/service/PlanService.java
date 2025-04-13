@@ -3,6 +3,7 @@ package com.turkcell.plan_service.service;
 import io.github.bothuany.dtos.plan.PlanCreateDTO;
 import io.github.bothuany.dtos.plan.PlanResponseDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface PlanService {
@@ -13,6 +14,10 @@ public interface PlanService {
     PlanResponseDTO updatePlan(UUID id, PlanCreateDTO planCreateDTO);
 
     PlanResponseDTO getPlanByName(String name);
+
     PlanResponseDTO getPlanWithDurationMonth(String name, int month);
+
     void deletePlan(UUID id);
+
+    List<PlanResponseDTO> getAllPlans();
 }

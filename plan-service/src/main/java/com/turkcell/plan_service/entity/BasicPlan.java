@@ -19,13 +19,10 @@ public class BasicPlan {
     @UuidGenerator
     private UUID id;
 
-    @Convert(converter = AttributeEncryptor.class)
     private String name;
 
-    @Convert(converter = AttributeEncryptor.class)
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Convert(converter = AttributeEncryptor.class)
     private PlanType planType;
 }

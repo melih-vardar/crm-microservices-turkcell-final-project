@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -54,5 +55,11 @@ public class PlanController {
             @PathVariable String name,
             @PathVariable int month) {
         return ResponseEntity.ok(planService.getPlanWithDurationMonth(name, month));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
+    public ResponseEntity<List<PlanResponseDTO>> getAllPlans() {
+        return ResponseEntity.ok(planService.getAllPlans());
     }
 }
