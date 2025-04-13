@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "i8b52d7e-4f8b-4ded-a1bb-db3c92f7a356",
+    "_postman_id": "billing-service-collection",
     "name": "Billing Service API Collection",
     "description": "Turkcell CRM Microservices - Billing Service API endpoints collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -23,24 +23,48 @@
               ]
             },
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"contractId\": \"{{contract_id}}\",\n    \"amount\": 199.99,\n    \"dueDate\": \"2024-05-01\",\n    \"description\": \"Monthly subscription bill\",\n    \"status\": \"UNPAID\"\n}"
-            },
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/bills",
+              "raw": "{{base_url}}/api/bills/{{customer_id}}/{{contract_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "bills"]
+              "path": ["api", "bills", "{{customer_id}}", "{{contract_id}}"]
             },
-            "description": "Create a new bill (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Create a new bill for a customer and contract (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/bills/{{customer_id}}/{{contract_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "bills", "{{customer_id}}", "{{contract_id}}"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "contractId": "550e8400-e29b-41d4-a716-446655440001",
+                "customerId": "550e8400-e29b-41d4-a716-446655440002",
+                "amount": 199.99,
+                "dueDate": "2024-05-01T00:00:00",
+                "billStatus": "PENDING",
+                "createdAt": "2024-04-13T12:00:00",
+                "paymentDate": null,
+                "paid": false
+              }
+            }
+          ]
         },
         {
           "name": "Get Bill by ID",
@@ -58,16 +82,49 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/bills/{{bill_id}}",
+              "raw": "{{base_url}}/api/bills/{{bill_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "bills", "{{bill_id}}"]
+              "path": ["api", "bills", "{{bill_id}}"]
             },
             "description": "Get bill details by ID (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/bills/{{bill_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "bills", "{{bill_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "contractId": "550e8400-e29b-41d4-a716-446655440001",
+                "customerId": "550e8400-e29b-41d4-a716-446655440002",
+                "amount": 199.99,
+                "dueDate": "2024-05-01T00:00:00",
+                "billStatus": "PENDING",
+                "createdAt": "2024-04-13T12:00:00",
+                "paymentDate": null,
+                "paid": false
+              }
+            }
+          ]
         },
         {
-          "name": "Get Unpaid Bills",
+          "name": "Get Bills by Customer ID",
           "request": {
             "auth": {
               "type": "bearer",
@@ -82,13 +139,163 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/bills/unpaid",
+              "raw": "{{base_url}}/api/bills/customer/{{customer_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "bills", "unpaid"]
+              "path": ["api", "bills", "customer", "{{customer_id}}"]
             },
-            "description": "Get all unpaid bills (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Get all bills for a customer (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/bills/customer/{{customer_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "bills", "customer", "{{customer_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440000",
+                  "contractId": "550e8400-e29b-41d4-a716-446655440001",
+                  "customerId": "550e8400-e29b-41d4-a716-446655440002",
+                  "amount": 199.99,
+                  "dueDate": "2024-05-01T00:00:00",
+                  "billStatus": "PENDING",
+                  "createdAt": "2024-04-13T12:00:00",
+                  "paymentDate": null,
+                  "paid": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update Bill",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"billStatus\": \"PAID\",\n    \"paid\": true,\n    \"paymentDate\": \"2024-04-13T12:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bills/{{bill_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bills", "{{bill_id}}"]
+            },
+            "description": "Update bill details (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"billStatus\": \"PAID\",\n    \"paid\": true,\n    \"paymentDate\": \"2024-04-13T12:00:00\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/bills/{{bill_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "bills", "{{bill_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "contractId": "550e8400-e29b-41d4-a716-446655440001",
+                "customerId": "550e8400-e29b-41d4-a716-446655440002",
+                "amount": 199.99,
+                "dueDate": "2024-05-01T00:00:00",
+                "billStatus": "PAID",
+                "createdAt": "2024-04-13T12:00:00",
+                "paymentDate": "2024-04-13T12:00:00",
+                "paid": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Bill",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bills/{{bill_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bills", "{{bill_id}}"]
+            },
+            "description": "Delete a bill (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/bills/{{bill_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "bills", "{{bill_id}}"]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": []
+            }
+          ]
         }
       ],
       "description": "Bill management endpoints"
@@ -118,16 +325,111 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"billId\": \"{{bill_id}}\",\n    \"amount\": 199.99,\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"cardNumber\": \"4111111111111111\",\n    \"expiryDate\": \"12/25\",\n    \"cvv\": \"123\"\n}"
+              "raw": "{\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cardHolderName\": \"John Doe\",\n    \"expiryDate\": \"12/25\",\n    \"cvv\": \"123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/payments",
+              "raw": "{{base_url}}/api/payments/{{bill_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "payments"]
+              "path": ["api", "payments", "{{bill_id}}"]
             },
             "description": "Process a payment for a bill (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cardHolderName\": \"John Doe\",\n    \"expiryDate\": \"12/25\",\n    \"cvv\": \"123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/payments/{{bill_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "payments", "{{bill_id}}"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "billId": "550e8400-e29b-41d4-a716-446655440001",
+                "amount": 199.99,
+                "paymentMethod": "CREDIT_CARD",
+                "transactionId": "TRX123456789",
+                "paymentDate": "2024-04-13T12:00:00",
+                "createdAt": "2024-04-13T12:00:00"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Payment by Bill ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/payments/paymentByBill/{{bill_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "paymentByBill", "{{bill_id}}"]
+            },
+            "description": "Get payment details by bill ID (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/payments/paymentByBill/{{bill_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "payments", "paymentByBill", "{{bill_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "billId": "550e8400-e29b-41d4-a716-446655440001",
+                "amount": 199.99,
+                "paymentMethod": "CREDIT_CARD",
+                "transactionId": "TRX123456789",
+                "paymentDate": "2024-04-13T12:00:00",
+                "createdAt": "2024-04-13T12:00:00"
+              }
+            }
+          ]
         },
         {
           "name": "Get Payment by ID",
@@ -145,16 +447,47 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/payments/{{payment_id}}",
+              "raw": "{{base_url}}/api/payments/{{payment_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "payments", "{{payment_id}}"]
+              "path": ["api", "payments", "{{payment_id}}"]
             },
             "description": "Get payment details by ID (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/payments/{{payment_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "payments", "{{payment_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "billId": "550e8400-e29b-41d4-a716-446655440001",
+                "amount": 199.99,
+                "paymentMethod": "CREDIT_CARD",
+                "transactionId": "TRX123456789",
+                "paymentDate": "2024-04-13T12:00:00",
+                "createdAt": "2024-04-13T12:00:00"
+              }
+            }
+          ]
         },
         {
-          "name": "Get Payment Methods",
+          "name": "Get All Payments",
           "request": {
             "auth": {
               "type": "bearer",
@@ -169,13 +502,172 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/payments/methods",
+              "raw": "{{base_url}}/api/payments",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "payments", "methods"]
+              "path": ["api", "payments"]
             },
-            "description": "Get available payment methods (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Get all payments (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/payments",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "payments"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440000",
+                  "billId": "550e8400-e29b-41d4-a716-446655440001",
+                  "amount": 199.99,
+                  "paymentMethod": "CREDIT_CARD",
+                  "transactionId": "TRX123456789",
+                  "paymentDate": "2024-04-13T12:00:00",
+                  "createdAt": "2024-04-13T12:00:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Payments by Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/payments/status?status=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Get payments by status (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/payments/status?status=true",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "payments", "status"],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440000",
+                  "billId": "550e8400-e29b-41d4-a716-446655440001",
+                  "amount": 199.99,
+                  "paymentMethod": "CREDIT_CARD",
+                  "transactionId": "TRX123456789",
+                  "paymentDate": "2024-04-13T12:00:00",
+                  "createdAt": "2024-04-13T12:00:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Get Payments by Method",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/payments/method/CREDIT_CARD",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "method", "CREDIT_CARD"]
+            },
+            "description": "Get payments by payment method (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/payments/method/CREDIT_CARD",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "payments", "method", "CREDIT_CARD"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440000",
+                  "billId": "550e8400-e29b-41d4-a716-446655440001",
+                  "amount": 199.99,
+                  "paymentMethod": "CREDIT_CARD",
+                  "transactionId": "TRX123456789",
+                  "paymentDate": "2024-04-13T12:00:00",
+                  "createdAt": "2024-04-13T12:00:00"
+                }
+              ]
+            }
+          ]
         }
       ],
       "description": "Payment management endpoints"
@@ -195,14 +687,14 @@
         "type": "text/javascript",
         "exec": [
           "// Store bill ID after creation",
-          "if (pm.response.code === 200) {",
+          "if (pm.response.code === 201) {",
           "    if (pm.response.json() && pm.response.json().id) {",
           "        pm.environment.set('bill_id', pm.response.json().id);",
           "    }",
           "}",
           "",
           "// Store payment ID after processing",
-          "if (pm.response.code === 200) {",
+          "if (pm.response.code === 201) {",
           "    if (pm.response.json() && pm.response.json().id) {",
           "        pm.environment.set('payment_id', pm.response.json().id);",
           "    }",

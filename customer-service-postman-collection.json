@@ -51,7 +51,49 @@
             },
             "description": "Get all customers (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/customers",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customers"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440000",
+                  "firstName": "John",
+                  "lastName": "Doe",
+                  "email": "john.doe@example.com",
+                  "phoneNumber": "+905551234567",
+                  "address": {
+                    "street": "123 Main St",
+                    "city": "Istanbul",
+                    "state": "Marmara",
+                    "country": "Turkey",
+                    "postalCode": "34000"
+                  },
+                  "customerType": "INDIVIDUAL",
+                  "status": "ACTIVE",
+                  "createdAt": "2024-04-13T12:00:00",
+                  "updatedAt": "2024-04-13T12:00:00"
+                }
+              ]
+            }
+          ]
         },
         {
           "name": "Create Customer",
@@ -75,7 +117,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"+905551234567\",\n    \"address\": \"123 Main St, Istanbul, Turkey\"\n}"
+              "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"+905551234567\",\n    \"address\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"Istanbul\",\n        \"state\": \"Marmara\",\n        \"country\": \"Turkey\",\n        \"postalCode\": \"34000\"\n    },\n    \"customerType\": \"INDIVIDUAL\",\n    \"status\": \"ACTIVE\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/customers",
@@ -84,7 +126,56 @@
             },
             "description": "Create a new customer (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"+905551234567\",\n    \"address\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"Istanbul\",\n        \"state\": \"Marmara\",\n        \"country\": \"Turkey\",\n        \"postalCode\": \"34000\"\n    },\n    \"customerType\": \"INDIVIDUAL\",\n    \"status\": \"ACTIVE\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/customers",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customers"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "firstName": "John",
+                "lastName": "Doe",
+                "email": "john.doe@example.com",
+                "phoneNumber": "+905551234567",
+                "address": {
+                  "street": "123 Main St",
+                  "city": "Istanbul",
+                  "state": "Marmara",
+                  "country": "Turkey",
+                  "postalCode": "34000"
+                },
+                "customerType": "INDIVIDUAL",
+                "status": "ACTIVE",
+                "createdAt": "2024-04-13T12:00:00",
+                "updatedAt": "2024-04-13T12:00:00"
+              }
+            }
+          ]
         },
         {
           "name": "Get Customer by ID",
@@ -108,7 +199,47 @@
             },
             "description": "Get customer details by ID (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/customers/{{customer_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customers", "{{customer_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "firstName": "John",
+                "lastName": "Doe",
+                "email": "john.doe@example.com",
+                "phoneNumber": "+905551234567",
+                "address": {
+                  "street": "123 Main St",
+                  "city": "Istanbul",
+                  "state": "Marmara",
+                  "country": "Turkey",
+                  "postalCode": "34000"
+                },
+                "customerType": "INDIVIDUAL",
+                "status": "ACTIVE",
+                "createdAt": "2024-04-13T12:00:00",
+                "updatedAt": "2024-04-13T12:00:00"
+              }
+            }
+          ]
         },
         {
           "name": "Update Customer",
@@ -132,7 +263,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"+905551234567\",\n    \"address\": \"456 New St, Istanbul, Turkey\"\n}"
+              "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"+905551234567\",\n    \"address\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"Istanbul\",\n        \"state\": \"Marmara\",\n        \"country\": \"Turkey\",\n        \"postalCode\": \"34000\"\n    },\n    \"customerType\": \"INDIVIDUAL\",\n    \"status\": \"ACTIVE\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/customers/{{customer_id}}",
@@ -141,7 +272,56 @@
             },
             "description": "Update customer details (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phoneNumber\": \"+905551234567\",\n    \"address\": {\n        \"street\": \"123 Main St\",\n        \"city\": \"Istanbul\",\n        \"state\": \"Marmara\",\n        \"country\": \"Turkey\",\n        \"postalCode\": \"34000\"\n    },\n    \"customerType\": \"INDIVIDUAL\",\n    \"status\": \"ACTIVE\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/customers/{{customer_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customers", "{{customer_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "firstName": "John",
+                "lastName": "Doe",
+                "email": "john.doe@example.com",
+                "phoneNumber": "+905551234567",
+                "address": {
+                  "street": "123 Main St",
+                  "city": "Istanbul",
+                  "state": "Marmara",
+                  "country": "Turkey",
+                  "postalCode": "34000"
+                },
+                "customerType": "INDIVIDUAL",
+                "status": "ACTIVE",
+                "createdAt": "2024-04-13T12:00:00",
+                "updatedAt": "2024-04-13T12:00:00"
+              }
+            }
+          ]
         },
         {
           "name": "Delete Customer",
@@ -151,7 +331,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{admin_token}}",
+                  "value": "{{customer_rep_token}}",
                   "type": "string"
                 }
               ]
@@ -163,9 +343,25 @@
               "host": ["{{base_url}}"],
               "path": ["api", "customers", "{{customer_id}}"]
             },
-            "description": "Delete a customer (requires ADMIN role)"
+            "description": "Delete a customer (requires CUSTOMER_REPRESENTATIVE role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/customers/{{customer_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customers", "{{customer_id}}"]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": []
+            }
+          ]
         },
         {
           "name": "Get Customer Bills",
@@ -245,16 +441,11 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:8020",
+      "value": "http://localhost:8050",
       "type": "string"
     },
     {
       "key": "customer_rep_token",
-      "value": "",
-      "type": "default"
-    },
-    {
-      "key": "admin_token",
       "value": "",
       "type": "default"
     },

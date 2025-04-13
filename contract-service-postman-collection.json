@@ -31,14 +31,69 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"planId\": \"{{plan_id}}\",\n    \"startDate\": \"2024-03-01\",\n    \"endDate\": \"2025-03-01\",\n    \"status\": \"ACTIVE\"\n}"
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"contractType\": \"MOBILE\",\n    \"startDate\": \"2024-04-13\",\n    \"endDate\": \"2025-04-13\",\n    \"status\": \"ACTIVE\",\n    \"planDetails\": {\n        \"planName\": \"Unlimited 5G\",\n        \"dataLimit\": \"UNLIMITED\",\n        \"voiceLimit\": \"UNLIMITED\",\n        \"smsLimit\": \"UNLIMITED\",\n        \"price\": 199.99\n    },\n    \"deviceDetails\": {\n        \"deviceType\": \"SMARTPHONE\",\n        \"deviceModel\": \"iPhone 15 Pro\",\n        \"imei\": \"123456789012345\",\n        \"price\": 999.99\n    }\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/contracts",
               "host": ["{{base_url}}"],
               "path": ["api", "contracts"]
             },
-            "description": "Create a new contract (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Create a new contract (requires CUSTOMER_REPRESENTATIVE role)",
+            "response": [
+              {
+                "name": "Success Response",
+                "originalRequest": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"contractType\": \"MOBILE\",\n    \"startDate\": \"2024-04-13\",\n    \"endDate\": \"2025-04-13\",\n    \"status\": \"ACTIVE\",\n    \"planDetails\": {\n        \"planName\": \"Unlimited 5G\",\n        \"dataLimit\": \"UNLIMITED\",\n        \"voiceLimit\": \"UNLIMITED\",\n        \"smsLimit\": \"UNLIMITED\",\n        \"price\": 199.99\n    },\n    \"deviceDetails\": {\n        \"deviceType\": \"SMARTPHONE\",\n        \"deviceModel\": \"iPhone 15 Pro\",\n        \"imei\": \"123456789012345\",\n        \"price\": 999.99\n    }\n}"
+                  },
+                  "url": {
+                    "raw": "{{base_url}}/api/contracts",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "contracts"]
+                  }
+                },
+                "status": "Created",
+                "code": 201,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "id": "550e8400-e29b-41d4-a716-446655440001",
+                  "customerId": "550e8400-e29b-41d4-a716-446655440000",
+                  "contractType": "MOBILE",
+                  "startDate": "2024-04-13",
+                  "endDate": "2025-04-13",
+                  "status": "ACTIVE",
+                  "planDetails": {
+                    "planName": "Unlimited 5G",
+                    "dataLimit": "UNLIMITED",
+                    "voiceLimit": "UNLIMITED",
+                    "smsLimit": "UNLIMITED",
+                    "price": 199.99
+                  },
+                  "deviceDetails": {
+                    "deviceType": "SMARTPHONE",
+                    "deviceModel": "iPhone 15 Pro",
+                    "imei": "123456789012345",
+                    "price": 999.99
+                  },
+                  "createdAt": "2024-04-13T12:00:00",
+                  "updatedAt": "2024-04-13T12:00:00"
+                }
+              }
+            ]
           }
         },
         {
@@ -61,7 +116,53 @@
               "host": ["{{base_url}}"],
               "path": ["api", "contracts", "{{contract_id}}"]
             },
-            "description": "Get contract details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Get contract details by ID (requires CUSTOMER_REPRESENTATIVE role)",
+            "response": [
+              {
+                "name": "Success Response",
+                "originalRequest": {
+                  "method": "GET",
+                  "header": [],
+                  "url": {
+                    "raw": "{{base_url}}/api/contracts/{{contract_id}}",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "contracts", "{{contract_id}}"]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "id": "550e8400-e29b-41d4-a716-446655440001",
+                  "customerId": "550e8400-e29b-41d4-a716-446655440000",
+                  "contractType": "MOBILE",
+                  "startDate": "2024-04-13",
+                  "endDate": "2025-04-13",
+                  "status": "ACTIVE",
+                  "planDetails": {
+                    "planName": "Unlimited 5G",
+                    "dataLimit": "UNLIMITED",
+                    "voiceLimit": "UNLIMITED",
+                    "smsLimit": "UNLIMITED",
+                    "price": 199.99
+                  },
+                  "deviceDetails": {
+                    "deviceType": "SMARTPHONE",
+                    "deviceModel": "iPhone 15 Pro",
+                    "imei": "123456789012345",
+                    "price": 999.99
+                  },
+                  "createdAt": "2024-04-13T12:00:00",
+                  "updatedAt": "2024-04-13T12:00:00"
+                }
+              }
+            ]
           }
         },
         {
@@ -84,7 +185,55 @@
               "host": ["{{base_url}}"],
               "path": ["api", "contracts", "customer", "{{customer_id}}"]
             },
-            "description": "Get all contracts for a customer (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Get all contracts for a customer (requires CUSTOMER_REPRESENTATIVE role)",
+            "response": [
+              {
+                "name": "Success Response",
+                "originalRequest": {
+                  "method": "GET",
+                  "header": [],
+                  "url": {
+                    "raw": "{{base_url}}/api/contracts/customer/{{customer_id}}",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "contracts", "customer", "{{customer_id}}"]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": [
+                  {
+                    "id": "550e8400-e29b-41d4-a716-446655440001",
+                    "customerId": "550e8400-e29b-41d4-a716-446655440000",
+                    "contractType": "MOBILE",
+                    "startDate": "2024-04-13",
+                    "endDate": "2025-04-13",
+                    "status": "ACTIVE",
+                    "planDetails": {
+                      "planName": "Unlimited 5G",
+                      "dataLimit": "UNLIMITED",
+                      "voiceLimit": "UNLIMITED",
+                      "smsLimit": "UNLIMITED",
+                      "price": 199.99
+                    },
+                    "deviceDetails": {
+                      "deviceType": "SMARTPHONE",
+                      "deviceModel": "iPhone 15 Pro",
+                      "imei": "123456789012345",
+                      "price": 999.99
+                    },
+                    "createdAt": "2024-04-13T12:00:00",
+                    "updatedAt": "2024-04-13T12:00:00"
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -109,14 +258,69 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"planId\": \"{{plan_id}}\",\n    \"startDate\": \"2024-03-01\",\n    \"endDate\": \"2025-03-01\",\n    \"status\": \"TERMINATED\"\n}"
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"contractType\": \"MOBILE\",\n    \"startDate\": \"2024-04-13\",\n    \"endDate\": \"2025-04-13\",\n    \"status\": \"ACTIVE\",\n    \"planDetails\": {\n        \"planName\": \"Unlimited 5G\",\n        \"dataLimit\": \"UNLIMITED\",\n        \"voiceLimit\": \"UNLIMITED\",\n        \"smsLimit\": \"UNLIMITED\",\n        \"price\": 199.99\n    },\n    \"deviceDetails\": {\n        \"deviceType\": \"SMARTPHONE\",\n        \"deviceModel\": \"iPhone 15 Pro\",\n        \"imei\": \"123456789012345\",\n        \"price\": 999.99\n    }\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/contracts/{{contract_id}}",
               "host": ["{{base_url}}"],
               "path": ["api", "contracts", "{{contract_id}}"]
             },
-            "description": "Update contract details (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Update contract details (requires CUSTOMER_REPRESENTATIVE role)",
+            "response": [
+              {
+                "name": "Success Response",
+                "originalRequest": {
+                  "method": "PUT",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"contractType\": \"MOBILE\",\n    \"startDate\": \"2024-04-13\",\n    \"endDate\": \"2025-04-13\",\n    \"status\": \"ACTIVE\",\n    \"planDetails\": {\n        \"planName\": \"Unlimited 5G\",\n        \"dataLimit\": \"UNLIMITED\",\n        \"voiceLimit\": \"UNLIMITED\",\n        \"smsLimit\": \"UNLIMITED\",\n        \"price\": 199.99\n    },\n    \"deviceDetails\": {\n        \"deviceType\": \"SMARTPHONE\",\n        \"deviceModel\": \"iPhone 15 Pro\",\n        \"imei\": \"123456789012345\",\n        \"price\": 999.99\n    }\n}"
+                  },
+                  "url": {
+                    "raw": "{{base_url}}/api/contracts/{{contract_id}}",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "contracts", "{{contract_id}}"]
+                  }
+                },
+                "status": "OK",
+                "code": 200,
+                "_postman_previewlanguage": "json",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "id": "550e8400-e29b-41d4-a716-446655440001",
+                  "customerId": "550e8400-e29b-41d4-a716-446655440000",
+                  "contractType": "MOBILE",
+                  "startDate": "2024-04-13",
+                  "endDate": "2025-04-13",
+                  "status": "ACTIVE",
+                  "planDetails": {
+                    "planName": "Unlimited 5G",
+                    "dataLimit": "UNLIMITED",
+                    "voiceLimit": "UNLIMITED",
+                    "smsLimit": "UNLIMITED",
+                    "price": 199.99
+                  },
+                  "deviceDetails": {
+                    "deviceType": "SMARTPHONE",
+                    "deviceModel": "iPhone 15 Pro",
+                    "imei": "123456789012345",
+                    "price": 999.99
+                  },
+                  "createdAt": "2024-04-13T12:00:00",
+                  "updatedAt": "2024-04-13T12:00:00"
+                }
+              }
+            ]
           }
         },
         {
@@ -127,7 +331,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{admin_token}}",
+                  "value": "{{customer_rep_token}}",
                   "type": "string"
                 }
               ]
@@ -139,7 +343,24 @@
               "host": ["{{base_url}}"],
               "path": ["api", "contracts", "{{contract_id}}"]
             },
-            "description": "Delete a contract (requires ADMIN role)"
+            "description": "Delete a contract (requires CUSTOMER_REPRESENTATIVE role)",
+            "response": [
+              {
+                "name": "Success Response",
+                "originalRequest": {
+                  "method": "DELETE",
+                  "header": [],
+                  "url": {
+                    "raw": "{{base_url}}/api/contracts/{{contract_id}}",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "contracts", "{{contract_id}}"]
+                  }
+                },
+                "status": "No Content",
+                "code": 204,
+                "header": []
+              }
+            ]
           }
         }
       ],
@@ -172,7 +393,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:8030",
+      "value": "http://localhost:8050",
       "type": "string"
     },
     {
@@ -181,17 +402,7 @@
       "type": "default"
     },
     {
-      "key": "admin_token",
-      "value": "",
-      "type": "default"
-    },
-    {
       "key": "customer_id",
-      "value": "",
-      "type": "default"
-    },
-    {
-      "key": "plan_id",
       "value": "",
       "type": "default"
     },
