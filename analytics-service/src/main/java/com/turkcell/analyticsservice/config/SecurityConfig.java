@@ -1,6 +1,7 @@
 package com.turkcell.analyticsservice.config;
 
 import feign.RequestInterceptor;
+
 import io.github.bothuany.security.config.BaseSecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,8 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/api/contracts/test" // Test endpoint is public
+            "/api/contracts/test", // Test endpoint is public
+            "/actuator/prometheus"
     };
 
     @Bean
