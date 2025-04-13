@@ -25,7 +25,7 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     @Column(name = "transaction_id")
     private String transactionId;
@@ -40,9 +40,9 @@ public class Payment {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bill_id", nullable = false)
-    private Bill bill;
+    // Sadece bill_id ile ilişki
+    @Column(name = "bill_id", nullable = false)
+    private UUID billId; // Entity yerine direkt ID tutuyoruz
 
 
 }

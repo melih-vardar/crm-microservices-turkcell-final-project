@@ -12,4 +12,5 @@ public interface BillRepository extends JpaRepository<Bill, UUID> {
     List<Bill> findByPaidFalse();
 
     List<Bill> findByCustomerId(String customerId);
+
 }

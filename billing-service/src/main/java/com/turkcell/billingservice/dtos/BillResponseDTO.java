@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ public class BillResponseDTO {
     BigDecimal amount;
     LocalDateTime dueDate;
     String billStatus;
-    List<PaymentResponseDTO> payments;
     LocalDateTime createdAt;
+    private LocalDateTime paymentDate;
+    private boolean paid;
 } 

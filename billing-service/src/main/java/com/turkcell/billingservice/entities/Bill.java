@@ -36,6 +36,7 @@ public class Bill {
     private boolean paid = false;
 
     @Column(name = "bill_status")
+    @Enumerated(EnumType.STRING)
     private BillStatus billStatus;
 
     @Column(name = "payment_date")
@@ -47,7 +48,6 @@ public class Bill {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Payment> payments = new ArrayList<>();
+
 
 } 

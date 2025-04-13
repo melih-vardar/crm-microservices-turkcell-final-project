@@ -53,7 +53,6 @@ public class BillingServiceImpl implements BilingService {
         bill.setPaid(false);
         bill.setCreatedAt(LocalDateTime.now());
         bill.setBillStatus(BillStatus.PENDING);//bill starter mode
-
         billRepository.save(bill);
 
         // Fatura oluşturuldu bildirimi gönder
@@ -137,17 +136,23 @@ public class BillingServiceImpl implements BilingService {
         billRepository.deleteById(billId);
     }
 
+    @Override
+    public void saveBill(Bill bill) {
+        billRepository.save(bill);
+    }
+
     private BillResponseDTO getBillResponseDTO(Bill bill) {
-        BillResponseDTO billResponseDTO = new BillResponseDTO();
-        billResponseDTO.setId(bill.getId());
-        billResponseDTO.setContractId(bill.getContractId());
-        billResponseDTO.setCustomerId(bill.getCustomerId());
-        billResponseDTO.setAmount(bill.getAmount());
-        billResponseDTO.setDueDate(bill.getDueDate());
-        billResponseDTO.setBillStatus(bill.getBillStatus().name());
-        billResponseDTO.setCreatedAt(bill.getCreatedAt());
-        billResponseDTO.setCreatedAt(bill.getCreatedAt());
-        return billResponseDTO;
+        BillResponseDTO dto = new BillResponseDTO();
+        dto.setId(bill.getId());
+        dto.setContractId(bill.getContractId());
+        dto.setCustomerId(bill.getCustomerId());
+        dto.setAmount(bill.getAmount());
+        dto.setDueDate(bill.getDueDate());
+        dto.setBillStatus(bill.getBillStatus().name());
+        dto.setCreatedAt(bill.getCreatedAt());
+        dto.setPaymentDate(bill.getPaymentDate());
+        dto.setPaid(bill.isPaid());
+        return dto;
     }
 
 

@@ -43,6 +43,7 @@ public class BillingController {
 
         return ResponseEntity.ok(billingService.getBillsByCustomerId(customerId));
     }
+
     @PutMapping("/{billId}")
     @PreAuthorize("hasRole('CUSTOMER_REPRESENTATIVE')")
     public ResponseEntity<BillResponseDTO> updateBill(@PathVariable UUID billId, @Valid @RequestBody BillUpdateDTO updateDTO) {

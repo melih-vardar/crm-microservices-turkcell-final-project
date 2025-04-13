@@ -8,6 +8,7 @@ import com.turkcell.billingservice.entities.Bill;
 import com.turkcell.billingservice.entities.BillStatus;
 import com.turkcell.billingservice.entities.Payment;
 import com.turkcell.billingservice.entities.PaymentMethod;
+import com.turkcell.billingservice.repositories.BillRepository;
 import com.turkcell.billingservice.repositories.PaymentRepository;
 import com.turkcell.billingservice.services.BilingService;
 import com.turkcell.billingservice.services.PaymentService;
@@ -48,32 +49,11 @@ public class PaymentServiceImpl implements PaymentService {
         String transactionId = "SIM-PAY-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
         BillResponseDTO billResponseDTO = billingService.getBillById(billId);
-
-        Bill bill = new Bill();
-        bill.setId(billResponseDTO.getId());
-        bill.setContractId(billResponseDTO.getContractId());
-        bill.setCustomerId(billResponseDTO.getCustomerId());
-        bill.setAmount(billResponseDTO.getAmount());
-        bill.setDueDate(billResponseDTO.getDueDate());
-        bill.setBillStatus(BillStatus.valueOf(billResponseDTO.getBillStatus()));
-        bill.setCreatedAt(billResponseDTO.getCreatedAt());
-        // Payment listesi varsa onları da dönüştürmeniz gerek. Örneğin:
-        List<Payment> payments = new ArrayList<>();
-        if (billResponseDTO.getPayments() != null) {
-            for (PaymentResponseDTO paymentDTO : billResponseDTO.getPayments()) {
-                Payment payment = new Payment();
-                payment.setId(paymentDTO.getId());
-                payment.setAmount(paymentDTO.getAmount());
-                payment.setPaymentDate(paymentDTO.getPaymentDate());
-                payment.setBill(bill); // iki yönlü ilişkiyi korumak için
-
-                payments.add(payment);
-            }
-        }
-        bill.setPayments(payments);
+        // BillResponseDTO'yu doğrudan Entity'ye çeviren bir metod kullanalım
+        Bill bill = convertToBill(billResponseDTO);
         // Payment kaydı oluştur
         Payment payment = new Payment();
-        payment.setBill(bill);
+        payment.setBillId(billId);
         payment.setAmount(bill.getAmount());
         payment.setPaymentMethod(paymentRequest.getPaymentMethod());
         payment.setTransactionId(transactionId);
@@ -83,17 +63,10 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setCardLastFour(paymentRequest.getCardNumber().substring(12));
         // Basit bir simülasyon
         updateBillStatus(bill, isSuccess);
+
         paymentRepository.save(payment);
 
-        PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
-        paymentResponseDTO.setId(payment.getId());
-        paymentResponseDTO.setBillId(bill.getId());
-        paymentResponseDTO.setAmount(payment.getAmount());
-        paymentResponseDTO.setPaymentMethod(payment.getPaymentMethod().toString());
-        paymentResponseDTO.setTransactionId(payment.getTransactionId());
-        paymentResponseDTO.setPaymentDate(payment.getPaymentDate());
-        paymentResponseDTO.setPaymentDate(payment.getPaymentDate());
-        return paymentResponseDTO;
+        return convertToDTO(payment);
     }
 
     @Override
@@ -106,6 +79,22 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<PaymentResponseDTO> getAllPayments() {
         return paymentRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    public PaymentResponseDTO getPaymentByBillId(UUID billId) {
+        Payment payment = paymentRepository.findByBillId(billId)
+                .orElseThrow(() -> new BusinessException("not found payment for bill: " + billId));
+
+        return convertToDTO(payment);
+    }
+    public List<PaymentResponseDTO> getPaymentsByStatus(boolean isSuccess) {
+        return paymentRepository.findBySuccess(isSuccess).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    public List<PaymentResponseDTO> getPaymentsByMethod(PaymentMethod method) {
+        return paymentRepository.findByPaymentMethod(method).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -135,8 +124,9 @@ public class PaymentServiceImpl implements PaymentService {
         } else {
             bill.setBillStatus(BillStatus.FAILED);
             logger.warn("Ödeme başarısız - Fatura ID: {}", bill.getId());
+            bill.setPaid(false);
         }
-
+        billingService.saveBill(bill);
 
     }
     private boolean simulatePayment(PaymentRequest paymentRequest) {
@@ -151,7 +141,22 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentMethod(payment.getPaymentMethod().name())
                 .transactionId(payment.getTransactionId())
                 .paymentDate(payment.getPaymentDate())
-                .billId(payment.getBill().getId())
+                .billId(payment.getBillId())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
+    private Bill convertToBill(BillResponseDTO dto) {
+        Bill bill = new Bill();
+        bill.setId(dto.getId());
+        bill.setContractId(dto.getContractId());
+        bill.setCustomerId(dto.getCustomerId());
+        bill.setAmount(dto.getAmount());
+        bill.setDueDate(dto.getDueDate());
+        bill.setBillStatus(BillStatus.valueOf(dto.getBillStatus()));
+        bill.setCreatedAt(dto.getCreatedAt());
+        bill.setPaymentDate(dto.getPaymentDate());
+        bill.setPaid(dto.isPaid());
+        return bill;
+    }
+
 }
