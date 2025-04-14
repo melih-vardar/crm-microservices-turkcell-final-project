@@ -8,6 +8,6 @@ import java.util.UUID;
 
 @FeignClient(name = "contractservice")
 public interface ContractClient {
-    @GetMapping("/api/v1/contracts/{id}")
-    List<Object> getCustomerContracts(@PathVariable("id") UUID customerId);
+    @GetMapping("/api/contracts/customer/{customerId}")
+    List<Object> getCustomerContracts(@PathVariable("customerId") UUID customerId);
 }
