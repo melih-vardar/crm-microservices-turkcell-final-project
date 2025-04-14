@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/bills")
+@RequestMapping("/api/billings")
 @RequiredArgsConstructor
 @Tag(name = "Billing Service", description = "Billing service API endpoints")
 public class BillingController {
