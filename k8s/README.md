@@ -40,6 +40,14 @@ The architecture consists of:
 - `kubectl` CLI installed and configured
 - Docker Hub account for storing container images
 
+## Configuration Repository
+
+The configuration for all microservices is stored in a separate Git repository. The Config Server connects to this repository to provide centralized configuration management:
+
+- **Configuration Repository**: [https://github.com/melih-vardar/crm-microservices-turkcell-final-project-configs](https://github.com/melih-vardar/crm-microservices-turkcell-final-project-configs)
+
+This repository contains environment-specific configuration files (dev, prod, local) for each microservice in the system.
+
 ## Deployment Instructions
 
 ### Manual Deployment
