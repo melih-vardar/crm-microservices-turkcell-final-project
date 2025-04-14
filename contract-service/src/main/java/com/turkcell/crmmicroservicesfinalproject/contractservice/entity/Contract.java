@@ -53,4 +53,4 @@ public class Contract {
     public boolean isDeleted() {
         return deletedAt != null;
     }
-}
+}//
