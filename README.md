@@ -37,7 +37,7 @@ The application consists of the following microservices:
 | ------------------------ | -------------------------------------------------- |
 | User Service             | Authentication, authorization, and user management |
 | Customer Service         | Customer profile and information management        |
-| Billing Service          | Invoice generation, payment processing             |
+| Billing Service          | Billing generation, payment processing             |
 | Contract Service         | Contract creation, management, and tracking        |
 | Plan Service             | Service plans and offering management              |
 | Customer Support Service | Support ticket management and resolution           |
@@ -167,10 +167,10 @@ API documentation is available via Swagger UI at the following endpoints:
 
 #### Billing Service API
 
-- **POST /api/v1/invoices**: Create new invoice
-- **GET /api/v1/invoices**: List all invoices
-- **GET /api/v1/invoices/{id}**: Get invoice by ID
-- **PUT /api/v1/invoices/{id}/status**: Update invoice status
+- **POST /api/v1/billings**: Create new billing
+- **GET /api/v1/billings**: List all billings
+- **GET /api/v1/billings/{id}**: Get billing by ID
+- **PUT /api/v1/billings/{id}/status**: Update billing status
 - **POST /api/v1/payments**: Process payment
 - **GET /api/v1/payments/customer/{customerId}**: Get customer payment history
 

@@ -10,24 +10,88 @@ env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
 jobs:
-  build-and-push:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: |
+            config-server/**
+            discovery-server/**
+            gateway-server/**
+            user-service/**
+            customer-service/**
+            billing-service/**
+            analytics-service/**
+            contract-service/**
+            plan-service/**
+            notification-service/**
+            customer-support-service/**
+
+      - name: Set matrix
+        id: set-matrix
+        run: |
+          changed_services=()
+
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            service=$(echo $file | cut -d'/' -f1)
+            if [[ " ${changed_services[@]} " =~ " ${service} " ]]; then
+              continue
+            fi
+            
+            # Check if the service is one of our microservices
+            if [[ -d "$service" && ( "$service" == "config-server" || 
+                "$service" == "discovery-server" || 
+                "$service" == "gateway-server" || 
+                "$service" == "user-service" || 
+                "$service" == "customer-service" || 
+                "$service" == "billing-service" || 
+                "$service" == "analytics-service" || 
+                "$service" == "contract-service" || 
+                "$service" == "plan-service" || 
+                "$service" == "notification-service" || 
+                "$service" == "customer-support-service" ) ]]; then
+              changed_services+=("$service")
+            fi
+          done
+
+          # If no services changed, build all services (for workflow_dispatch)
+          if [ ${#changed_services[@]} -eq 0 ]; then
+            changed_services=(
+              "config-server"
+              "discovery-server"
+              "gateway-server"
+              "user-service"
+              "customer-service"
+              "billing-service"
+              "analytics-service"
+              "contract-service"
+              "plan-service"
+              "notification-service"
+              "customer-support-service"
+            )
+          fi
+
+          # Convert to JSON array for the matrix
+          matrix=$(printf '"%s",' "${changed_services[@]}" | sed 's/,$//')
+          echo "matrix={\"service\":[$matrix]}" >> $GITHUB_OUTPUT
+          echo "Building services: $matrix"
+
+  build-and-push:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.detect-changes.outputs.matrix != '{"service":[]}' }}
     strategy:
-      matrix:
-        service:
-          [
-            config-server,
-            discovery-server,
-            gateway-server,
-            user-service,
-            customer-service,
-            billing-service,
-            analytics-service,
-            contract-service,
-            plan-service,
-            notification-service,
-            customer-support-service,
-          ]
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,11 +114,25 @@ jobs:
           context: ./${{ matrix.service }}
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
 
-  deploy-to-kubernetes:
+  update-k8s-manifests:
     needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update Kubernetes manifests with SHA tag
+        run: |
+          # Replace ${DOCKERHUB_USERNAME} with actual username
+          find ./k8s -type f -name "*.yaml" -exec sed -i "s/\${DOCKERHUB_USERNAME}/${{ secrets.DOCKERHUB_USERNAME }}/g" {} \;
+
+          # Replace ${IMAGE_TAG} with SHA
+          find ./k8s -type f -name "*.yaml" -exec sed -i "s/\${IMAGE_TAG}/${{ github.sha }}/g" {} \;
+
+  deploy-to-kubernetes:
+    needs: update-k8s-manifests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -70,10 +148,6 @@ jobs:
       - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig --name crm-cluster --region eu-central-1
-
-      - name: Update Kubernetes manifests
-        run: |
-          find ./k8s -type f -name "*.yaml" -exec sed -i "s/\${DOCKERHUB_USERNAME}/${{ secrets.DOCKERHUB_USERNAME }}/g" {} \;
 
       - name: Deploy to Kubernetes
         run: |

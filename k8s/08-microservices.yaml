@@ -67,8 +67,8 @@ spec:
             ]
       containers:
         - name: user-service
-          image: batuce/user-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/user-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8010
           env:
@@ -232,8 +232,8 @@ spec:
             ]
       containers:
         - name: customer-service
-          image: batuce/customer-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/customer-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8020
           env:
@@ -397,8 +397,8 @@ spec:
             ]
       containers:
         - name: contract-service
-          image: batuce/contract-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/contract-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8030
           env:
@@ -550,8 +550,8 @@ spec:
             ]
       containers:
         - name: plan-service
-          image: batuce/plan-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/plan-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8040
           env:
@@ -711,8 +711,8 @@ spec:
             ]
       containers:
         - name: billing-service
-          image: batuce/billing-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/billing-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8050
           env:
@@ -863,8 +863,8 @@ spec:
             ]
       containers:
         - name: customer-support-service
-          image: batuce/customer-support-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/customer-support-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8060
           env:
@@ -1030,8 +1030,8 @@ spec:
             ]
       containers:
         - name: analytics-service
-          image: batuce/analytics-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/analytics-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8071
           env:
@@ -1175,8 +1175,8 @@ spec:
             ]
       containers:
         - name: notification-service
-          image: batuce/notification-service:latest
-          imagePullPolicy: Always
+          image: ${DOCKERHUB_USERNAME}/notification-service:${IMAGE_TAG}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8090
           env:
