@@ -52,8 +52,10 @@ public class CustomerServiceImpl implements CustomerService {
         // Push Bildirimi Gönder
         // sendPushNotification(customer,"Welcome to Our Service!","Welcome, " +
         // customer.getFirstName() + "!");
-        sendCustomerAnalytics(customer);
-        return convertToResponse(customerRepository.save(customer));
+        Customer createdCustomer = customerRepository.save(customer);
+        sendCustomerAnalytics(createdCustomer);
+
+        return convertToResponse(createdCustomer);
     }
 
     @Override

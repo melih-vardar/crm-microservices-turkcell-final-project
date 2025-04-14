@@ -30,9 +30,9 @@ public class CustomerBehaviorServiceImp implements CustomerBehaviorService {
         logger.info("Registering analytics to Customer start ");
         CustomerCreateBehavior customerCreateBehavior = new CustomerCreateBehavior();
         customerCreateBehavior.setCustomerId(createExampleCustomerEvent.getCustomerId());
-        customerCreateBehavior.setFirstName(customerCreateBehavior.getFirstName());
-        customerCreateBehavior.setLastName(customerCreateBehavior.getLastName());
-        customerCreateBehavior.setEmail(customerCreateBehavior.getEmail());
+        customerCreateBehavior.setFirstName(createExampleCustomerEvent.getFirstname());
+        customerCreateBehavior.setLastName(createExampleCustomerEvent.getLastname());
+        customerCreateBehavior.setEmail(createExampleCustomerEvent.getEmail());
         customerCreateBehavior.setEventType(EventType.valueOf(createExampleCustomerEvent.getEventType()));
         customerCreateBehavior.setDateTime(LocalDateTime.now());
         logger.info("converted userBehavior {}", customerCreateBehavior);

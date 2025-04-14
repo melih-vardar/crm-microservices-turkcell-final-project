@@ -1,6 +1,5 @@
 package com.turkcell.customer_support_service.service.impl;
 
-import com.turkcell.customer_support_service.client.CustomerClient;
 import com.turkcell.customer_support_service.entity.CustomerSupport;
 import com.turkcell.customer_support_service.repository.CustomerSupportRepository;
 import com.turkcell.customer_support_service.rules.CustomerSupportBusinessRules;
@@ -8,14 +7,9 @@ import com.turkcell.customer_support_service.service.CustomerSupportService;
 import io.github.bothuany.dtos.support.TicketCreateDTO;
 import io.github.bothuany.dtos.support.TicketResponseDTO;
 import io.github.bothuany.enums.TicketStatus;
-import io.github.bothuany.event.analytics.TicketAnalyticsEvent;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,8 +20,6 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
     private final CustomerSupportRepository customerSupportRepository;
     private final CustomerSupportBusinessRules customerSupportBusinessRules;
-    private final StreamBridge streamBridge;
-    private static final Logger logger = LoggerFactory.getLogger(CustomerSupportServiceImpl.class);
 
     @Override
     public TicketResponseDTO createTicket(TicketCreateDTO ticket) {
@@ -35,8 +27,8 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
         CustomerSupport customerSupport = new CustomerSupport();
         updateTicketFromRequest(customerSupport, ticket);
-        sendTicketForAnalytics(customerSupport, "TICKET_CREATED");
-        return convertToResponseDTO(customerSupportRepository.save(customerSupport));
+        CustomerSupport SavedCustomerSupport = customerSupportRepository.save(customerSupport);
+        return convertToResponseDTO(SavedCustomerSupport);
     }
 
     @Override
@@ -46,7 +38,6 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
         CustomerSupport customerSupport = customerSupportRepository.findById(id).get();
         updateTicketFromRequest(customerSupport, ticket);
-        sendTicketForAnalytics(customerSupport, "TICKET_UPDATED");
         return convertToResponseDTO(customerSupportRepository.save(customerSupport));
     }
 
@@ -74,7 +65,6 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
     public void deleteTicket(UUID id) {
         customerSupportBusinessRules.checkIfTicketExists(id);
         CustomerSupport customerSupport = customerSupportRepository.findById(id).get();
-        sendTicketForAnalytics(customerSupport, "TICKET_CLOSED");
         customerSupportRepository.deleteById(id);
     }
 
@@ -93,21 +83,5 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
         ticketResponseDTO.setIssueType(customerSupport.getIssueType());
 
         return ticketResponseDTO;
-    }
-
-    private void sendTicketForAnalytics(CustomerSupport customerSupport, String eventName) {
-        try {
-            TicketAnalyticsEvent ticketAnalyticsEvent = new TicketAnalyticsEvent();
-            ticketAnalyticsEvent.setTicketId(customerSupport.getId());
-            ticketAnalyticsEvent.setCustomerId(customerSupport.getCustomerId());
-            ticketAnalyticsEvent.setEventType(eventName);
-            ticketAnalyticsEvent.setEventTime(LocalDateTime.now());
-
-            logger.info("Sending ticket for customer support {}", customerSupport.getCustomerId());
-            streamBridge.send("TicketAnalytics-out-0", ticketAnalyticsEvent);
-        } catch (Exception e) {
-            // Log error but allow application to continue
-            logger.error("Error while sending analytics data: {}", e.getMessage(), e);
-        }
     }
 }

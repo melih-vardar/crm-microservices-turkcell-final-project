@@ -31,7 +31,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        log.info("Configuring security for contract-service");
+        log.info("Configuring security for analytics service");
 
         // First apply base security configuration
         baseSecurityService.configureCoreSecurity(http);
