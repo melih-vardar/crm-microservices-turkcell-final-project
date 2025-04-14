@@ -2,7 +2,6 @@ package com.turkcell.analyticsservice.kafka;
 
 import com.turkcell.analyticsservice.service.BillBehaviorService;
 import com.turkcell.analyticsservice.service.CustomerBehaviorService;
-import com.turkcell.analyticsservice.service.CustomerSupportBehaviorService;
 import com.turkcell.analyticsservice.service.UserBehaviorService;
 import io.github.bothuany.event.analytics.*;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ public class AnalyticsPipeline {
 
     private final UserBehaviorService userBehaviorService;
     private final CustomerBehaviorService customerBehaviorService;
-    private final CustomerSupportBehaviorService customerSupportBehaviorService;
     private final BillBehaviorService billBehaviorService;
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsPipeline.class);
 
@@ -57,17 +55,6 @@ public class AnalyticsPipeline {
           }catch (Exception e){
               logger.error("Failed to process customer analytics function : {}",createExampleCustomerEvent,e);
           }
-        };
-    }
-
-    @Bean
-    public Consumer<TicketAnalyticsEvent> TicketAnalyticsFunction(){
-        return ticketAnalyticsEvent -> {
-            switch (ticketAnalyticsEvent.getEventType()){
-                case "TICKET_CREATED" -> customerSupportBehaviorService.processTicketCreation(ticketAnalyticsEvent);
-                case "TICKET_UPDATED" -> customerSupportBehaviorService.processTicketUpdate(ticketAnalyticsEvent);
-                case "TICKET_CLOSED" -> customerSupportBehaviorService.processTicketClosure(ticketAnalyticsEvent);
-            }
         };
     }
 
