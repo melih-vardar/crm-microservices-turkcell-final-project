@@ -6,117 +6,30 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: eu-central-1
-  EKS_CLUSTER_NAME: crm-cluster
+  REGISTRY: docker.io
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
 jobs:
-  changes:
-    name: Detect changes
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.filter.outputs.changes }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Filter changes
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            config-server:
-              - 'config-server/**'
-            discovery-server:
-              - 'discovery-server/**'
-            gateway-server:
-              - 'gateway-server/**'
-            user-service:
-              - 'user-service/**'
-            customer-service:
-              - 'customer-service/**'
-            billing-service:
-              - 'billing-service/**'
-            analytics-service:
-              - 'analytics-service/**'
-            contract-service:
-              - 'contract-service/**'
-            plan-service:
-              - 'plan-service/**'
-            notification-service:
-              - 'notification-service/**'
-            customer-support-service:
-              - 'customer-support-service/**'
-
-      - name: Create matrix
-        id: create-matrix
-        run: |
-          # Tüm değişiklikleri görüntüle
-          echo "All outputs from filter: "
-          echo '${{ toJSON(steps.filter.outputs) }}'
-
-          # Servisleri array olarak oluştur
-          SERVICES=()
-
-          # Her servis için kontrol et
-          if [[ "${{ steps.filter.outputs.config-server }}" == "true" ]]; then
-            SERVICES+=("config-server")
-          fi
-          if [[ "${{ steps.filter.outputs.discovery-server }}" == "true" ]]; then
-            SERVICES+=("discovery-server")
-          fi
-          if [[ "${{ steps.filter.outputs.gateway-server }}" == "true" ]]; then
-            SERVICES+=("gateway-server")
-          fi
-          if [[ "${{ steps.filter.outputs.user-service }}" == "true" ]]; then
-            SERVICES+=("user-service")
-          fi
-          if [[ "${{ steps.filter.outputs.customer-service }}" == "true" ]]; then
-            SERVICES+=("customer-service")
-          fi
-          if [[ "${{ steps.filter.outputs.billing-service }}" == "true" ]]; then
-            SERVICES+=("billing-service")
-          fi
-          if [[ "${{ steps.filter.outputs.analytics-service }}" == "true" ]]; then
-            SERVICES+=("analytics-service")
-          fi
-          if [[ "${{ steps.filter.outputs.contract-service }}" == "true" ]]; then
-            SERVICES+=("contract-service")
-          fi
-          if [[ "${{ steps.filter.outputs.plan-service }}" == "true" ]]; then
-            SERVICES+=("plan-service")
-          fi
-          if [[ "${{ steps.filter.outputs.notification-service }}" == "true" ]]; then
-            SERVICES+=("notification-service")
-          fi
-          if [[ "${{ steps.filter.outputs.customer-support-service }}" == "true" ]]; then
-            SERVICES+=("customer-support-service")
-          fi
-
-          # Array'i JSON formatına çevir
-          JSON_ARRAY=$(printf '"%s",' "${SERVICES[@]}" | sed 's/,$//')
-          echo "Changes detected in: [${JSON_ARRAY}]"
-
-          # Empty matrix protection - if nothing changed, don't output any matrix
-          if [ -z "$JSON_ARRAY" ]; then
-            echo "No services changed"
-            echo "changes=[]" >> $GITHUB_OUTPUT
-          else
-            echo "changes=[${JSON_ARRAY}]" >> $GITHUB_OUTPUT
-          fi
-
-  build:
-    name: Build and push images
-    needs: changes
-    if: ${{ needs.changes.outputs.matrix != '[]' }}
+  build-and-push:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson(needs.changes.outputs.matrix) }}
-      fail-fast: false
+        service:
+          [
+            config-server,
+            discovery-server,
+            gateway-server,
+            user-service,
+            customer-service,
+            billing-service,
+            analytics-service,
+            contract-service,
+            plan-service,
+            notification-service,
+            customer-support-service,
+          ]
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 11
@@ -124,10 +37,6 @@ jobs:
         with:
           java-version: "11"
           distribution: "temurin"
-          cache: maven
-
-      - name: Echo service name
-        run: echo "Building service ${{ matrix.service }}"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -135,10 +44,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./${{ matrix.service }}
@@ -147,91 +53,63 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
 
-  deploy:
-    name: Deploy to Kubernetes
+  deploy-to-kubernetes:
+    needs: build-and-push
     runs-on: ubuntu-latest
-    needs: [changes, build]
-    # Run if changes job succeeded and either build succeeded or was skipped
-    if: always() && needs.changes.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: eu-central-1
 
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+        run: |
+          aws eks update-kubeconfig --name crm-cluster --region eu-central-1
 
-      - name: Replace Docker username in manifests
+      - name: Update Kubernetes manifests
         run: |
           find ./k8s -type f -name "*.yaml" -exec sed -i "s/\${DOCKERHUB_USERNAME}/${{ secrets.DOCKERHUB_USERNAME }}/g" {} \;
 
-      - name: Deploy infrastructure
+      - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/00-namespace.yaml
-
-          # ConfigMaps
           kubectl apply -f k8s/01-configmaps.yaml
-          kubectl apply -f k8s/07-config-maps.yaml
 
-          # Storage
+          # Apply Storage Class first
           kubectl apply -f k8s/aws-ebs-sc.yaml
+
+          # Apply storage configuration (PVCs)
           kubectl apply -f k8s/02-storage.yaml
 
-          # Databases and dependencies
           kubectl apply -f k8s/03-databases.yaml
           kubectl apply -f k8s/04-kafka.yaml
           kubectl apply -f k8s/05-monitoring.yaml
-
-          # LoadBalancer services
           kubectl apply -f k8s/grafana-lb.yaml
           kubectl apply -f k8s/discovery-server-lb.yaml
+          kubectl apply -f k8s/07-config-maps.yaml
 
-          echo "Infrastructure deployed"
+          # Wait for infrastructure to be ready
+          echo "Waiting for infrastructure components to be ready..."
 
-      - name: Wait for infrastructure
-        run: |
-          echo "Waiting for infrastructure to be ready..."
-          kubectl -n crm-system wait --for=condition=ready pod -l app=postgres-user --timeout=120s || true
-          kubectl -n crm-system wait --for=condition=ready pod -l app=mongodb --timeout=120s || true
-          kubectl -n crm-system wait --for=condition=ready pod -l app=redis --timeout=120s || true
-          kubectl -n crm-system wait --for=condition=ready pod -l app=kafka --timeout=120s || true
-          sleep 30
-
-      - name: Deploy core services
-        run: |
+          # Deploy core services
           kubectl apply -f k8s/06-core-services.yaml
-          echo "Core services deployed"
 
-      - name: Wait for core services
-        run: |
+          # Wait for core services to be ready
           echo "Waiting for core services to be ready..."
-          kubectl -n crm-system wait --for=condition=ready pod -l app=config-server --timeout=120s || true
-          kubectl -n crm-system wait --for=condition=ready pod -l app=discovery-server --timeout=120s || true
-          kubectl -n crm-system wait --for=condition=ready pod -l app=gateway-server --timeout=120s || true
-          sleep 30
 
-      - name: Deploy microservices
-        run: |
+          # Deploy microservices
           kubectl apply -f k8s/08-microservices.yaml
-          echo "Microservices deployed"
+
+          echo "Deployment completed"
 
       - name: Verify deployment
         run: |
           kubectl get all -n crm-system
-
-          # Get access URLs
-          GATEWAY_URL=$(kubectl get svc gateway-server -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
-          GRAFANA_URL=$(kubectl get svc grafana-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
-          DISCOVERY_URL=$(kubectl get svc discovery-server-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
-
-          echo "===== Access Information ====="
-          echo "API Gateway: http://$GATEWAY_URL"
-          echo "Grafana: http://$GRAFANA_URL"
-          echo "Eureka Discovery: http://$DISCOVERY_URL:8888"
-          echo "============================"
+          echo "Access your application at http://$(kubectl get svc gateway-server -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
+          echo "Access Grafana at http://$(kubectl get svc grafana-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
+          echo "Access Discovery Server at http://$(kubectl get svc discovery-server-lb -n crm-system -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'):8888"

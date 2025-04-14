@@ -28,6 +28,7 @@ spec:
       containers:
         - name: config-server
           image: batuce/config-server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8070
           env:
@@ -107,6 +108,7 @@ spec:
       containers:
         - name: discovery-server
           image: batuce/discovery-server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8888
           env:
@@ -197,6 +199,7 @@ spec:
       containers:
         - name: gateway-server
           image: batuce/gateway-server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
