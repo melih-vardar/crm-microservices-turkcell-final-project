@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 public class ContractServiceApplication {
 	public static void main(String[] args) {
-		// CI/CD test
 		SpringApplication.run(ContractServiceApplication.class, args);
 	}
 }
