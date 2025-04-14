@@ -1,6 +1,5 @@
 package com.turkcell.customer_support_service.service.impl;
 
-import com.turkcell.customer_support_service.client.CustomerClient;
 import com.turkcell.customer_support_service.entity.CustomerSupport;
 import com.turkcell.customer_support_service.repository.CustomerSupportRepository;
 import com.turkcell.customer_support_service.rules.CustomerSupportBusinessRules;
@@ -35,8 +34,9 @@ public class CustomerSupportServiceImpl implements CustomerSupportService {
 
         CustomerSupport customerSupport = new CustomerSupport();
         updateTicketFromRequest(customerSupport, ticket);
-        sendTicketForAnalytics(customerSupport, "TICKET_CREATED");
-        return convertToResponseDTO(customerSupportRepository.save(customerSupport));
+        CustomerSupport SavedCustomerSupport = customerSupportRepository.save(customerSupport);
+        sendTicketForAnalytics(SavedCustomerSupport, "TICKET_CREATED");
+        return convertToResponseDTO(SavedCustomerSupport);
     }
 
     @Override
