@@ -1,11 +1,31 @@
 {
   "info": {
-    "_postman_id": "j8b52d7e-4f8b-4ded-a1bb-db3c92f7a357",
+    "_postman_id": "customer-support-service-collection",
     "name": "Customer Support Service API Collection",
     "description": "Turkcell CRM Microservices - Customer Support Service API endpoints collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Test Service",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customer-support/test",
+              "host": ["{{base_url}}"],
+              "path": ["api", "customer-support", "test"]
+            },
+            "description": "Test if the customer support service is working"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints that are accessible without authentication"
+    },
     {
       "name": "Ticket Management",
       "item": [
@@ -31,16 +51,54 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"title\": \"Network connectivity issue\",\n    \"description\": \"Customer is experiencing intermittent network connectivity\",\n    \"priority\": \"HIGH\",\n    \"category\": \"TECHNICAL\",\n    \"status\": \"OPEN\"\n}"
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"issueType\": \"TECHNICAL\",\n    \"description\": \"Customer is experiencing network connectivity issues\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/customer-support/tickets",
+              "raw": "{{base_url}}/api/customer-support/tickets",
               "host": ["{{base_url}}"],
-              "path": ["customer-support", "tickets"]
+              "path": ["api", "customer-support", "tickets"]
             },
-            "description": "Create a new support ticket (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Create a new support ticket (requires CUSTOMER_REPRESENTATIVE or ADMIN role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"issueType\": \"TECHNICAL\",\n    \"description\": \"Customer is experiencing network connectivity issues\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/customer-support/tickets",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customer-support", "tickets"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "customerId": "550e8400-e29b-41d4-a716-446655440001",
+                "issueType": "TECHNICAL",
+                "description": "Customer is experiencing network connectivity issues",
+                "status": "OPEN"
+              }
+            }
+          ]
         },
         {
           "name": "Get Ticket by ID",
@@ -58,13 +116,42 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/customer-support/tickets/{{ticket_id}}",
+              "raw": "{{base_url}}/api/customer-support/tickets/{{ticket_id}}",
               "host": ["{{base_url}}"],
-              "path": ["customer-support", "tickets", "{{ticket_id}}"]
+              "path": ["api", "customer-support", "tickets", "{{ticket_id}}"]
             },
-            "description": "Get ticket details by ID (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Get ticket details by ID (requires CUSTOMER_REPRESENTATIVE or ADMIN role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/customer-support/tickets/{{ticket_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customer-support", "tickets", "{{ticket_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "customerId": "550e8400-e29b-41d4-a716-446655440001",
+                "issueType": "TECHNICAL",
+                "description": "Customer is experiencing network connectivity issues",
+                "status": "OPEN"
+              }
+            }
+          ]
         },
         {
           "name": "Update Ticket",
@@ -88,16 +175,54 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"title\": \"Network connectivity issue - Resolved\",\n    \"description\": \"Issue has been resolved by resetting the network settings\",\n    \"priority\": \"LOW\",\n    \"category\": \"TECHNICAL\",\n    \"status\": \"CLOSED\"\n}"
+              "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"issueType\": \"TECHNICAL\",\n    \"description\": \"Issue resolved after network reset\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/customer-support/tickets/{{ticket_id}}",
+              "raw": "{{base_url}}/api/customer-support/tickets/{{ticket_id}}",
               "host": ["{{base_url}}"],
-              "path": ["customer-support", "tickets", "{{ticket_id}}"]
+              "path": ["api", "customer-support", "tickets", "{{ticket_id}}"]
             },
-            "description": "Update ticket details (requires CUSTOMER_REPRESENTATIVE role)"
+            "description": "Update ticket details (requires CUSTOMER_REPRESENTATIVE or ADMIN role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"customerId\": \"{{customer_id}}\",\n    \"issueType\": \"TECHNICAL\",\n    \"description\": \"Issue resolved after network reset\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/customer-support/tickets/{{ticket_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customer-support", "tickets", "{{ticket_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "customerId": "550e8400-e29b-41d4-a716-446655440001",
+                "issueType": "TECHNICAL",
+                "description": "Issue resolved after network reset",
+                "status": "OPEN"
+              }
+            }
+          ]
         },
         {
           "name": "Delete Ticket",
@@ -115,13 +240,85 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/customer-support/tickets/{{ticket_id}}",
+              "raw": "{{base_url}}/api/customer-support/tickets/{{ticket_id}}",
               "host": ["{{base_url}}"],
-              "path": ["customer-support", "tickets", "{{ticket_id}}"]
+              "path": ["api", "customer-support", "tickets", "{{ticket_id}}"]
             },
             "description": "Delete a ticket (requires ADMIN role)"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/customer-support/tickets/{{ticket_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customer-support", "tickets", "{{ticket_id}}"]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": []
+            }
+          ]
+        },
+        {
+          "name": "Get All Tickets",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/customer-support/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "customer-support", "tickets"]
+            },
+            "description": "Get all tickets (requires CUSTOMER_REPRESENTATIVE or ADMIN role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/customer-support/tickets",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "customer-support", "tickets"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440000",
+                  "customerId": "550e8400-e29b-41d4-a716-446655440001",
+                  "issueType": "TECHNICAL",
+                  "description": "Customer is experiencing network connectivity issues",
+                  "status": "OPEN"
+                }
+              ]
+            }
+          ]
         }
       ],
       "description": "Support ticket management endpoints"

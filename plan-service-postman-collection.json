@@ -51,6 +51,283 @@
       "description": "Endpoints that are accessible without authentication"
     },
     {
+      "name": "Basic Plan Management",
+      "item": [
+        {
+          "name": "Create Basic Plan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Premium Mobile\",\n    \"description\": \"Unlimited data and calls with 5G access\",\n    \"planType\": \"MOBILE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/basic-plans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "basic-plans"]
+            },
+            "description": "Create a new basic plan (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Premium Mobile\",\n    \"description\": \"Unlimited data and calls with 5G access\",\n    \"planType\": \"MOBILE\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/basic-plans",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "basic-plans"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile\",\n    \"description\": \"Unlimited data and calls with 5G access\",\n    \"planType\": \"MOBILE\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Basic Plan by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/basic-plans/{{basic_plan_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "basic-plans", "{{basic_plan_id}}"]
+            },
+            "description": "Get a basic plan by ID (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/basic-plans/550e8400-e29b-41d4-a716-446655440000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "basic-plans", "550e8400-e29b-41d4-a716-446655440000"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile\",\n    \"description\": \"Unlimited data and calls with 5G access\",\n    \"planType\": \"MOBILE\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Basic Plans",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/basic-plans",
+              "host": ["{{base_url}}"],
+              "path": ["api", "basic-plans"]
+            },
+            "description": "Get all basic plans (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/basic-plans",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "basic-plans"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile\",\n        \"description\": \"Unlimited data and calls with 5G access\",\n        \"planType\": \"MOBILE\"\n    },\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"name\": \"Basic Internet\",\n        \"description\": \"Basic internet package with 100Mbps speed\",\n        \"planType\": \"INTERNET\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Update Basic Plan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Premium Mobile Plus\",\n    \"description\": \"Unlimited data and calls with 5G access and international roaming\",\n    \"planType\": \"MOBILE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/basic-plans/{{basic_plan_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "basic-plans", "{{basic_plan_id}}"]
+            },
+            "description": "Update a basic plan (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Premium Mobile Plus\",\n    \"description\": \"Unlimited data and calls with 5G access and international roaming\",\n    \"planType\": \"MOBILE\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/basic-plans/550e8400-e29b-41d4-a716-446655440000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "basic-plans", "550e8400-e29b-41d4-a716-446655440000"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plus\",\n    \"description\": \"Unlimited data and calls with 5G access and international roaming\",\n    \"planType\": \"MOBILE\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Basic Plan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/basic-plans/{{basic_plan_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "basic-plans", "{{basic_plan_id}}"]
+            },
+            "description": "Delete a basic plan (requires ADMIN role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/basic-plans/550e8400-e29b-41d4-a716-446655440000",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "basic-plans", "550e8400-e29b-41d4-a716-446655440000"]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "description": "Basic plan management endpoints"
+    },
+    {
       "name": "Plan Management",
       "item": [
         {
@@ -75,7 +352,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\"\n}"
+              "raw": "{\n    \"basicPlanId\": \"{{basic_plan_id}}\",\n    \"price\": 199.99,\n    \"durationInMonths\": 12\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/plans",
@@ -97,7 +374,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\"\n}"
+                  "raw": "{\n    \"basicPlanId\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"price\": 199.99,\n    \"durationInMonths\": 12\n}"
                 },
                 "url": {
                   "raw": "{{base_url}}/api/plans",
@@ -115,7 +392,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2023-06-01T12:00:00Z\",\n    \"updatedAt\": \"2023-06-01T12:00:00Z\"\n}"
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"basicPlan\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile\",\n        \"description\": \"Unlimited data and calls with 5G access\",\n        \"planType\": \"MOBILE\"\n    },\n    \"price\": 199.99,\n    \"durationInMonths\": 12\n}"
             }
           ]
         },
@@ -148,9 +425,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440000",
+                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440001",
                   "host": ["{{base_url}}"],
-                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440000"]
+                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440001"]
                 }
               },
               "status": "OK",
@@ -163,7 +440,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plan\",\n    \"description\": \"Unlimited data and calls\",\n    \"price\": 199.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2023-06-01T12:00:00Z\",\n    \"updatedAt\": \"2023-06-01T12:00:00Z\"\n}"
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"basicPlan\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile\",\n        \"description\": \"Unlimited data and calls with 5G access\",\n        \"planType\": \"MOBILE\"\n    },\n    \"price\": 199.99,\n    \"durationInMonths\": 12\n}"
             }
           ]
         },
@@ -211,7 +488,7 @@
                 }
               ],
               "cookie": [],
-              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile Plan\",\n        \"description\": \"Unlimited data and calls\",\n        \"price\": 199.99,\n        \"duration\": 30,\n        \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\"],\n        \"status\": \"ACTIVE\",\n        \"createdAt\": \"2023-06-01T12:00:00Z\",\n        \"updatedAt\": \"2023-06-01T12:00:00Z\"\n    },\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"name\": \"Basic Mobile Plan\",\n        \"description\": \"Limited data and calls\",\n        \"price\": 99.99,\n        \"duration\": 30,\n        \"features\": [\"5GB Data\", \"100 Minutes Calls\", \"4G Access\"],\n        \"status\": \"ACTIVE\",\n        \"createdAt\": \"2023-06-01T12:00:00Z\",\n        \"updatedAt\": \"2023-06-01T12:00:00Z\"\n    }\n]"
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"basicPlan\": {\n            \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n            \"name\": \"Premium Mobile\",\n            \"description\": \"Unlimited data and calls with 5G access\",\n            \"planType\": \"MOBILE\"\n        },\n        \"price\": 199.99,\n        \"durationInMonths\": 12\n    },\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440002\",\n        \"basicPlan\": {\n            \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n            \"name\": \"Basic Internet\",\n            \"description\": \"Basic internet package with 100Mbps speed\",\n            \"planType\": \"INTERNET\"\n        },\n        \"price\": 99.99,\n        \"durationInMonths\": 6\n    }\n]"
             }
           ]
         },
@@ -237,7 +514,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Premium Mobile Plan Updated\",\n    \"description\": \"Unlimited data and calls with 5G\",\n    \"price\": 249.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\", \"International Roaming\"],\n    \"status\": \"ACTIVE\"\n}"
+              "raw": "{\n    \"basicPlanId\": \"{{basic_plan_id}}\",\n    \"price\": 179.99,\n    \"durationInMonths\": 6\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/plans/{{plan_id}}",
@@ -259,12 +536,12 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"name\": \"Premium Mobile Plan Updated\",\n    \"description\": \"Unlimited data and calls with 5G\",\n    \"price\": 249.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\", \"International Roaming\"],\n    \"status\": \"ACTIVE\"\n}"
+                  "raw": "{\n    \"basicPlanId\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"price\": 179.99,\n    \"durationInMonths\": 6\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440000",
+                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440001",
                   "host": ["{{base_url}}"],
-                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440000"]
+                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440001"]
                 }
               },
               "status": "OK",
@@ -277,7 +554,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Premium Mobile Plan Updated\",\n    \"description\": \"Unlimited data and calls with 5G\",\n    \"price\": 249.99,\n    \"duration\": 30,\n    \"features\": [\"Unlimited Data\", \"Unlimited Calls\", \"5G Access\", \"International Roaming\"],\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2023-06-01T12:00:00Z\",\n    \"updatedAt\": \"2023-06-01T12:30:00Z\"\n}"
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"basicPlan\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile\",\n        \"description\": \"Unlimited data and calls with 5G access\",\n        \"planType\": \"MOBILE\"\n    },\n    \"price\": 179.99,\n    \"durationInMonths\": 6\n}"
             }
           ]
         },
@@ -310,9 +587,9 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440000",
+                  "raw": "{{base_url}}/api/plans/550e8400-e29b-41d4-a716-446655440001",
                   "host": ["{{base_url}}"],
-                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440000"]
+                  "path": ["api", "plans", "550e8400-e29b-41d4-a716-446655440001"]
                 }
               },
               "status": "No Content",
@@ -321,6 +598,102 @@
               "header": [],
               "cookie": [],
               "body": null
+            }
+          ]
+        },
+        {
+          "name": "Get Plan by Name",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/plans/name/{{plan_name}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans", "name", "{{plan_name}}"]
+            },
+            "description": "Get plan by name (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/plans/name/Premium Mobile",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans", "name", "Premium Mobile"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"basicPlan\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile\",\n        \"description\": \"Unlimited data and calls with 5G access\",\n        \"planType\": \"MOBILE\"\n    },\n    \"price\": 199.99,\n    \"durationInMonths\": 12\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Plan by Name and Duration",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_rep_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/plans/name/{{plan_name}}/duration/{{duration}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "plans", "name", "{{plan_name}}", "duration", "{{duration}}"]
+            },
+            "description": "Get plan by name and duration (requires CUSTOMER_REPRESENTATIVE role)"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/plans/name/Premium Mobile/duration/12",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "plans", "name", "Premium Mobile", "duration", "12"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"basicPlan\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"name\": \"Premium Mobile\",\n        \"description\": \"Unlimited data and calls with 5G access\",\n        \"planType\": \"MOBILE\"\n    },\n    \"price\": 199.99,\n    \"durationInMonths\": 12\n}"
             }
           ]
         }
@@ -368,7 +741,22 @@
       "type": "default"
     },
     {
+      "key": "basic_plan_id",
+      "value": "",
+      "type": "default"
+    },
+    {
       "key": "plan_id",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "plan_name",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "duration",
       "value": "",
       "type": "default"
     }
