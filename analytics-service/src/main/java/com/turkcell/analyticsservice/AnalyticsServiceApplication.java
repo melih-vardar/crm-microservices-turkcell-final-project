@@ -11,7 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 })
 public class AnalyticsServiceApplication {
 	public static void main(String[] args) {
-		// CI/CD test
 		SpringApplication.run(AnalyticsServiceApplication.class, args);
 	}
 }

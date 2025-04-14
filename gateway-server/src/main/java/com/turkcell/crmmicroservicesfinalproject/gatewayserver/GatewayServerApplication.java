@@ -10,7 +10,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class GatewayServerApplication {
     public static void main(String[] args) {
-        // CI/CD test
         SpringApplication.run(GatewayServerApplication.class, args);
     }
 }
